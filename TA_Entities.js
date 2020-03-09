@@ -187,9 +187,10 @@ let TA_Entities = function () {
 							text.innerHTML = parametersArray[i][0];
 
 							let input = document.createElement( 'input' );
-							input.type = 'text';
-							input.readOnly = false;
-							input.disabled = false;
+							input.type = 'number';
+							input.step = 0.001;
+							// input.readOnly = false;
+							// input.disabled = false;
 							rowDiv.appendChild (input);
 							input.value = Math.round( parametersArray[i][1] * 1000 )/1000;
 

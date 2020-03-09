@@ -202,7 +202,7 @@ let TA_Scene = function ( taUI ) {
 
 	function getScreenPoint( event ) {
 
-		event.preventDefault();
+		// event.preventDefault();
 		const screenPoint =  new THREE.Vector2();
 
 		return screenPoint.set((event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1);

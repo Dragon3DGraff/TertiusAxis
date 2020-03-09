@@ -54,3 +54,9 @@ let TertiusAxis = function () {
 	// 	uicontainer.appendChild(dom);
 		
 }
+// echo "# TertiusAxis" >> README.md
+// git init
+// git add README.md
+// git commit -m "first commit"
+// git remote add origin https://github.com/Dragon3DGraff/TertiusAxis.git
+// git push -u origin master
