@@ -1,0 +1,71 @@
+/**
+ * @author Dragon3DGraff / http://dragon3dgraff.ru/
+ */
+"use strict" 
+let TA_SceneLights = function () {
+	
+    this.ambientLight = new THREE.AmbientLight( new THREE.Color('white'), 0.5 ); 
+    // soft white light 0x404040   
+
+    this.spotLight = new THREE.SpotLight( new THREE.Color('grey') );
+    this.spotLight.position.set( -3, 0, 2 );
+    
+    // let pointLightHelper = new THREE.SpotLightHelper( spotLight );
+    // scene.add( pointLightHelper );    
+    
+    this.spotLight.castShadow = true;
+    this.spotLight.shadow.mapSize.width = 1024;
+    this.spotLight.shadow.mapSize.height = 1024;
+    this.spotLight.shadow.camera.near = 500;
+    this.spotLight.shadow.camera.far = 4000;
+    this.spotLight.shadow.camera.fov = 30;
+	
+}
+
+TA_SceneLights.prototype = {
+
+	initAmbientlight: function ( scene ) {
+
+		if ( !scene || !scene.isScene) {
+			console.warn("Parameter of this function must be object of THREE.Scene()");
+			return;
+		}
+
+		scene.add( this.ambientLight );
+
+    },
+    
+    initSpotLight: function ( scene ) {
+
+        if ( !scene || !scene.isScene) {
+			console.warn("Parameter of this function must be object of THREE.Scene()");
+			return;
+		}
+
+        scene.add( this.spotLight );
+        
+    },
+
+    initAll: function ( scene ) {
+
+        if ( !scene || !scene.isScene) {
+			console.warn("Parameter of this function must be object of THREE.Scene()");
+			return;
+		}
+
+        scene.add( this.spotLight );
+        scene.add( this.ambientLight );
+
+    },
+
+    removeAll: function ( scene ){
+
+        if ( !scene || !scene.isScene) {
+			console.warn("Parameter of this function must be object of THREE.Scene()");
+			return;
+		}
+
+        scene.remove( this.spotLight );
+        scene.remove( this.ambientLight );
+    }
+}

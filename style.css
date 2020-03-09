@@ -1,0 +1,336 @@
+.canvas {
+
+	padding: 0px;
+	margin: 0px;
+	position:fixed;
+	top: 0px;
+	left: 0px;
+	/* width: 100vw; */
+	width: 100%;
+	height: 100%;
+	/* height: 100vh; */
+
+}
+
+.secondCanvas {
+
+	padding: 0px;
+	margin: 0px;
+	position:absolute;
+	z-index: 199;
+	top: 30px;
+	right: 30px;
+	/* width: 100vw; */
+	width: 200px;
+	height: 200px;	
+	background-color: black;
+	border: solid;
+	border-color:  black;
+
+}
+
+.secondCanvas canvas {
+
+	position: relative;
+	padding: 0px;
+	margin: 0px;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+}
+
+body {
+
+	position: fixed;
+
+	padding: 0px;
+	margin: 0px;
+
+}
+.labelDiv {
+	/* padding-bottom: 15px; */
+
+	/* background-color: rgba(0, 0, 0, 1); */
+	font-size: 12px;
+	font-weight: bold;
+	color: rgb(255, 0, 0);
+
+}
+
+.slidecontainer {
+
+	position: absolute;
+	bottom: 5px;
+	width: 100%;
+
+}
+
+.mainMenu {
+
+	padding: 0px;
+	margin: 0px;
+	display: flex;
+	position: absolute;
+	z-index: 201;
+	background-color: black;
+	width: 100%;
+	height: 18px;
+
+}
+
+.mainMenu button {
+	
+	font-size: 12px;
+	background-color: lightslategrey;
+	border-color: black;
+	font-weight: bold;
+
+}
+
+.mainMenu button:hover {
+
+	background-color: lightblue;
+}
+
+.subMainMenu{
+
+	position: absolute;
+	top: 18px;
+	left: 0px;
+	z-index: 202;
+	width: 120px;
+	background-color: lightgray;
+	visibility: hidden;
+
+}
+
+.subMainMenu button {
+
+	width: 100%;
+	
+}
+
+
+.subMainMenu button:hover {
+
+	background-color: lightsteelblue;
+
+}
+
+.Title {
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	width: 100%;
+	height: 18px;
+	font-weight: bold;
+	font-size: 17px;	
+	color: rgba(127,255,255, 1);
+	
+
+}
+.Title p {
+
+	text-shadow: 2px 2px 5px rgba(127, 255, 255, 0.788);
+
+}
+
+.author {
+	padding: 0px;
+	margin: 0px;
+	position: absolute ;
+	height: 18px;
+	color: rgb(255, 255, 255);
+	right: 10px;
+
+	font-size: 12px;
+
+}
+
+ p {
+
+	padding: 0px;
+	margin: 2px;
+
+}
+
+.mainToolbar {
+
+	padding: 0px;
+	margin: 0px;
+	position: absolute;
+	z-index: 200;
+	width: 250px;
+	height: 98%;
+	background-color:rgba(205, 214, 219, 0.63);
+	/* opacity: 0.8; */
+	top: 18px;
+
+}
+
+.buttonsDiv {
+
+	padding: 0px;
+	margin: 0px;
+	position: absolute;
+	display: flex;
+	flex-wrap: wrap;
+	background-color: rgba(119, 136, 153, 0.589);	
+	color: rgba(127,255,255, 1);
+	width: 100%;
+	bottom:100px;
+	text-align: center;
+
+}
+
+.mainToolbar button {
+
+	/* position: absolute;	 */
+	z-index: 203;
+	background-color:rgb(51, 51, 51) ;
+	color: rgba(127,255,255, 1);
+	width: 83px;
+	height: 22px;
+	/* top:130px; */
+	border-color: rgba(0, 0, 0, 1);
+	/* border-radius: 3px; */
+	text-align: center;
+	margin: 0px;
+	padding: 0px;
+	
+}
+
+.mainToolbar button:hover {
+
+	background-color: darkslategrey;
+	
+}
+
+.sectionDiv {
+
+	display: flex;
+	flex-wrap: wrap;
+	background-color: rgba(119, 136, 153, 0.589);
+	position: relative;
+
+}
+/* .ParametersDiv {
+
+	display: flex;
+	flex-wrap: wrap;
+
+} */
+.ParametersRow {
+
+	display: flex;
+	flex-wrap: wrap;
+	padding-left: 5px;
+	height: 35px;
+	border-style: solid;
+	border-width: 0.2px;
+	align-content: center;
+	color: rgba(127,255,255, 1);
+	background-color: rgb(51, 51, 51);
+	
+
+}
+.ParametersRow input {
+
+	width: 130px;
+	height: 22px;
+	position: fixed;
+	z-index: 204;
+	margin-top: 4px;
+	left: 112px;
+	/* cursor: e-resize; */
+	border-radius: 5px;
+	background-color: rgb(77, 76, 76);
+	color: rgba(127,255,255, 1);
+	
+
+}
+
+.ParametersRow input:hover {
+
+	border-color: rgba(127,255,255, 1);
+	border-width: 3px;
+	background-color: rgb(255, 255, 255);
+	color: black;
+	
+
+}
+
+.sectionName {
+
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	text-align: center;
+	font-weight: bolder;
+	font-size: 18px;
+	color: black;
+
+}
+
+.info{
+
+	position: absolute;
+	bottom: 20px;
+	height: 40px;
+	width: 100%;
+	background: rgba(0, 0, 0,0.75);
+	color: limegreen;
+	font-size: 10px;
+
+}
+
+.slidecontainer2 {
+
+	padding: 0px;
+	margin: 0px;
+	position: relative;	
+	width: 100%;
+
+}
+
+/* The slider itself */
+.slider {
+	margin: 0px;
+	padding: 0px;
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 20px; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 20px; /* Set a specific slider handle width */
+  height: 20px; /* Slider handle height */
+  background: #4CAF50; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #4CAF50; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+} 
+

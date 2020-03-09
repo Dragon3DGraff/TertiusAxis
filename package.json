@@ -1,0 +1,16 @@
+{
+  "name": "tertiusaxis",
+  "version": "1.0.0",
+  "description": "3dEditor",
+  "main": "Main.js",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dragon3DGraff",
+  "license": "ISC"
+}
