@@ -6,23 +6,51 @@
 let TertiusAxis = function () {
 
 	let taUI = new TA_UI();
+	
 	taUI.init();
-	let addToScene = taUI.createContainer( 'sectionDiv' );
-	addToScene.id = 'AddToScene';
-	let title =  taUI.addElement( addToScene,'p', 'Add to scene', '');
+
+	let manipulatingContainer = taUI.createContainer( 'Manipulating' );
+	taUI.addElement( manipulatingContainer, 'button', 'Select', function () {
+
+		taScene.mode.action = 'select';
+
+	} 
+	);
+
+	let addToSceneContainer = taUI.createContainer( 'sectionDiv' );
+	addToSceneContainer.id = 'AddToScene';
+	let title =  taUI.addElement( addToSceneContainer, 'p', 'Add to scene', '');
 	title.className = 'sectionName';
-	taUI.addElement( addToScene, 'button', 'Cube', 'cube');
-	taUI.addElement( addToScene, 'button', 'Sphere', 'sphere');
+
+	
+	// console.log (func);
+	taUI.addElement( addToSceneContainer, 'button', 'Cube', function () {
+	
+		taScene.mode.action = 'creationEntity';
+		taScene.mode.entity = 'cube';
+
+	}
+	);
+
+	taUI.addElement( addToSceneContainer, 'button', 'Sphere', function () {
+	
+		taScene.mode.action = 'creationEntity';
+		taScene.mode.entity = 'sphere';
+
+	}
+	);
 
 	let paramContainer = taUI.createContainer( 'sectionDiv' );
 	paramContainer.id = 'Parameters';
 	 title =  taUI.addElement( paramContainer,'p', 'Parameters', '');
 	title.className = 'sectionName';
+
+	
 	
 
 	let infoDiv = taUI.createContainer( 'info' );
 
-	let taScene = new TA_Scene( taUI );
+	let taScene = new TA_Scene( taUI );	
 	taUI.setScene( taScene );
 
 	// taUI.taScene = taScene;

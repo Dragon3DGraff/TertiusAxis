@@ -100,6 +100,61 @@ let TA_Entities = function () {
 
 	}
 
+	this.selectEntity = function (intersects, selectedObject) {
+
+
+		if ( intersects.length > 0 ) {
+
+			if ( selectedObject.object ) {
+
+				removeSelection ( selectedObject );
+
+			}
+
+			selectedObject.objectOwnColor = intersects[0].object.material.color;
+			intersects[0].object.material.color = new THREE.Color( 'grey' );
+			selectedObject.object = intersects[0].object;
+
+		// в функцию
+
+			let wireframe = new THREE.WireframeGeometry( selectedObject.object.geometry );
+			let wireframeLines = new THREE.LineSegments( wireframe );
+			wireframeLines.material.depthTest = false;
+			wireframeLines.material.opacity = 0.25;
+			wireframeLines.material.transparent = true;
+			wireframeLines.material.color = new THREE.Color( 'white' );
+			// line.position.add( selectedObject.position );
+			wireframeLines.name = 'wireframe';
+
+			selectedObject.object.add( wireframeLines );
+			
+		}
+		else {
+
+			if ( selectedObject.object ) {
+
+				removeSelection ( selectedObject );
+
+			}
+
+		}
+		function removeSelection (selectedObject) {
+
+			let wireframeScene = selectedObject.object.children.filter( item => item.name === "wireframe" );
+			wireframeScene.forEach( element => {
+			selectedObject.object.remove( element );			
+			});
+
+			selectedObject.object.material.color = selectedObject.objectOwnColor;
+			selectedObject.object = null;
+			selectedObject.objectOwnColor = null;
+
+		}
+
+		return selectedObject;
+
+	}
+
 	this.CreatingEntity = function () {
 
 		let scope = this;
@@ -117,24 +172,22 @@ let TA_Entities = function () {
 			let z = this.centerOfObjectWorld.z;
 			let width;
 
-			if (scope.currentEntity) {	
+			if ( scope.currentEntity ) {	
 
-			let pos = scope.currentEntity.position.clone().project( sceneCamera.camera );
-			pos.x = ( pos.x * window.innerWidth/2 ) + window.innerWidth/2;
-			pos.y = - ( pos.y * window.innerHeight/2 ) + window.innerHeight/2;
-			scope.centerOfObjectScreen.x = pos.x;
-			scope.centerOfObjectScreen.y = pos.y;
+				let pos = scope.currentEntity.position.clone().project( sceneCamera.camera );
+				scope.centerOfObjectScreen.x = ( pos.x * window.innerWidth/2 ) + window.innerWidth/2;
+				scope.centerOfObjectScreen.y = - ( pos.y * window.innerHeight/2 ) + window.innerHeight/2;
 
-			let worldSizeOfScreen =  sceneCamera.getWorldSizeOfScreen( sceneCamera.camera, scope.currentEntity.position )
+				let worldSizeOfScreen =  sceneCamera.getWorldSizeOfScreen( sceneCamera.camera, scope.currentEntity.position )
 
-			let ratio = ( 1000000000 * window.innerHeight)/(1000000000 * worldSizeOfScreen.height );
+				let ratio = ( 1000000000 * window.innerHeight)/(1000000000 * worldSizeOfScreen.height );
 
-			scene.remove( scope.currentEntity );
+				scene.remove( scope.currentEntity );
 
-			let currentCoordsScreen = new THREE.Vector2 ( event.x, event.y);
-			let distance = currentCoordsScreen.distanceTo( scope.centerOfObjectScreen );
+				let currentCoordsScreen = new THREE.Vector2 ( event.x, event.y);
+				let distance = currentCoordsScreen.distanceTo( scope.centerOfObjectScreen );
 
-			width = 1.00 * distance / ratio;
+				width = 1.00 * distance / ratio;
 
 			}
 			else {
@@ -148,10 +201,6 @@ let TA_Entities = function () {
 						this.currentEntity = GLOBALSCOPE.createCube(x, y, z, width, 'material');
 						scene.add( this.currentEntity );
 
-						//ТУТ ОБНОВЛЯТЬ ПАРАМЕТРЫ
-
-						
-						
 						break;
 
 						case 'sphere' :
@@ -165,37 +214,19 @@ let TA_Entities = function () {
 				}
 			}
 
-			this.stopCreating = function () {
+			this.stopCreating = function ( selectableObjects ) {
 
-				// ТУТ УДАЛИТЬ ПАРАМЕТРЫ
+				// console.log(this.currentEntity);
 
-						let dom = document.getElementById( 'Parameters');
-						let elem = document.createElement( 'div' );
-						elem.id = 'ParametersRows';
-						dom.appendChild( elem );
+				if ( scope.currentEntity ) {
 
-						let parametersArray = Object.entries(this.currentEntity.geometry.parameters);
+				selectableObjects.push( scope.currentEntity );
 
-						for (let i = 0; i < parametersArray.length; i++) {
+				}
 
-							let rowDiv = document.createElement( 'div' );
-							elem.appendChild( rowDiv );
-							rowDiv.className = 'ParametersRow';
-
-							let text = document.createElement( 'p' );
-							rowDiv.appendChild( text );
-							text.innerHTML = parametersArray[i][0];
-
-							let input = document.createElement( 'input' );
-							input.type = 'number';
-							input.step = 0.001;
-							// input.readOnly = false;
-							// input.disabled = false;
-							rowDiv.appendChild (input);
-							input.value = Math.round( parametersArray[i][1] * 1000 )/1000;
-
-						}
-
+				let ta_ui = new TA_UI;
+				ta_ui.deleteParametersMenu();
+				ta_ui = null;
 
 				this.centerOfObjectWorld = null;
 				this.centerOfObjectScreen = null;
