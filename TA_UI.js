@@ -2,29 +2,6 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 "use strict" 
-// let TA_UI = function ( taScene ) {
-
-	
-
-// 	let cubeButton = document.getElementById( 'createCube' );
-
-// 	cubeButton.addEventListener( 'click', function () {
-	
-// 		taScene.mode.creationEntity = true;
-// 		taScene.mode.entity = 'cube';
-
-// 	}, false );
-
-// 	let sphereButton = document.getElementById( 'createSphere' );
-
-// 	sphereButton.addEventListener( 'click', function () {
-
-// 		taScene.mode.creationEntity = true;
-// 		taScene.mode.entity = 'sphere';
-
-// 	}, false );
-
-// }
 
 class TA_UI {
 
@@ -51,22 +28,15 @@ class TA_UI {
 
 	}
 	
-	addElement( container, elementName, text, commandName ) {
+	addElement( container, elementName, text, func ) {
 
 		let dom = document.createElement( elementName );
 		container.appendChild( dom );
 		dom.innerHTML = text;
-		dom.addEventListener( 'click', () => {
-	
-			this.taScene.mode.creationEntity = true;
-			this.taScene.mode.entity = commandName;
-
-	// 		let paramContainer = this.createContainer( 'ParametersDiv' );
-	// paramContainer.id = 'Parameters';
-	//  title =  this.addElement( paramContainer,'p', 'Parameters', '');
-	// title.className = 'sectionName';
-	
-		}, false );
+		if (typeof( func ) === 'function') {
+			dom.addEventListener( 'click', func, false );
+		}
+		
 
 		return dom;
 	}
@@ -78,6 +48,88 @@ class TA_UI {
 		dom.id = containername;
 		this.main.appendChild( dom );
 		return dom;
+
+	}
+
+	createParametersMenu( entity ) {
+
+		this.deleteParametersMenu();
+
+		let dom = document.getElementById( 'Parameters');
+		let elem = document.createElement( 'div' );
+		elem.id = 'ParametersRows';
+		dom.appendChild( elem );
+
+		let typeOfObject = document.createElement( 'div' );
+		typeOfObject.id = 'ParametersRows';
+		elem.appendChild( typeOfObject );
+		typeOfObject.innerHTML = entity.geometry.type;// + ' id = ' + entity.id;
+
+
+		let parametersArray = Object.entries( entity.geometry.parameters );
+
+		for (let i = 0; i < parametersArray.length; i++) {
+
+			let rowDiv = document.createElement( 'div' );
+			elem.appendChild( rowDiv );
+			rowDiv.className = 'ParametersRow';
+
+			let text = document.createElement( 'p' );
+			rowDiv.appendChild( text );
+			text.innerHTML = parametersArray[i][0];
+
+			let input = document.createElement( 'input' );
+			input.id = parametersArray[i][0]; //'param_' + 
+			input.type = 'number';
+			input.step = 0.01;
+			rowDiv.appendChild (input);
+			input.value = Math.round( parametersArray[i][1] * 1000 )/1000;
+			input.addEventListener( 'change', () => {
+
+				// if ( entity.geometry.isGeometry ) {
+
+					// entity.geometry = new BufferGeometry().fromGeometry( entity.geometry );
+
+					// console.warn( 'THREE.GeometryBrowser: Converted Geometry to BufferGeometry.' );
+
+				// }
+
+				let geom = entity.geometry;
+				console.log( entity.geometry.parameters );
+				// let newGeom =  entity.geometry;
+
+				let newGeom = new THREE.SphereGeometry( +input.value, geom.parameters.widthSegments, geom.parameters.heightSegments, geom.parameters.phiStart, geom.parameters.phiLength, geom.parameters.thetaStart, geom.parameters.thetaLength);
+				// newGeom.parameters[ input.id ] = +input.value;
+				entity.geometry.dispose();
+				entity.geometry = newGeom;
+				// console.log( entity.geometry.parameters );
+
+				// console.log( entity.id );
+				// console.log( this.taScene.scene.getObjectById( entity.id ) ); //
+			}, false );
+
+		}
+
+	}
+
+	updateParametersMenu( entity ) {
+
+		let parametersArray = Object.entries(entity.geometry.parameters);
+
+		for (let i = 0; i < parametersArray.length; i++) {
+
+			let dom = document.getElementById( parametersArray[i][0] );
+			dom.value = Math.round( parametersArray[i][1] * 1000 )/1000;
+
+		}
+
+		
+	}
+
+	deleteParametersMenu() {
+
+		let rows = document.getElementById( 'ParametersRows' );
+		if (rows) rows.remove();
 
 	}
 

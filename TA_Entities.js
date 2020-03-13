@@ -6,6 +6,35 @@ let TA_Entities = function () {
 
 	let GLOBALSCOPE = this;
 
+	this.createGeometry = function ( geometryType ) {
+
+		let geometry = null;
+
+		switch ( geometryType, params ) {
+			case 'BoxBufferGeometry':
+
+					let data = {
+						width: params.width,
+						height: params.height,
+						depth: params.depth,
+						widthSegments: params.widthSegments,
+						heightSegments: params.heightSegments,
+						depthSegments: params.depthSegments
+					};
+
+					geometry = new BoxBufferGeometry(
+						data.width, data.height, data.depth, data.widthSegments, data.heightSegments, data.depthSegments
+					);
+				
+				break;
+		
+			default:
+				break;
+		}
+
+		return geometry;
+	}
+
 	this.createCube = function (x, y, z, height, material){
 		
 
@@ -18,7 +47,6 @@ let TA_Entities = function () {
 			cube.position.x = x;
 			cube.position.y = y;
 			cube.position.z = z;
-			
 
 		return cube;
 	}
@@ -100,6 +128,93 @@ let TA_Entities = function () {
 
 	}
 
+	this.selectEntityByClick = function (intersects, selectedObject) {
+
+
+		if ( intersects.length > 0 ) {
+
+			if ( selectedObject.object ) {
+
+				this.removeSelection ( selectedObject );
+
+			}
+
+			let objectToSelect = intersects[0].object;
+			this.selectEntity( objectToSelect, selectedObject );
+
+
+			
+		}
+		else {
+
+			if ( selectedObject.object ) {
+
+				this.removeSelection ( selectedObject );
+
+			}
+
+		}
+
+		return selectedObject;
+
+	}
+
+	this.selectEntity = function ( objectToSelect, selectedObject ){
+
+		selectedObject.objectOwnColor = objectToSelect.material.color;
+		objectToSelect.material.color = new THREE.Color( 'whitesmoke' );
+		selectedObject.object = objectToSelect;
+
+		selectedObject.object.add( this.createWireframe ( selectedObject ) );
+		selectedObject.object.add( this.createBoundingBox( selectedObject ) );
+
+		let taUI = new TA_UI;
+		taUI.createParametersMenu( objectToSelect );
+
+	}
+
+	this.createWireframe = function ( selectedObject ) {
+
+		let wireframe = new THREE.WireframeGeometry( selectedObject.object.geometry );
+		
+		let wireframeLines = new THREE.LineSegments( wireframe );
+		wireframeLines.material.depthTest = true;
+		// wireframeLines.material.opacity = 0.25;
+		// wireframeLines.material.transparent = true;
+		wireframeLines.material.color = new THREE.Color( 'white' );
+		wireframeLines.name = 'wireframe';
+
+		wireframeLines.scale.set( 1.001, 1.001, 1.001 );
+
+		return wireframeLines;
+
+	}
+
+	this.createBoundingBox = function (selectedObject ) {
+
+		selectedObject.object.geometry.computeBoundingBox()
+
+		let box = new THREE.Box3Helper( selectedObject.object.geometry.boundingBox,  new THREE.Color( 'red' ) );
+		box.name = 'BoundingBox';
+
+
+		 return box;
+
+	}
+
+	this.removeSelection = function ( selectedObject ) {
+
+		let wireframeScene = selectedObject.object.children.filter( item => item.name === "wireframe" || item.name === "BoundingBox" );
+		wireframeScene.forEach( element => {
+		selectedObject.object.remove( element );			
+		});
+
+		selectedObject.object.material.color = selectedObject.objectOwnColor;
+		selectedObject.object = null;
+		selectedObject.objectOwnColor = null;
+
+	}
+
 	this.CreatingEntity = function () {
 
 		let scope = this;
@@ -117,24 +232,22 @@ let TA_Entities = function () {
 			let z = this.centerOfObjectWorld.z;
 			let width;
 
-			if (scope.currentEntity) {	
+			if ( scope.currentEntity ) {	
 
-			let pos = scope.currentEntity.position.clone().project( sceneCamera.camera );
-			pos.x = ( pos.x * window.innerWidth/2 ) + window.innerWidth/2;
-			pos.y = - ( pos.y * window.innerHeight/2 ) + window.innerHeight/2;
-			scope.centerOfObjectScreen.x = pos.x;
-			scope.centerOfObjectScreen.y = pos.y;
+				let pos = scope.currentEntity.position.clone().project( sceneCamera.camera );
+				scope.centerOfObjectScreen.x = ( pos.x * window.innerWidth/2 ) + window.innerWidth/2;
+				scope.centerOfObjectScreen.y = - ( pos.y * window.innerHeight/2 ) + window.innerHeight/2;
 
-			let worldSizeOfScreen =  sceneCamera.getWorldSizeOfScreen( sceneCamera.camera, scope.currentEntity.position )
+				let worldSizeOfScreen =  sceneCamera.getWorldSizeOfScreen( sceneCamera.camera, scope.currentEntity.position )
 
-			let ratio = ( 1000000000 * window.innerHeight)/(1000000000 * worldSizeOfScreen.height );
+				let ratio = ( 1000000000 * window.innerHeight)/(1000000000 * worldSizeOfScreen.height );
 
-			scene.remove( scope.currentEntity );
+				scene.remove( scope.currentEntity );
 
-			let currentCoordsScreen = new THREE.Vector2 ( event.x, event.y);
-			let distance = currentCoordsScreen.distanceTo( scope.centerOfObjectScreen );
+				let currentCoordsScreen = new THREE.Vector2 ( event.x, event.y);
+				let distance = currentCoordsScreen.distanceTo( scope.centerOfObjectScreen );
 
-			width = 1.00 * distance / ratio;
+				width = 1.00 * distance / ratio;
 
 			}
 			else {
@@ -148,14 +261,10 @@ let TA_Entities = function () {
 						this.currentEntity = GLOBALSCOPE.createCube(x, y, z, width, 'material');
 						scene.add( this.currentEntity );
 
-						//ТУТ ОБНОВЛЯТЬ ПАРАМЕТРЫ
-
-						
-						
 						break;
 
 						case 'sphere' :
-						this.currentEntity = GLOBALSCOPE.createSphere( x, y, z, width, 32) ;
+						this.currentEntity = GLOBALSCOPE.createSphere( x, y, z, width, 12) ;
 						scene.add( this.currentEntity );
 						break;
 
@@ -165,40 +274,23 @@ let TA_Entities = function () {
 				}
 			}
 
-			this.stopCreating = function () {
+			this.stopCreating = function ( selectableObjects ) {
 
-				// ТУТ УДАЛИТЬ ПАРАМЕТРЫ
+				// console.log(this.currentEntity);
 
-						let dom = document.getElementById( 'Parameters');
-						let elem = document.createElement( 'div' );
-						elem.id = 'ParametersRows';
-						dom.appendChild( elem );
+				if ( scope.currentEntity ) {
 
-						let parametersArray = Object.entries(this.currentEntity.geometry.parameters);
+				selectableObjects.push( scope.currentEntity );
 
-						for (let i = 0; i < parametersArray.length; i++) {
+				}
 
-							let rowDiv = document.createElement( 'div' );
-							elem.appendChild( rowDiv );
-							rowDiv.className = 'ParametersRow';
-
-							let text = document.createElement( 'p' );
-							rowDiv.appendChild( text );
-							text.innerHTML = parametersArray[i][0];
-
-							let input = document.createElement( 'input' );
-							input.type = 'number';
-							input.step = 0.001;
-							// input.readOnly = false;
-							// input.disabled = false;
-							rowDiv.appendChild (input);
-							input.value = Math.round( parametersArray[i][1] * 1000 )/1000;
-
-						}
-
+				// let ta_ui = new TA_UI;
+				// ta_ui.deleteParametersMenu();
+				// ta_ui = null;
 
 				this.centerOfObjectWorld = null;
 				this.centerOfObjectScreen = null;
+
 				this.currentEntity = null;
 
 			}

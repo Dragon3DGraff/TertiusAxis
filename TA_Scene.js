@@ -5,7 +5,7 @@
 
 let TA_Scene = function ( taUI ) {
 
-	this.taUI= taUI;
+	this.taUI = taUI;
 
 	let scene = new THREE.Scene();
 	let sceneCamera = new TA_SceneCamera();
@@ -31,9 +31,20 @@ let TA_Scene = function ( taUI ) {
 	const sceneGrid = new ta_sHelpers.SceneGrids( scene );
 
 	this.mode = {
-		creationEntity: false,
+		
+		action: 'select',
 		entity: null
+
 	};
+
+	let selectableObjects = [];
+	let selectedObject = {
+
+		object: null,
+		objectOwnColor: null
+
+	};
+	// let objectOwnColor;
 
 	scene.background = new THREE.Color( 'white' );
 
@@ -151,11 +162,11 @@ let TA_Scene = function ( taUI ) {
 
 		if (event.target.className === "labelDiv" ) {
 
-			if ( scope.mode.creationEntity === true) {
+			if ( scope.mode.action === 'creationEntity') {
 
 				if ( creatingEntity.centerOfObjectWorld ) {
 
-					creatingEntity.stopCreating();
+					creatingEntity.stopCreating( selectableObjects );
 
 					return;
 
@@ -164,10 +175,20 @@ let TA_Scene = function ( taUI ) {
 				creatingEntity.centerOfObjectWorld = intersects[0].point;
 				creatingEntity.createEntity( scope.mode, scene, event, sceneCamera );
 
-				// В ФУНКЦИЮ!!!
+				taUI.createParametersMenu( creatingEntity.currentEntity );
 
-				let rows = document.getElementById( 'ParametersRows' );
-				if (rows) rows.remove();
+			}
+			if (scope.mode.action === 'select') {
+
+				let intersects = raycaster.intersectObjects( selectableObjects );
+				selectedObject = taEntities.selectEntityByClick( intersects, selectedObject );
+
+				if ( selectedObject.object ) {
+				taUI.createParametersMenu( selectedObject.object );
+				}
+				else{
+					taUI.deleteParametersMenu();
+				}
 
 			}
 
@@ -177,7 +198,7 @@ let TA_Scene = function ( taUI ) {
 
 	function onDocumentMouseMove( event ) {
 
-		let screenPoint =  getScreenPoint( event ); 
+		let screenPoint = getScreenPoint( event ); 
 
 		raycaster.setFromCamera( screenPoint, camera );
 
@@ -193,6 +214,8 @@ let TA_Scene = function ( taUI ) {
 			if (creatingEntity.currentEntity) {
 
 				creatingEntity.createEntity( scope.mode, scene, event, sceneCamera );
+				
+				taUI.updateParametersMenu( creatingEntity.currentEntity );
 
 			}
 
@@ -204,6 +227,7 @@ let TA_Scene = function ( taUI ) {
 
 		// event.preventDefault();
 		const screenPoint =  new THREE.Vector2();
+		
 
 		return screenPoint.set((event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1);
 
@@ -251,10 +275,10 @@ let TA_Scene = function ( taUI ) {
 			case 'Escape': // Esc
 
 			scope.mode =  {
-				creationEntity: false,
+				action: 'select',
 				entity: null
 			};
-			creatingEntity.stopCreating();
+			creatingEntity.stopCreating( selectableObjects );
 			break;
 		}
 
