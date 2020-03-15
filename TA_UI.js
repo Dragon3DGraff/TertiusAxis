@@ -7,7 +7,6 @@ class TA_UI {
 
 	constructor( ) {
 
-		
 		this.main;
 
 	}
@@ -52,6 +51,16 @@ class TA_UI {
 	}
 
 	createParametersMenu( entity ) {
+
+		
+
+		if ( !entity.geometry.parameters) {
+
+			console.warn( "No Params" );
+
+			return;
+
+		}
 
 		this.deleteParametersMenu();
 
@@ -113,6 +122,14 @@ class TA_UI {
 	}
 
 	updateParametersMenu( entity ) {
+
+		if ( !entity.geometry.parameters ) {
+
+			console.warn( "No Params" );
+
+			return;
+
+		}
 
 		let parametersArray = Object.entries(entity.geometry.parameters);
 

@@ -190,8 +190,8 @@ let TA_Scene = function ( taUI ) {
 					taUI.deleteParametersMenu();
 				}
 
-				let intersects = raycaster.intersectObjects( selectableObjects );
-				selectedObject = taEntities.selectEntity( intersects, selectedObject );
+				// let intersects = raycaster.intersectObjects( selectableObjects );
+				// selectedObject = taEntities.selectEntity( intersects, selectedObject );
 				// console.log (selectedObject);
 			}
 
