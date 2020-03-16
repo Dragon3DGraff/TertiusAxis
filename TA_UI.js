@@ -52,8 +52,6 @@ class TA_UI {
 
 	createParametersMenu( entity ) {
 
-		
-
 		if ( !entity.geometry.parameters) {
 
 			console.warn( "No Params" );
@@ -90,36 +88,38 @@ class TA_UI {
 			let input = document.createElement( 'input' );
 			input.id = parametersArray[i][0]; //'param_' + 
 			input.type = 'number';
-			input.step = 0.01;
+
+			if ( parametersArray[i][0].includes( 'Segments' )) {
+
+				input.step = 1;
+
+			}
+			else {
+
+				input.step = 0.1;
+
+			}
 			rowDiv.appendChild (input);
 			input.value = Math.round( parametersArray[i][1] * 1000 )/1000;
-			input.addEventListener( 'change', () => {
+			input.addEventListener( 'input', () => {
 
-				// if ( entity.geometry.isGeometry ) {
+				if (input.value <= 0 ){
 
-					// entity.geometry = new BufferGeometry().fromGeometry( entity.geometry );
+					input.value = 0.001;
 
-					// console.warn( 'THREE.GeometryBrowser: Converted Geometry to BufferGeometry.' );
+				} 
 
-				// }
+				let ta_entities = new TA_Entities;
 
-				let geom = entity.geometry;
-				console.log( entity.geometry.parameters );
-				// let newGeom =  entity.geometry;
+				ta_entities.updateSelectedObject(  input.id, +input.value, entity );
 
-				let newGeom = new THREE.SphereGeometry( +input.value, geom.parameters.widthSegments, geom.parameters.heightSegments, geom.parameters.phiStart, geom.parameters.phiLength, geom.parameters.thetaStart, geom.parameters.thetaLength);
-				// newGeom.parameters[ input.id ] = +input.value;
-				entity.geometry.dispose();
-				entity.geometry = newGeom;
-				// console.log( entity.geometry.parameters );
-
-				// console.log( entity.id );
-				// console.log( this.taScene.scene.getObjectById( entity.id ) ); //
 			}, false );
 
 		}
 
 	}
+
+	
 
 	updateParametersMenu( entity ) {
 

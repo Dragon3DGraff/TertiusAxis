@@ -12,7 +12,7 @@ class TA_Entities {
 		this.createGeometry = function ( geometryType, params ) {
 
 			let geometry = null;
-			let data = {};
+			let paramsArray;
 
 			if ( !(params instanceof Object) ) {
 
@@ -26,70 +26,130 @@ class TA_Entities {
 				case 'BoxGeometry':
 
 					geometry = new THREE.BoxGeometry();
-					Object.assign( data, geometry.parameters );
-					geometry.dispose();
 
-					for (const key in data) {
+					this.checkParams( params, geometry.parameters );
 
-						if ( params.hasOwnProperty(key) ) {
-							data[ key ] = params[ key ];
-						}
-						else {
-							console.warn( 'Parameter "' + key + '" is missing ' );
-						}
-					}
-					geometry = new THREE.BoxGeometry(
+					paramsArray = Object.values( params );
 
-						data.width,
-						data.height,
-						data.depth,
-						data.widthSegments,
-						data.heightSegments,
-						data.depthSegments
+					geometry = new THREE.BoxGeometry( ...paramsArray );
 
-						);
+					break;
+
+				case 'SphereGeometry':
+
+					geometry = new THREE.SphereGeometry();
+
+					this.checkParams( params, geometry.parameters );
+
+					paramsArray = Object.values( params );
+
+					geometry = new THREE.SphereGeometry( ...paramsArray );
 
 					break;
 
 				default:
 
+						console.error( 'Incorrect type of geometry' );
+
 					break;
+
 			}
+
 			return geometry;
+
 		};
 
-		this.createCube = function (x, y, z, height, material) {
-			// const geometry = new THREE.BoxGeometry(height, height, height, 1, 1, 1 );
+		this.checkParams = function( paramsToCheck, paramsTemplate ) {
+
+			if ( !(paramsToCheck instanceof Object) ) {
+	
+				console.error( 'paramsToCheck must be an object. Now params are ' + typeof params );
+				return;
+	
+			}
+	
+			if ( !(paramsTemplate instanceof Object) ) {
+	
+				console.error( 'paramsTamplate must be an object. Now params are ' + typeof params );
+				return;
+	
+			}
+	
+			let data = {};
+			Object.assign( data, paramsTemplate );
+	
+			for (const key in data) {
+	
+				if ( !paramsToCheck.hasOwnProperty(key) ) {
+	
+					console.warn( 'Parameter "' + key + '" is missing ' );
+	
+				}
+				else {
+	
+					if ( paramsToCheck[ key ] === undefined && paramsToCheck[ key ] === '' ) {
+	
+						console.warn ( '"' + key + '" not set');
+	
+					}
+	
+				}
+	
+			}
+	
+		}
+
+	
+
+		this.createBox = function ( x, y, z, width, height, depth, material ) {
+
 			let params = {
-				width: height,
+				width: width,
 				height: height,
-				depth: height,
+				depth: depth,
 				widthSegments: 1,
 				heightSegments: 1,
 				depthSegments: 1
 			};
-			// params = '';	
-			// params.width = "";
+
 			let geometry = this.createGeometry('BoxGeometry', params);
+
 			if ( !geometry ) {
 
-				console.error ( "invalid geometry" );
+				console.error ( "Invalid geometry. Object not created" );
 
 			}
 			//material = new THREE.MeshPhongMaterial({ color: new THREE.Color('grey') });
 			// material = new THREE.MeshPhongMaterial({color: new THREE.Color('grey'),  wireframe: true, transparent: true, opacity: 0.5});
-			material = new THREE.MeshPhongMaterial({ color: new THREE.Color('red') });
-			var cube = new THREE.Mesh(geometry, material);
+			material = new THREE.MeshPhongMaterial({ color: new THREE.Color('wheat') });
+			var box = new THREE.Mesh(geometry, material);
 
-			cube.position.x = x;
-			cube.position.y = y;
-			cube.position.z = z;
+			box.position.x = x;
+			box.position.y = y;
+			box.position.z = z;
 
-			return cube;
+			return box;
 
 		};
 		this.createSphere = function (x, y, z, radius, segments) {
-			const geometry = new THREE.SphereGeometry(radius, segments, segments, 0, Math.PI * 2, 0, Math.PI);
+
+			let params = {
+				radius: radius,
+				widthSegments : segments,
+				heightSegments : segments,
+				phiStart : 0,
+				phiLength : Math.PI * 2,
+				thetaStart : 0,
+				thetaLength : Math.PI
+			};
+			let geometry = this.createGeometry('SphereGeometry', params);
+
+			if ( !geometry ) {
+
+				console.error ( "Invalid geometry. Object not created" );
+
+			}
+			// const geometry = new THREE.SphereGeometry(radius, segments, segments, 0, Math.PI * 2, 0, Math.PI);
 			// const material = new THREE.MeshPhongMaterial({color: new THREE.Color('grey'),  wireframe: true, transparent: true, opacity: 0.5});
 			const material = new THREE.MeshPhongMaterial({ color: new THREE.Color('yellow') });
 			let sphere = new THREE.Mesh(geometry, material);
@@ -177,7 +237,7 @@ class TA_Entities {
 			wireframeLines.scale.set(1.001, 1.001, 1.001);
 			return wireframeLines;
 		};
-		this.createBoundingBox = function (selectedObject) {
+		this.createBoundingBox = function ( selectedObject ) {
 			selectedObject.object.geometry.computeBoundingBox();
 			let box = new THREE.Box3Helper(selectedObject.object.geometry.boundingBox, new THREE.Color('red'));
 			box.name = 'BoundingBox';
@@ -192,6 +252,31 @@ class TA_Entities {
 			selectedObject.object = null;
 			selectedObject.objectOwnColor = null;
 		};
+
+		this.updateSelectedObject = function( parameterName, parameterValue, entity ) {
+
+			let geom = entity.geometry;
+	
+					let params = {};
+					Object.assign( params, geom.parameters );
+					params[ parameterName ] = parameterValue;
+	
+					let newGeom = this.createGeometry ( entity.geometry.type, params );
+	
+					entity.geometry.dispose();
+					entity.geometry = newGeom;
+	
+					let wireframe = entity.getObjectByName( 'wireframe' );
+					let newWireframeGeometry = new THREE.WireframeGeometry( newGeom );
+					wireframe.geometry = newWireframeGeometry;
+	
+					let boundingBox = entity.getObjectByName( 'BoundingBox' );
+					entity.geometry.computeBoundingBox();
+					let box = new THREE.Box3Helper( entity.geometry.boundingBox );
+					boundingBox.box = box.box;
+	
+		}
+		
 		this.CreatingEntity = function () {
 			let scope = this;
 			this.centerOfObjectWorld;
@@ -218,8 +303,8 @@ class TA_Entities {
 					width = 0.01;
 				}
 				switch (mode.entity) {
-					case 'cube':
-						this.currentEntity = GLOBALSCOPE.createCube(x, y, z, width, 'material');
+					case 'box':
+						this.currentEntity = GLOBALSCOPE.createBox(x, y, z, width, width, width, 'material');
 						scene.add(this.currentEntity);
 						break;
 					case 'sphere':
@@ -228,20 +313,22 @@ class TA_Entities {
 						break;
 					default:
 						break;
+
 				}
 			};
 			this.stopCreating = function (selectableObjects) {
-				// console.log(this.currentEntity);
+
 				if (scope.currentEntity) {
 					selectableObjects.push(scope.currentEntity);
 				}
-				// let ta_ui = new TA_UI;
-				// ta_ui.deleteParametersMenu();
-				// ta_ui = null;
+
 				this.centerOfObjectWorld = null;
 				this.centerOfObjectScreen = null;
 				this.currentEntity = null;
 			};
 		};
 	}
+
+	
+
 }

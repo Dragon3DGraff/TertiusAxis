@@ -27,7 +27,7 @@ let TertiusAxis = function () {
 	taUI.addElement( addToSceneContainer, 'button', 'Cube', function () {
 	
 		taScene.mode.action = 'creationEntity';
-		taScene.mode.entity = 'cube';
+		taScene.mode.entity = 'box';
 
 	}
 	);
@@ -60,7 +60,7 @@ let TertiusAxis = function () {
 	// cubeButton.addEventListener( 'click', function () {
 	
 	// 	taScene.mode.creationEntity = true;
-	// 	taScene.mode.entity = 'cube';
+	// 	taScene.mode.entity = 'box';
 
 	// }, false );
 
@@ -74,7 +74,7 @@ let TertiusAxis = function () {
 	// }, false );
 
 
-	// Object.call(addToScene).addElement('button', 'Cube', 'cube');
+	// Object.call(addToScene).addElement('button', 'Cube', 'box');
 	// let uicontainer = document.getElementById( 'Properties' );
 	// 	let dom = document.createElement( 'div' );
 	// 	dom.innerHTML = 'text';

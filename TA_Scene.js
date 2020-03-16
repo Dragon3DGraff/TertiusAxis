@@ -65,6 +65,14 @@ let TA_Scene = function ( taUI ) {
 
 	const controls = new OrbitControls( camera, labelRenderer.domElement );
 
+	//===============TESTING============
+
+// let testCube = taEntities.createBox( 0, 0, 0, 0.5, 0.5, 0.5 );
+// testCube.name = 'testCube'
+// scene.add(testCube);
+
+	//=============================
+
 	const infoDiv = document.getElementById( "info" );
 
 	window.addEventListener( 'resize', onWindowResize, false );
@@ -166,11 +174,19 @@ let TA_Scene = function ( taUI ) {
 
 				if ( creatingEntity.centerOfObjectWorld ) {
 
+					taEntities.selectEntity( creatingEntity.currentEntity, selectedObject );
+
 					creatingEntity.stopCreating( selectableObjects );
 
 					return;
 
 				}
+
+				if (selectedObject.object ) {
+					taEntities.removeSelection( selectedObject );
+				}
+
+				
 
 				creatingEntity.centerOfObjectWorld = intersects[0].point;
 				creatingEntity.createEntity( scope.mode, scene, event, sceneCamera );
