@@ -23,27 +23,27 @@ class TA_Entities {
 
 			switch ( geometryType ) {
 
-				case 'BoxGeometry':
+				case 'BoxBufferGeometry':
 
-					geometry = new THREE.BoxGeometry();
+					geometry = new THREE.BoxBufferGeometry();
 
 					this.checkParams( params, geometry.parameters );
 
 					paramsArray = Object.values( params );
 
-					geometry = new THREE.BoxGeometry( ...paramsArray );
+					geometry = new THREE.BoxBufferGeometry( ...paramsArray );
 
 					break;
 
-				case 'SphereGeometry':
+				case 'SphereBufferGeometry':
 
-					geometry = new THREE.SphereGeometry();
+					geometry = new THREE.SphereBufferGeometry();
 
 					this.checkParams( params, geometry.parameters );
 
 					paramsArray = Object.values( params );
 
-					geometry = new THREE.SphereGeometry( ...paramsArray );
+					geometry = new THREE.SphereBufferGeometry( ...paramsArray );
 
 					break;
 
@@ -112,7 +112,7 @@ class TA_Entities {
 				depthSegments: 1
 			};
 
-			let geometry = this.createGeometry('BoxGeometry', params);
+			let geometry = this.createGeometry('BoxBufferGeometry', params);
 
 			if ( !geometry ) {
 
@@ -121,7 +121,7 @@ class TA_Entities {
 			}
 			//material = new THREE.MeshPhongMaterial({ color: new THREE.Color('grey') });
 			// material = new THREE.MeshPhongMaterial({color: new THREE.Color('grey'),  wireframe: true, transparent: true, opacity: 0.5});
-			material = new THREE.MeshPhongMaterial({ color: new THREE.Color('wheat') });
+			material = new THREE.MeshPhongMaterial({ color: new THREE.Color( "#7FFFFF") });
 			var box = new THREE.Mesh(geometry, material);
 
 			box.position.x = x;
@@ -142,7 +142,7 @@ class TA_Entities {
 				thetaStart : 0,
 				thetaLength : Math.PI
 			};
-			let geometry = this.createGeometry('SphereGeometry', params);
+			let geometry = this.createGeometry( 'SphereBufferGeometry', params );
 
 			if ( !geometry ) {
 
@@ -202,29 +202,17 @@ class TA_Entities {
 			let plane = new THREE.Mesh(planeGeom, planeMaterial);
 			return plane;
 		};
-		this.selectEntityByClick = function (intersects, selectedObject) {
-			if (intersects.length > 0) {
-				if (selectedObject.object) {
-					this.removeSelection(selectedObject);
-				}
-				let objectToSelect = intersects[0].object;
-				this.selectEntity(objectToSelect, selectedObject);
-			}
-			else {
-				if (selectedObject.object) {
-					this.removeSelection(selectedObject);
-				}
-			}
-			return selectedObject;
-		};
+
 		this.selectEntity = function (objectToSelect, selectedObject) {
 			selectedObject.objectOwnColor = objectToSelect.material.color;
-			objectToSelect.material.color = new THREE.Color('whitesmoke');
+			objectToSelect.material.color = new THREE.Color('tomato');
 			selectedObject.object = objectToSelect;
 			selectedObject.object.add(this.createWireframe(selectedObject));
 			selectedObject.object.add(this.createBoundingBox(selectedObject));
 			let taUI = new TA_UI;
 			taUI.createParametersMenu(objectToSelect);
+
+			return selectedObject;
 		};
 		this.createWireframe = function ( selectedObject ) {
 			let wireframe = new THREE.WireframeGeometry(selectedObject.object.geometry);
@@ -276,12 +264,29 @@ class TA_Entities {
 					boundingBox.box = box.box;
 	
 		}
+
+		this.updateObject = function( parameterName, parameterValue, entity ) {
+
+			let geom = entity.geometry;
+	
+					let params = {};
+					Object.assign( params, geom.parameters );
+					params[ parameterName ] = parameterValue;
+	
+					let newGeom = this.createGeometry ( entity.geometry.type, params );
+	
+					entity.geometry.dispose();
+					entity.geometry = newGeom;
+
+		}
 		
 		this.CreatingEntity = function () {
+
 			let scope = this;
-			this.centerOfObjectWorld;
-			this.centerOfObjectScreen;
-			this.currentEntity;
+			this.centerOfObjectWorld = null;
+			this.centerOfObjectScreen = null;
+			this.currentEntity = null;
+			
 			this.createEntity = function (mode, scene, event, sceneCamera) {
 				scope.centerOfObjectScreen = new THREE.Vector2(event.x, event.y);
 				let x = this.centerOfObjectWorld.x;
@@ -289,12 +294,13 @@ class TA_Entities {
 				let z = this.centerOfObjectWorld.z;
 				let width;
 				if (scope.currentEntity) {
+
 					let pos = scope.currentEntity.position.clone().project(sceneCamera.camera);
 					scope.centerOfObjectScreen.x = (pos.x * window.innerWidth / 2) + window.innerWidth / 2;
 					scope.centerOfObjectScreen.y = -(pos.y * window.innerHeight / 2) + window.innerHeight / 2;
 					let worldSizeOfScreen = sceneCamera.getWorldSizeOfScreen(sceneCamera.camera, scope.currentEntity.position);
 					let ratio = (1000000000 * window.innerHeight) / (1000000000 * worldSizeOfScreen.height);
-					scene.remove(scope.currentEntity);
+
 					let currentCoordsScreen = new THREE.Vector2(event.x, event.y);
 					let distance = currentCoordsScreen.distanceTo(scope.centerOfObjectScreen);
 					width = 1.00 * distance / ratio;
@@ -303,28 +309,59 @@ class TA_Entities {
 					width = 0.01;
 				}
 				switch (mode.entity) {
-					case 'box':
-						this.currentEntity = GLOBALSCOPE.createBox(x, y, z, width, width, width, 'material');
-						scene.add(this.currentEntity);
+					case 'BoxBufferGeometry':
+
+						if (this.currentEntity !== null ) {
+
+							GLOBALSCOPE.updateObject( 'width', width, this.currentEntity);
+							GLOBALSCOPE.updateObject( 'height', width, this.currentEntity);
+							GLOBALSCOPE.updateObject( 'depth', width, this.currentEntity);
+
+						}
+						else{
+
+							this.currentEntity = GLOBALSCOPE.createBox(x, y, z, width, width, width, 'material');
+							this.currentEntity.name = "CUBE";
+
+							scene.add(this.currentEntity);
+
+						}
+
 						break;
-					case 'sphere':
-						this.currentEntity = GLOBALSCOPE.createSphere(x, y, z, width, 12);
-						scene.add(this.currentEntity);
+
+					case 'SphereBufferGeometry':
+
+						if (this.currentEntity !== null ) {
+
+							GLOBALSCOPE.updateObject( 'radius', width, this.currentEntity);
+
+						}
+						else{
+
+							this.currentEntity = GLOBALSCOPE.createSphere(x, y, z, width, 12);
+
+							this.currentEntity.name = "SPHERE";
+
+							scene.add(this.currentEntity);
+
+						}
+
 						break;
 					default:
 						break;
 
 				}
 			};
-			this.stopCreating = function (selectableObjects) {
+			this.stopCreating = function ( selectableObjects ) {
 
 				if (scope.currentEntity) {
-					selectableObjects.push(scope.currentEntity);
+					selectableObjects.push( scope.currentEntity );
 				}
 
 				this.centerOfObjectWorld = null;
 				this.centerOfObjectScreen = null;
 				this.currentEntity = null;
+
 			};
 		};
 	}

@@ -27,15 +27,21 @@ class TA_UI {
 
 	}
 	
-	addElement( container, elementName, text, func ) {
+	addElement( container, elementName, text, imgLink, func ) {
 
 		let dom = document.createElement( elementName );
 		container.appendChild( dom );
+		let img = document.createElement( 'img' );
+		img.src = ( imgLink );
+
+		// let textElement = document.createElement( 'p' );
 		dom.innerHTML = text;
+		// dom.appendChild( textElement );
+		dom.appendChild( img );
+		
 		if (typeof( func ) === 'function') {
 			dom.addEventListener( 'click', func, false );
 		}
-		
 
 		return dom;
 	}
@@ -70,7 +76,7 @@ class TA_UI {
 		let typeOfObject = document.createElement( 'div' );
 		typeOfObject.id = 'ParametersRows';
 		elem.appendChild( typeOfObject );
-		typeOfObject.innerHTML = entity.geometry.type;// + ' id = ' + entity.id;
+		typeOfObject.innerHTML = entity.geometry.type + ' id = ' + entity.id;
 
 
 		let parametersArray = Object.entries( entity.geometry.parameters );

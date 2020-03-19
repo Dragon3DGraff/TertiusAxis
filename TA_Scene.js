@@ -38,6 +38,7 @@ let TA_Scene = function ( taUI ) {
 	};
 
 	let selectableObjects = [];
+	
 	let selectedObject = {
 
 		object: null,
@@ -197,7 +198,24 @@ let TA_Scene = function ( taUI ) {
 			if (scope.mode.action === 'select') {
 
 				let intersects = raycaster.intersectObjects( selectableObjects );
-				selectedObject = taEntities.selectEntityByClick( intersects, selectedObject );
+
+				if (intersects.length > 0) {
+
+					if (selectedObject.object) {
+
+						taEntities.removeSelection(selectedObject);
+
+					}
+
+					let objectToSelect = intersects[0].object;
+					selectedObject = taEntities.selectEntity( objectToSelect, selectedObject );
+
+				}
+				else {
+					if (selectedObject.object) {
+						taEntities.removeSelection(selectedObject);
+					}
+				}
 
 				if ( selectedObject.object ) {
 				taUI.createParametersMenu( selectedObject.object );

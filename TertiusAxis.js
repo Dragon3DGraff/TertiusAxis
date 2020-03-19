@@ -10,11 +10,16 @@ let TertiusAxis = function () {
 	taUI.init();
 
 	let manipulatingContainer = taUI.createContainer( 'Manipulating' );
-	taUI.addElement( manipulatingContainer, 'button', 'Select', function () {
 
-		taScene.mode.action = 'select';
+	let buttonSelect = taUI.addElement(
+		manipulatingContainer,
+		'button',
+		'Select ',
+		"./ico/Arrow.PNG",
+		function () {
+			taScene.mode.action = 'select';
+		}
 
-	} 
 	);
 
 	let addToSceneContainer = taUI.createContainer( 'sectionDiv' );
@@ -22,22 +27,28 @@ let TertiusAxis = function () {
 	let title =  taUI.addElement( addToSceneContainer, 'p', 'Add to scene', '');
 	title.className = 'sectionName';
 
-	
-	// console.log (func);
-	taUI.addElement( addToSceneContainer, 'button', 'Cube', function () {
-	
+	let buttonCube = taUI.addElement(
+		addToSceneContainer,
+		'button',
+		'Box ',
+		"./ico/cubeico.PNG",
+		function () {
 		taScene.mode.action = 'creationEntity';
-		taScene.mode.entity = 'box';
+		taScene.mode.entity = 'BoxBufferGeometry';
+		}
 
-	}
 	);
 
-	taUI.addElement( addToSceneContainer, 'button', 'Sphere', function () {
-	
+	let buttonSphere = taUI.addElement(
+		addToSceneContainer,
+		'button',
+		'Sphere ',
+		"./ico/sphereico.PNG",
+		function () {
 		taScene.mode.action = 'creationEntity';
-		taScene.mode.entity = 'sphere';
+		taScene.mode.entity = 'SphereBufferGeometry';
+		}
 
-	}
 	);
 
 	let paramContainer = taUI.createContainer( 'sectionDiv' );

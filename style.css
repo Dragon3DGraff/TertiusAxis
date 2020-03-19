@@ -193,10 +193,10 @@ body {
 	z-index: 203;
 	background-color:rgb(51, 51, 51) ;
 	color: rgba(127,255,255, 1);
-	width: 83px;
-	height: 22px;
+	/* width: 83px; */
+	/* height: 25px; */
 	/* top:130px; */
-	border-color: rgba(0, 0, 0, 1);
+	/* border-color: rgba(0, 0, 0, 1); */
 	/* border-radius: 3px; */
 	text-align: center;
 	margin: 0px;
@@ -208,6 +208,15 @@ body {
 
 	background-color: darkslategrey;
 	
+}
+
+.mainToolbar img{
+
+	height: 15px;
+	width: 15px;
+	padding: 0px;
+	margin: 0px;
+
 }
 
 .sectionDiv {
@@ -230,6 +239,7 @@ body {
 	flex-wrap: wrap;
 	padding-left: 5px;
 	height: 35px;
+	width: 245px;
 	border-style: solid;
 	border-width: 0.2px;
 	align-content: center;
