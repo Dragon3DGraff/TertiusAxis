@@ -10,7 +10,7 @@ let TA_Scene = function ( taUI ) {
 	let scene = new THREE.Scene();
 	let sceneCamera = new TA_SceneCamera();
 	let sceneCamera2 = new TA_SceneCamera();	
-	let renderer = new THREE.WebGLRenderer();
+	let renderer = new THREE.WebGLRenderer({ antialias: true});
 	let renderer2 = new THREE.WebGLRenderer();
 	let labelRenderer = new CSS2DRenderer();	
 
@@ -49,6 +49,8 @@ let TA_Scene = function ( taUI ) {
 
 	scene.background = new THREE.Color( 'white' );
 
+
+
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	renderer2.setSize ( document.getElementById( 'secondCanvas' ).clientWidth, document.getElementById( 'secondCanvas' ).clientHeight);
 	labelRenderer.setSize( window.innerWidth, window.innerHeight );
@@ -74,7 +76,7 @@ let TA_Scene = function ( taUI ) {
 
 	//=============================
 
-	const infoDiv = document.getElementById( "info" );
+	const infoDiv = document.getElementById( "infoParagraph" );
 
 	window.addEventListener( 'resize', onWindowResize, false );
 	document.addEventListener( 'click', onDocumentMouseClick, false );
@@ -82,6 +84,9 @@ let TA_Scene = function ( taUI ) {
 	document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 	document.addEventListener( 'mouseup', onDocumentMouseUp, false );
 	document.addEventListener( 'keydown', onKeyDown, false );
+	document.addEventListener( 'touchstart', onTouchStart, false);
+	document.addEventListener( 'touchend', onTouchEnd, false);
+	document.addEventListener( 'touchmove', onTouchMove, false);
 
 	function onWindowResize() {
 
@@ -154,7 +159,6 @@ let TA_Scene = function ( taUI ) {
 	}
 
 	function onDocumentMouseClick( event ) {
-		
 	
 		if (event.target.parentElement.id === "secondCanvas" ) {
 
@@ -177,7 +181,11 @@ let TA_Scene = function ( taUI ) {
 
 					taEntities.selectEntity( creatingEntity.currentEntity, selectedObject );
 
-					creatingEntity.stopCreating( selectableObjects );
+					if (creatingEntity.currentEntity) {
+						selectableObjects.push( creatingEntity.currentEntity );
+					}
+
+					creatingEntity.stopCreating();
 
 					return;
 
@@ -186,8 +194,6 @@ let TA_Scene = function ( taUI ) {
 				if (selectedObject.object ) {
 					taEntities.removeSelection( selectedObject );
 				}
-
-				
 
 				creatingEntity.centerOfObjectWorld = intersects[0].point;
 				creatingEntity.createEntity( scope.mode, scene, event, sceneCamera );
@@ -230,6 +236,75 @@ let TA_Scene = function ( taUI ) {
 			}
 
 		}
+
+	}
+
+	function onTouchStart( event ){
+
+		// console.log( event.changedTouches);
+
+
+		// let screenPoint = getScreenPoint( event.touches[0] ); 
+
+		// raycaster.setFromCamera( screenPoint, camera );
+
+		// let intersects = raycaster.intersectObjects( sceneGrid.mainPlanesArray );
+
+		// if ( event.target.id == "labelRenderer") {
+
+			// coordsHelpers.removeCoordsHelpers( scene );
+			// coordsHelpers.createCoordsHelpers( intersects, scene );
+
+
+		controls.enableRotate = false;
+
+		
+
+	}
+
+	
+	function onTouchEnd( event ){
+
+
+
+		// controls.enableRotate = true;
+
+	}
+
+	function onTouchMove( event ) {
+
+		// event.preventDefault();
+		controls.enableRotate = false;
+
+		 console.log( event);
+
+
+
+		// 
+
+		// let screenPoint = getScreenPoint( event.touches[0] ); 
+
+		// raycaster.setFromCamera( screenPoint, camera );
+
+		// let intersects = raycaster.intersectObjects( sceneGrid.mainPlanesArray );
+
+		// if ( event.target.id == "labelRenderer") {
+
+			// coordsHelpers.removeCoordsHelpers( scene );
+			// coordsHelpers.createCoordsHelpers( intersects, scene );
+
+			// intersectionsInfo( intersects );
+
+			// if (creatingEntity.currentEntity) {
+
+			// 	creatingEntity.createEntity( scope.mode, scene, event, sceneCamera );
+				
+			// 	taUI.updateParametersMenu( creatingEntity.currentEntity );
+
+			// }
+
+		// }
+
 
 	}
 

@@ -9,7 +9,7 @@ let TertiusAxis = function () {
 	
 	taUI.init();
 
-	let manipulatingContainer = taUI.createContainer( 'Manipulating' );
+	let manipulatingContainer = taUI.createContainer( 'manipulating' );
 
 	let buttonSelect = taUI.addElement(
 		manipulatingContainer,
@@ -21,45 +21,98 @@ let TertiusAxis = function () {
 		}
 
 	);
+	taUI.addElement(
+		manipulatingContainer,
+		'button',
+		'Move',
+		"",
+		function () {
+			taScene.mode.action = 'move';
+		}
+
+	);
+	taUI.addElement(
+		manipulatingContainer,
+		'button',
+		'Rotate',
+		"",
+		function () {
+			taScene.mode.action = 'rotate';
+		}
+
+	);
+	taUI.addElement(
+		manipulatingContainer,
+		'button',
+		'Scale',
+		"",
+		function () {
+			taScene.mode.action = 'scale';
+		}
+
+	);
 
 	let addToSceneContainer = taUI.createContainer( 'sectionDiv' );
 	addToSceneContainer.id = 'AddToScene';
-	let title =  taUI.addElement( addToSceneContainer, 'p', 'Add to scene', '');
+	let title = taUI.addElement( addToSceneContainer, 'p', 'Add to scene', '');
 	title.className = 'sectionName';
 
-	let buttonCube = taUI.addElement(
-		addToSceneContainer,
-		'button',
-		'Box ',
-		"./ico/cubeico.PNG",
-		function () {
-		taScene.mode.action = 'creationEntity';
-		taScene.mode.entity = 'BoxBufferGeometry';
-		}
+	let buttonsDiv = taUI.addElement( addToSceneContainer, 'div','','');
+	buttonsDiv.className = 'buttonsDiv';
 
-	);
+	let primitivesNamesForButtons = [
 
-	let buttonSphere = taUI.addElement(
-		addToSceneContainer,
-		'button',
-		'Sphere ',
-		"./ico/sphereico.PNG",
-		function () {
-		taScene.mode.action = 'creationEntity';
-		taScene.mode.entity = 'SphereBufferGeometry';
-		}
+		{text:'Box', type: 'BoxBufferGeometry', imgLink: './ico/cubeico.PNG'},
+		{text:'Sphere', type: 'SphereBufferGeometry', imgLink: './ico/sphereico.PNG'},
+		{text:'Circle', type: 'CircleBufferGeometry', imgLink: ''},
+		{text:'Cone', type: 'ConeBufferGeometry', imgLink: ''},
+		{text:'Cylinder', type: 'CylinderBufferGeometry', imgLink: ''},
+		{text:'Dodecahedron', type: 'DodecahedronBufferGeometry', imgLink: ''},
+		{text:'Icosahedron', type: 'IcosahedronBufferGeometry', imgLink: ''},
+		{text:'Octahedron', type: 'OctahedronBufferGeometry', imgLink: ''},
+		{text:'Plane', type: 'PlaneBufferGeometry', imgLink: ''},
+		{text:'Ring', type: 'RingBufferGeometry', imgLink: ''},
+		{text:'Shape', type: 'ShapeBufferGeometry', imgLink: ''},
+		{text:'Tetrahedron', type: 'TetrahedronBufferGeometry', imgLink: ''},
+		{text:'Text', type: 'TextBufferGeometry', imgLink: ''},
+		{text:'Torus', type: 'TorusBufferGeometry', imgLink: ''},
+		{text:'TorusKnot', type: 'TorusKnotBufferGeometry', imgLink: ''},
+		{text:'Tube', type: 'TubeBufferGeometry', imgLink: ''}
 
-	);
+	]
+
+	primitivesNamesForButtons.forEach(element => {
+
+		taUI.addElement(
+			buttonsDiv,
+			'button',
+			element.text,
+			element.imgLink,
+			function () {
+			taScene.mode.action = 'creationEntity';
+			taScene.mode.entity = element.type;
+			}
+	
+		);
+		
+	});
 
 	let paramContainer = taUI.createContainer( 'sectionDiv' );
-	paramContainer.id = 'Parameters';
-	 title =  taUI.addElement( paramContainer,'p', 'Parameters', '');
+	
+	
+	 title =  taUI.addElement( paramContainer,'p', 'Object parameters', '');
 	title.className = 'sectionName';
+
+	buttonsDiv = taUI.addElement( paramContainer, 'div','','');
+	buttonsDiv.className = 'buttonsDiv';
+	buttonsDiv.id = 'Parameters';
 
 	
 	
 
 	let infoDiv = taUI.createContainer( 'info' );
+	let paragraph = taUI.addElement( infoDiv, 'p', '', '');
+	paragraph.id = "infoParagraph"
 
 	let taScene = new TA_Scene( taUI );	
 	taUI.setScene( taScene );

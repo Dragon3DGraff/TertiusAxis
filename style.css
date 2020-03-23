@@ -79,8 +79,11 @@ body {
 
 }
 
+
+
 .mainMenu button {
-	
+
+	z-index: 203;
 	font-size: 12px;
 	background-color: lightslategrey;
 	border-color: black;
@@ -91,7 +94,16 @@ body {
 .mainMenu button:hover {
 
 	background-color: lightblue;
+	border-color: lightblue;
+
 }
+/* 
+.mainMenu button:hover .subMainMenu{
+
+	visibility: visible;
+
+	
+} */
 
 .subMainMenu{
 
@@ -121,6 +133,7 @@ body {
 .Title {
 
 	display: flex;
+	z-index: 202;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
@@ -162,6 +175,7 @@ body {
 
 	padding: 0px;
 	margin: 0px;
+	/* display: grid; */
 	position: absolute;
 	z-index: 200;
 	width: 250px;
@@ -174,16 +188,30 @@ body {
 
 .buttonsDiv {
 
-	padding: 0px;
-	margin: 0px;
-	position: absolute;
-	display: flex;
-	flex-wrap: wrap;
-	background-color: rgba(119, 136, 153, 0.589);	
+	/* padding: 0px;
+	margin: 0px; */
+
+	/* position: absolute; */
+	/* 
+	
+
+	background-color: rgba(119, 136, 153, 0.589);
 	color: rgba(127,255,255, 1);
 	width: 100%;
 	bottom:100px;
-	text-align: center;
+	text-align: center;	 */
+
+	/* display: flex; */
+	/* flex-wrap: wrap; */
+
+	background-color: rgba(119, 136, 153, 0.589);
+	position: relative;
+	height: 90%;
+	overflow: auto;
+	border-style: solid;
+	border-width: 0.1px;
+	border-color: firebrick;
+
 
 }
 
@@ -193,21 +221,37 @@ body {
 	z-index: 203;
 	background-color:rgb(51, 51, 51) ;
 	color: rgba(127,255,255, 1);
-	/* width: 83px; */
-	/* height: 25px; */
+	width: 111px;
+	height: 22px;
+	font-size: 12px;
 	/* top:130px; */
 	/* border-color: rgba(0, 0, 0, 1); */
 	/* border-radius: 3px; */
 	text-align: center;
-	margin: 0px;
+	margin-left: 4px;
 	padding: 0px;
 	
 }
+
 
 .mainToolbar button:hover {
 
 	background-color: darkslategrey;
 	
+}
+
+
+.hideButton {
+	position: absolute;
+	right: -15px;
+	top: 5px;
+	height: 15px;
+	width: 15px;
+	background-color: dimgrey;
+	margin: 0px;
+	padding-top: 3px;
+	font-size: 10px;
+	text-align: center;
 }
 
 .mainToolbar img{
@@ -219,14 +263,59 @@ body {
 
 }
 
-.sectionDiv {
+.manipulating {
 
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
+	/* overflow: auto; */
 	background-color: rgba(119, 136, 153, 0.589);
 	position: relative;
+	height: 25px;
+	border-style: solid;
+	border-width: 0.1px;
+	border-color: firebrick;
 
 }
+
+.manipulating button {
+
+	/* width: 63px; */
+	margin: 0px;
+	padding: 0px;
+
+}
+
+
+.sectionDiv {
+
+	/* display: flex; */
+	/* flex-wrap: wrap; */
+
+	scrollbar-base-color: midnightblue;
+	background-color: rgba(119, 136, 153, 0.589);
+	position: relative;
+	height: 40%;
+
+	border-style: solid;
+	border-width: 0.1px;
+	border-color: firebrick;
+
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
 /* .ParametersDiv {
 
 	display: flex;
@@ -238,28 +327,30 @@ body {
 	display: flex;
 	flex-wrap: wrap;
 	padding-left: 5px;
-	height: 35px;
-	width: 245px;
+	height: 24px;
+	width: 225px;
 	border-style: solid;
 	border-width: 0.2px;
-	align-content: center;
+	/* align-content: center; */
 	color: rgba(127,255,255, 1);
 	background-color: rgb(51, 51, 51);
+	font-size: 12px;
 	
 
 }
 .ParametersRow input {
 
-	width: 130px;
-	height: 22px;
-	position: fixed;
+	width: 110px;
+	height: 14px;
+	position: absolute;
 	z-index: 204;
-	margin-top: 4px;
-	left: 112px;
-	/* cursor: e-resize; */
+	margin-top: 2px;
+	right: 4px;
+	cursor: row-resize;
 	border-radius: 5px;
 	background-color: rgb(77, 76, 76);
 	color: rgba(127,255,255, 1);
+	font-size: 12px;
 	
 
 }
@@ -279,9 +370,10 @@ body {
 	margin: 0px;
 	padding: 0px;
 	width: 100%;
+	height: 16x;
 	text-align: center;
 	font-weight: bolder;
-	font-size: 18px;
+	font-size: 14px;
 	color: black;
 
 }

@@ -11,7 +11,7 @@ class TA_UI {
 
 	}
 
-	setScene(  taScene ){
+	setScene( taScene ){
 
 		this.taScene = taScene;
 	
@@ -19,11 +19,56 @@ class TA_UI {
 
 	init() {
 
-		let dom = document.createElement( 'div' );
-		dom.className = 'mainToolbar';
-		dom.id = 'mainToolbar';
-		document.body.appendChild( dom );
-		return this.main = dom;
+		let mainToolbar = document.createElement( 'div' );
+		mainToolbar.className = 'mainToolbar';
+		mainToolbar.id = 'mainToolbar';
+		document.body.appendChild( mainToolbar );
+
+		let hideButton = document.createElement( 'div');
+		hideButton.className = 'hideButton';
+		hideButton.id = 'hideButton';
+		hideButton.innerHTML = '&#9668';
+		mainToolbar.style.left = '0px';
+		hideButton.addEventListener( 'click', (e) => {
+
+			// mainToolbar.style.visibility = (mainToolbar.style.visibility === 'visible')?'hidden':'visible';
+
+			if (mainToolbar.style.left === '0px') {
+
+				// console.log( mainToolbar.style.left.replace('px',''));
+
+				requestAnimationFrame(
+					function moveAnim (){
+						let pos = mainToolbar.style.left.replace('px','');
+						pos -= 10;
+						mainToolbar.style.left = pos + 'px';
+						if (mainToolbar.style.left.replace('px','') > -250) {
+							hideButton.innerHTML = '&#9658';
+							requestAnimationFrame(moveAnim);
+						}
+
+					}
+				);
+
+				// mainToolbar.style.left = '-250px';
+				// hideButton.innerHTML = '>';
+			}
+			else {
+				mainToolbar.style.left = '0px';
+				hideButton.innerHTML = '&#9668';
+			}
+
+			// mainToolbar.style.left = (mainToolbar.style.left === '0px')?'-250px':'0px';
+
+			// mainToolbar.style.width = (mainToolbar.style.width === '0px')?'250px':'0px';
+
+		}
+		)
+		mainToolbar.appendChild( hideButton);
+
+
+
+		return this.main = mainToolbar;
 
 	}
 	
@@ -31,13 +76,14 @@ class TA_UI {
 
 		let dom = document.createElement( elementName );
 		container.appendChild( dom );
-		let img = document.createElement( 'img' );
-		img.src = ( imgLink );
 
-		// let textElement = document.createElement( 'p' );
 		dom.innerHTML = text;
-		// dom.appendChild( textElement );
-		dom.appendChild( img );
+
+		if ( imgLink !== "" ){
+			let img = document.createElement( 'img' );
+			img.src = imgLink;
+			dom.appendChild( img );
+		}
 		
 		if (typeof( func ) === 'function') {
 			dom.addEventListener( 'click', func, false );
@@ -95,7 +141,7 @@ class TA_UI {
 			input.id = parametersArray[i][0]; //'param_' + 
 			input.type = 'number';
 
-			if ( parametersArray[i][0].includes( 'Segments' )) {
+			if ( parametersArray[i][0].toUpperCase().includes( 'SEGMENTS' )) {
 
 				input.step = 1;
 
@@ -118,6 +164,53 @@ class TA_UI {
 				let ta_entities = new TA_Entities;
 
 				ta_entities.updateSelectedObject(  input.id, +input.value, entity );
+
+			}, false );
+
+		}
+
+		
+
+		let materialParams = document.createElement( 'input' );
+		materialParams.id = 'ParametersRows';
+		elem.appendChild( materialParams );
+		materialParams.value = entity.material.type;
+
+		// console.log( entity.material );
+
+		let parametersMaterial = Object.entries( entity.material );
+
+		for (let i = 0; i < parametersMaterial.length; i++) {
+
+			let rowDiv = document.createElement( 'div' );
+			elem.appendChild( rowDiv );
+			rowDiv.className = 'ParametersRow';
+
+			let text = document.createElement( 'p' );
+			rowDiv.appendChild( text );
+			text.innerHTML = parametersMaterial[i][0];
+
+			let input = document.createElement( 'input' );
+			input.id = parametersMaterial[i][0]; //'param_' + 
+			// input.type = 'number';
+
+			
+			rowDiv.appendChild (input);
+
+			input.value =  parametersMaterial[i][1];
+
+			// input.value = Math.round( parametersMaterial[i][1] * 1000 )/1000;
+			input.addEventListener( 'input', () => {
+
+				if (input.value <= 0 ){
+
+					input.value = 0.001;
+
+				} 
+
+				// let ta_entities = new TA_Entities;
+
+				// ta_entities.updateSelectedObject(  input.id, +input.value, entity );
 
 			}, false );
 
