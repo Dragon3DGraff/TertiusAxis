@@ -54,11 +54,35 @@ let TertiusAxis = function () {
 
 	let addToSceneContainer = taUI.createContainer( 'sectionDiv' );
 	addToSceneContainer.id = 'AddToScene';
-	let title = taUI.addElement( addToSceneContainer, 'p', 'Add to scene', '');
+	
+	let title = taUI.addElement( addToSceneContainer, 'p', 'Add to scene &#9650', '');
 	title.className = 'sectionName';
+
+	title.addEventListener ('click',
+	function () {
+		let addToSceneButtons = document.getElementById( 'addToSceneButtons');
+
+		console.log (title.innerHTML);
+
+		if (addToSceneButtons.style.display === 'block') {
+			addToSceneButtons.style.display = 'none';
+
+			this.innerHTML = 'Add to scene &#9660';
+		}
+		else {
+			addToSceneButtons.style.display = 'block';
+
+			this.innerHTML = 'Add to scene &#9650';
+		}
+		
+	},
+	false
+	);
 
 	let buttonsDiv = taUI.addElement( addToSceneContainer, 'div','','');
 	buttonsDiv.className = 'buttonsDiv';
+	buttonsDiv.id = 'addToSceneButtons';
+	buttonsDiv.style.display = 'block';
 
 	let primitivesNamesForButtons = [
 
@@ -97,15 +121,105 @@ let TertiusAxis = function () {
 		
 	});
 
-	let paramContainer = taUI.createContainer( 'sectionDiv' );
+	//Parameters Menu
+
+	let paramContainer = taUI.createContainer( 'paramContainer' );
+	paramContainer.className = 'paramContainer';
 	
-	
-	 title =  taUI.addElement( paramContainer,'p', 'Object parameters', '');
+	 title = taUI.addElement( paramContainer,'p', 'Object parameters &#9650', '');
 	title.className = 'sectionName';
 
-	buttonsDiv = taUI.addElement( paramContainer, 'div','','');
-	buttonsDiv.className = 'buttonsDiv';
-	buttonsDiv.id = 'Parameters';
+	title.addEventListener ('click',
+	function () {
+		let addToSceneButtons = document.getElementById( 'paramsDiv');
+
+		if (addToSceneButtons.style.display === 'block') {
+			addToSceneButtons.style.display = 'none';
+			this.innerHTML = 'Object parameters &#9660';
+		}
+		else {
+			addToSceneButtons.style.display = 'block';
+
+			this.innerHTML = 'Object parameters &#9650';
+			
+		}
+		
+	},
+	false
+	);
+
+	let paramsDiv = taUI.addElement( paramContainer, 'div','','');
+	paramsDiv.id = 'paramsDiv';
+	paramsDiv.style.display = 'block';
+
+	let tabsButtons = taUI.addElement( paramsDiv, 'div', '','');
+	tabsButtons.className = 'tabsButtons';
+
+	let tabGeometry = taUI.addElement( tabsButtons, 'button', 'Geometry', '',
+	function () {
+
+		// this.style.backgroundColor = 'darkslategrey';
+
+		let divGeometry = document.getElementById( 'GeometryParameters');
+		divGeometry.style.display = 'block';
+		tabGeometry.style.backgroundColor = 'darkslategrey';
+		let divMaterial = document.getElementById( 'MaterialParameters');
+		divMaterial.style.display = 'none';
+		tabMaterial.style.backgroundColor = 'rgb(51, 51, 51)';
+		let divGeneral = document.getElementById( 'GeneralParameters');
+		divGeneral.style.display = 'none';
+		tabGeneral.style.backgroundColor = 'rgb(51, 51, 51)';
+
+	}
+	)
+	let tabMaterial = taUI.addElement( tabsButtons, 'button', 'Material', '',
+	function(){
+
+		// this.style.backgroundColor = 'darkslategrey';
+
+		let divGeometry = document.getElementById( 'GeometryParameters');
+		divGeometry.style.display = 'none';
+		tabGeometry.style.backgroundColor = 'rgb(51, 51, 51)';
+		let divMaterial = document.getElementById( 'MaterialParameters');
+		divMaterial.style.display = 'block';
+		tabMaterial.style.backgroundColor = 'darkslategrey';
+		let divGeneral = document.getElementById( 'GeneralParameters');
+		divGeneral.style.display = 'none';
+		tabGeneral.style.backgroundColor = 'rgb(51, 51, 51)';
+
+	}
+	)
+	let tabGeneral = taUI.addElement( tabsButtons, 'button', 'General', '',
+	function(){
+
+		let divGeometry = document.getElementById( 'GeometryParameters');
+		divGeometry.style.display = 'none';
+		tabGeometry.style.backgroundColor = 'rgb(51, 51, 51)';
+		let divMaterial = document.getElementById( 'MaterialParameters');
+		divMaterial.style.display = 'none';
+		tabMaterial.style.backgroundColor = 'rgb(51, 51, 51)';
+		let divGeneral = document.getElementById( 'GeneralParameters');
+		divGeneral.style.display = 'block';
+		tabGeneral.style.backgroundColor = 'darkslategrey';
+
+	}
+	);
+
+	let tabs = taUI.addElement( paramsDiv, 'div', '', '');
+	tabs.className = 'tabs';
+	tabs.id = 'tabs';
+
+	let geometryParameters = taUI.addElement( tabs, 'div','','');
+	geometryParameters.className = 'GeometryParameters';
+	geometryParameters.id = 'GeometryParameters';
+
+	let materialParameters = taUI.addElement( tabs, 'div','','');
+	materialParameters.className = 'MaterialParameters';
+	materialParameters.id = 'MaterialParameters';
+
+	let generalParameters = taUI.addElement( tabs, 'div','','');
+	generalParameters.className = 'GeneralParameters';
+	generalParameters.id = 'GeneralParameters';
 
 	
 	

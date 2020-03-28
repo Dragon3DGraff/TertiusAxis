@@ -64,7 +64,7 @@ class TA_UI {
 
 		}
 		)
-		mainToolbar.appendChild( hideButton);
+		mainToolbar.appendChild( hideButton );
 
 
 
@@ -114,15 +114,15 @@ class TA_UI {
 
 		this.deleteParametersMenu();
 
-		let dom = document.getElementById( 'Parameters');
+		let divGeometry = document.getElementById( 'GeometryParameters');
 		let elem = document.createElement( 'div' );
-		elem.id = 'ParametersRows';
-		dom.appendChild( elem );
+		elem.id = 'ParametersGoemetryRows';
+		divGeometry.appendChild( elem );
 
-		let typeOfObject = document.createElement( 'div' );
-		typeOfObject.id = 'ParametersRows';
-		elem.appendChild( typeOfObject );
-		typeOfObject.innerHTML = entity.geometry.type + ' id = ' + entity.id;
+		// let typeOfObject = document.createElement( 'div' );
+		// typeOfObject.id = 'ParametersRows';
+		// elem.appendChild( typeOfObject );
+		// typeOfObject.innerHTML = entity.geometry.type + ' id = ' + entity.id;
 
 
 		let parametersArray = Object.entries( entity.geometry.parameters );
@@ -169,51 +169,223 @@ class TA_UI {
 
 		}
 
+		//MaterialParameters
+
+		let divMaterial = document.getElementById( 'MaterialParameters');
+		let elemMaterial = document.createElement( 'div' );
+		elemMaterial.id = 'ParametersMaterialRows';
+		divMaterial.appendChild( elemMaterial );
+
 		
 
-		let materialParams = document.createElement( 'input' );
-		materialParams.id = 'ParametersRows';
-		elem.appendChild( materialParams );
-		materialParams.value = entity.material.type;
+		// let materialParams = document.createElement( 'input' );
+		// materialParams.id = 'ParametersRows';
+		// elem.appendChild( materialParams );
+		// materialParams.value = entity.material.type;
 
 		// console.log( entity.material );
 
-		let parametersMaterial = Object.entries( entity.material );
+		let materialParametersObject = {
+			type: entity.material.type
+		}
+		let materialTypes = [
 
-		for (let i = 0; i < parametersMaterial.length; i++) {
+			'LineBasicMaterial',
+			'LineDashedMaterial',
+			'MeshBasicMaterial',
+			'MeshDepthMaterial',
+			'MeshNormalMaterial',
+			'MeshLambertMaterial',
+			'MeshMatcapMaterial',
+			'MeshPhongMaterial',
+			'MeshToonMaterial',
+			'MeshStandardMaterial',
+			'MeshPhysicalMaterial',
+			'RawShaderMaterial',
+			'ShaderMaterial',
+			'ShadowMaterial',
+			'SpriteMaterial',
 
-			let rowDiv = document.createElement( 'div' );
-			elem.appendChild( rowDiv );
+		]
+
+		let rowDiv = document.createElement( 'div' );
+			
 			rowDiv.className = 'ParametersRow';
 
 			let text = document.createElement( 'p' );
 			rowDiv.appendChild( text );
-			text.innerHTML = parametersMaterial[i][0];
+			text.innerHTML = 'Type';
+
+			let input = document.createElement( 'select' );
+			input.id = 'MaterialType';
+			input.className = 'selectMaterial';
+			
+		elemMaterial.appendChild( rowDiv );
+
+		for (let n = 0; n < materialTypes.length; n++)
+		{
+			let option = document.createElement("option");
+			option.text = materialTypes[n];
+			option.value = materialTypes[n];
+			input.add(option) ;
+		}
+
+		rowDiv.appendChild (input);
+
+		input.value = entity.material.type;
+
+
+
+		let parametersMaterial = Object.entries( materialParametersObject );
+
+		// for (let i = 0; i < parametersMaterial.length; i++) {
+
+		// 	let rowDiv = document.createElement( 'div' );
+		// 	elemMaterial.appendChild( rowDiv );
+		// 	rowDiv.className = 'ParametersRow';
+
+		// 	let text = document.createElement( 'p' );
+		// 	rowDiv.appendChild( text );
+		// 	text.innerHTML = parametersMaterial[i][0];
+
+		// 	let input = document.createElement( 'input' );
+		// 	input.id = parametersMaterial[i][0]; //'param_' + 
+		// 	// input.type = 'number';
+
+			
+		// 	rowDiv.appendChild (input);
+
+		// 	input.value =  parametersMaterial[i][1];
+
+		// 	// input.value = Math.round( parametersMaterial[i][1] * 1000 )/1000;
+		// 	input.addEventListener( 'input', () => {
+
+		// 		if (input.value <= 0 ){
+
+		// 			input.value = 0.001;
+
+		// 		} 
+
+		// 		// let ta_entities = new TA_Entities;
+
+		// 		// ta_entities.updateSelectedObject(  input.id, +input.value, entity );
+
+		// 	}, false );
+
+		// }
+
+		//GeneralParameters
+
+		let divGeneral = document.getElementById( 'GeneralParameters');
+		let elemGeneral = document.createElement( 'div' );
+		elemGeneral.id = 'ParametersGeneralRows';
+		divGeneral.appendChild( elemGeneral );
+
+		// this.addElement( elemGeneral, 'p', 'Name', '');
+		rowDiv = addParametersRow( 'Name', 'string', entity.name );
+		elemGeneral.appendChild( rowDiv );
+		input = getInput(rowDiv);
+		input.addEventListener( 'input', () => {
+
+			entity.name = input.value;
+
+		}, false );
+
+		let inputId = addParametersRow( 'id', 'string', entity.id );
+		inputId.disabled = true;
+
+		this.addElement( elemGeneral, 'p', 'Position', '');
+
+		let parametersGeneral = Object.entries( entity.position );
+
+		for (let i = 0; i < parametersGeneral.length; i++) {
+
+			let nameOfParameter = parametersGeneral[i][0];
+			let valueOfParameter = Math.round( parametersGeneral[i][1] * 1000 )/1000;;
+
+			let rowDiv = addParametersRow( nameOfParameter, 'number', valueOfParameter );
+			elemGeneral.appendChild( rowDiv );
+			let input = getInput(rowDiv);
+			input.step = 0.1;
+
+			input.addEventListener( 'input', () => {
+
+				entity.position[nameOfParameter] = input.value;
+
+			}, false );
+
+		}
+
+		this.addElement( elemGeneral, 'p', 'Rotation', '');
+
+		 parametersGeneral = Object.entries( {x: entity.rotation.x, y: entity.rotation.y, z: entity.rotation.z } );
+
+		for (let i = 0; i < parametersGeneral.length; i++) {
+
+			let nameOfParameter = parametersGeneral[i][0];
+			let valueOfParameter = Math.round( parametersGeneral[i][1] * 1000 )/1000;;
+
+			let rowDiv = addParametersRow( nameOfParameter, 'number', valueOfParameter );
+			elemGeneral.appendChild( rowDiv );
+			let input = getInput(rowDiv);
+
+			input.step = 0.1;
+			input.addEventListener( 'input', () => {
+
+				entity.rotation[nameOfParameter] = input.value;
+
+			}, false );
+
+		}
+
+		this.addElement( elemGeneral, 'p', 'Scale', '');
+
+		parametersGeneral = Object.entries( entity.scale );
+
+		for (let i = 0; i < parametersGeneral.length; i++) {
+
+			let nameOfParameter = parametersGeneral[i][0].replace('_','');
+			let valueOfParameter = Math.round( parametersGeneral[i][1] * 1000 )/1000;;
+
+			let rowDiv = addParametersRow( nameOfParameter, 'number', valueOfParameter );
+			elemGeneral.appendChild( rowDiv );
+			let input = getInput(rowDiv);
+
+			input.step = 0.1;
+			input.addEventListener( 'input', () => {
+
+			entity.scale[nameOfParameter] = input.value;
+
+		   }, false );
+
+		}
+
+		function addParametersRow( nameOfParameter, inputType, valueOfParameter) {
+
+			let rowDiv = document.createElement( 'div' );
+			
+			rowDiv.className = 'ParametersRow';
+
+			let text = document.createElement( 'p' );
+			rowDiv.appendChild( text );
+			text.innerHTML = nameOfParameter;
 
 			let input = document.createElement( 'input' );
-			input.id = parametersMaterial[i][0]; //'param_' + 
-			// input.type = 'number';
+			input.id = nameOfParameter;
+			input.type = inputType;
 
 			
 			rowDiv.appendChild (input);
 
-			input.value =  parametersMaterial[i][1];
+			input.value = valueOfParameter;
 
-			// input.value = Math.round( parametersMaterial[i][1] * 1000 )/1000;
-			input.addEventListener( 'input', () => {
+			return rowDiv;
+			
+		}
 
-				if (input.value <= 0 ){
-
-					input.value = 0.001;
-
-				} 
-
-				// let ta_entities = new TA_Entities;
-
-				// ta_entities.updateSelectedObject(  input.id, +input.value, entity );
-
-			}, false );
-
+		function getInput (rowDiv){
+			let input = rowDiv.getElementsByTagName( 'input');
+			return input[0];
 		}
 
 	}
@@ -244,7 +416,11 @@ class TA_UI {
 
 	deleteParametersMenu() {
 
-		let rows = document.getElementById( 'ParametersRows' );
+		let rows = document.getElementById( 'ParametersGoemetryRows' );
+		if (rows) rows.remove();
+		rows = document.getElementById( 'ParametersMaterialRows' );
+		if (rows) rows.remove();
+		rows = document.getElementById( 'ParametersGeneralRows' );
 		if (rows) rows.remove();
 
 	}

@@ -461,6 +461,8 @@ class TA_Entities {
 			};
 			this.stopCreating = function ( ) {
 
+				console.log( this.currentEntity);
+
 				this.centerOfObjectWorld = null;
 				this.centerOfObjectScreen = null;
 				this.currentEntity = null;
