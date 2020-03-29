@@ -269,8 +269,8 @@ class TA_Entities {
 		};
 
 		this.selectEntity = function (objectToSelect, selectedObject) {
-			selectedObject.objectOwnColor = objectToSelect.material.color;
-			objectToSelect.material.color = new THREE.Color('tomato');
+			// selectedObject.objectOwnColor = objectToSelect.material.color;
+			// objectToSelect.material.color = new THREE.Color('tomato');
 			selectedObject.object = objectToSelect;
 			selectedObject.object.add(this.createWireframe(selectedObject));
 			selectedObject.object.add(this.createBoundingBox(selectedObject));
@@ -309,7 +309,7 @@ class TA_Entities {
 			wireframeScene.forEach(element => {
 				selectedObject.object.remove(element);
 			});
-			selectedObject.object.material.color = selectedObject.objectOwnColor;
+			// selectedObject.object.material.color = selectedObject.objectOwnColor;
 			selectedObject.object = null;
 			selectedObject.objectOwnColor = null;
 		};

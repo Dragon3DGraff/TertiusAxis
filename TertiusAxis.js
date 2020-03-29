@@ -134,16 +134,19 @@ let TertiusAxis = function () {
 		let addToSceneButtons = document.getElementById( 'paramsDiv');
 
 		if (addToSceneButtons.style.display === 'block') {
+
 			addToSceneButtons.style.display = 'none';
 			this.innerHTML = 'Object parameters &#9660';
+
 		}
 		else {
+			
 			addToSceneButtons.style.display = 'block';
 
 			this.innerHTML = 'Object parameters &#9650';
-			
+
 		}
-		
+
 	},
 	false
 	);

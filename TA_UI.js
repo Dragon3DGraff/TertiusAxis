@@ -176,18 +176,6 @@ class TA_UI {
 		elemMaterial.id = 'ParametersMaterialRows';
 		divMaterial.appendChild( elemMaterial );
 
-		
-
-		// let materialParams = document.createElement( 'input' );
-		// materialParams.id = 'ParametersRows';
-		// elem.appendChild( materialParams );
-		// materialParams.value = entity.material.type;
-
-		// console.log( entity.material );
-
-		let materialParametersObject = {
-			type: entity.material.type
-		}
 		let materialTypes = [
 
 			'LineBasicMaterial',
@@ -234,45 +222,71 @@ class TA_UI {
 
 		input.value = entity.material.type;
 
+		rowDiv = addParametersRow( 'Color', 'color', entity.material.color );
+		elemMaterial.appendChild( rowDiv );
+		input = getInput(rowDiv);
+		input.className = 'inputColor';
+		input.value = '#' + entity.material.color.getHexString ();
 
+		input.addEventListener('input',
+		
+			function(){
 
-		let parametersMaterial = Object.entries( materialParametersObject );
+				entity.material.color = new THREE.Color( this.value );
+				updateColorComponentsInputs( entity.material.color );
 
-		// for (let i = 0; i < parametersMaterial.length; i++) {
+			}
 
-		// 	let rowDiv = document.createElement( 'div' );
-		// 	elemMaterial.appendChild( rowDiv );
-		// 	rowDiv.className = 'ParametersRow';
+		);
 
-		// 	let text = document.createElement( 'p' );
-		// 	rowDiv.appendChild( text );
-		// 	text.innerHTML = parametersMaterial[i][0];
+		this.addElement( elemMaterial, 'p', 'Color components', '');
 
-		// 	let input = document.createElement( 'input' );
-		// 	input.id = parametersMaterial[i][0]; //'param_' + 
-		// 	// input.type = 'number';
+		let parametersMaterial = Object.entries( entity.material.color );
 
+		for (let i = 0; i < parametersMaterial.length; i++) {
+
+			let rowDiv = document.createElement( 'div' );
+			elemMaterial.appendChild( rowDiv );
+			rowDiv.className = 'ParametersRow';
+
+			let text = document.createElement( 'p' );
+			rowDiv.appendChild( text );
+			text.innerHTML = parametersMaterial[i][0];
+
+			let input = document.createElement( 'input' );
+			input.id = parametersMaterial[i][0]; 
+			input.type = 'range';
+			input.className = 'slider';
 			
-		// 	rowDiv.appendChild (input);
+			rowDiv.appendChild (input);
 
-		// 	input.value =  parametersMaterial[i][1];
+			input.value =  parametersMaterial[i][1];
+			input.step = 0.01;
+			input.min = 0;
+			input.max = 1;
 
-		// 	// input.value = Math.round( parametersMaterial[i][1] * 1000 )/1000;
-		// 	input.addEventListener( 'input', () => {
+			input.addEventListener( 'input', () => {
 
-		// 		if (input.value <= 0 ){
+				let nameOfParameter = parametersMaterial[i][0];
 
-		// 			input.value = 0.001;
+				entity.material.color[nameOfParameter] = input.value;
+				let colorInput = document.getElementById('Color');
+				colorInput.value = '#' + entity.material.color.getHexString ();
 
-		// 		} 
+			}, false );
 
-		// 		// let ta_entities = new TA_Entities;
+		}
 
-		// 		// ta_entities.updateSelectedObject(  input.id, +input.value, entity );
+		function updateColorComponentsInputs( color ) {
 
-		// 	}, false );
-
-		// }
+			let componentRed = document.getElementById('r');
+			componentRed.value = color.r;
+			let componentGreen = document.getElementById('g');
+			componentGreen.value = color.g;
+			let componentBlue = document.getElementById('b');
+			componentBlue.value = color.b;
+			
+		}
 
 		//GeneralParameters
 

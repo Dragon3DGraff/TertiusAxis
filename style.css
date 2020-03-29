@@ -435,17 +435,24 @@ body {
 	background-color: rgb(77, 76, 76);
 	color: rgba(127,255,255, 1);
 	font-size: 12px;
-	
 
 }
 
-.ParametersRow input:hover {
+
+
+.ParametersRow input[type=number]:hover {
 
 	border-color: rgba(127,255,255, 1);
 	border-width: 3px;
 	background-color: rgb(255, 255, 255);
 	color: black;
 	
+
+}
+
+.ParametersRow input[type=color] {
+
+	width: 125px;
 
 }
 
@@ -497,7 +504,7 @@ body {
   -webkit-appearance: none;  /* Override default CSS styles */
   appearance: none;
   width: 100%; /* Full-width */
-  height: 20px; /* Specified height */
+  height: 10px; /* Specified height */
   background: #d3d3d3; /* Grey background */
   outline: none; /* Remove outline */
   opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
@@ -515,8 +522,9 @@ body {
   -webkit-appearance: none; /* Override default look */
   appearance: none;
   width: 20px; /* Set a specific slider handle width */
-  height: 20px; /* Slider handle height */
-  background: #4CAF50; /* Green background */
+  height: 15px; /* Slider handle height */
+  background: rgba(127,255,255, 1); /* Green background */
+  border-radius: 7px;
   cursor: pointer; /* Cursor on hover */
 }
 
