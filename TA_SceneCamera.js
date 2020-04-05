@@ -1,27 +1,24 @@
 /**
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
-"use strict" 
+import * as THREE from "./build/three.module.js";
 
-let TA_SceneCamera = function(){
+class TA_SceneCamera {
+	constructor() {
+		this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 10000);
+		this.camera.position.z = 3;
+		this.camera.position.y = 3;
+		this.camera.position.x = 3;
+		this.camera.lookAt(0, 0, 0);
+	}
 
-	this.camera = new THREE.PerspectiveCamera( 50, window.innerWidth/window.innerHeight, 0.01, 10000 );
-	this.camera.position.z = 3;
-	this.camera.position.y = 3;
-	this.camera.position.x = 3;
-	this.camera.lookAt( 0, 0, 0 );
-
-}
-
-TA_SceneCamera.prototype =  {
-
-	initCamera: function() {
+	initCamera () {
 		
 		return this.camera;
 
-	},
+	}
 
-	getWorldSizeOfScreen: function( camera, point ) {
+	getWorldSizeOfScreen ( camera, point ) {
 
 		let cameraDirection = new THREE.Vector3();
 		camera.getWorldDirection ( cameraDirection );
@@ -53,5 +50,6 @@ TA_SceneCamera.prototype =  {
 		return sizeOfView;
 
 	}
-
 }
+
+ export {TA_SceneCamera};

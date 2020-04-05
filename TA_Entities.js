@@ -1,7 +1,10 @@
 /**
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
-"use strict" 
+
+import * as THREE from "./build/three.module.js";
+import {CSS2DObject} from './jsm/renderers/CSS2DRenderer.js';
+import { TA_UI } from "./UI/TA_UI.js";
 
 class TA_Entities {
 
@@ -461,7 +464,7 @@ class TA_Entities {
 			};
 			this.stopCreating = function ( ) {
 
-				console.log( this.currentEntity);
+				// console.log( this.currentEntity);
 
 				this.centerOfObjectWorld = null;
 				this.centerOfObjectScreen = null;
@@ -474,3 +477,4 @@ class TA_Entities {
 	
 
 }
+export {TA_Entities};
