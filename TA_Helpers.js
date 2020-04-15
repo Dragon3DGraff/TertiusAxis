@@ -3,7 +3,7 @@
 */
 
 import * as THREE from "./build/three.module.js";
-import {TA_Entities} from "./TA_Entities.js";
+import {TA_Entities} from "./Entities/TA_Entities.js";
 
 let TA_Helpers = function () {
 

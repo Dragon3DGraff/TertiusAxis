@@ -114,6 +114,7 @@ class TA_UI {
 
 		let input = rowDiv.getElementsByTagName( 'input');
 		return input[0];
+		
 	}
 
 	updateParametersMenu( entity ) {
@@ -130,8 +131,14 @@ class TA_UI {
 
 		for (let i = 0; i < parametersArray.length; i++) {
 
+
 			let dom = document.getElementById( parametersArray[i][0] );
-			dom.value = Math.round( parametersArray[i][1] * 1000 )/1000;
+
+			if ( dom.type === 'number' ){
+
+				dom.value = Math.round( parametersArray[i][1] * 1000 )/1000;
+
+			}
 
 		}
 

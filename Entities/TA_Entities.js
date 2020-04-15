@@ -2,9 +2,10 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 
-import * as THREE from "./build/three.module.js";
-import {CSS2DObject} from './jsm/renderers/CSS2DRenderer.js';
-import { TA_UI } from "./UI/TA_UI.js";
+import * as THREE from "../build/three.module.js";
+import {CSS2DObject} from '../jsm/renderers/CSS2DRenderer.js';
+import { TA_UI } from "../UI/TA_UI.js";
+
 
 class TA_Entities {
 
@@ -12,96 +13,19 @@ class TA_Entities {
 
 		let GLOBALSCOPE = this;
 
-		this.createGeometry = function ( geometryType, params ) {
+		this.createGeometry = function( geometryType, params ){
 
-			let geometry = null;
-			let paramsArray;
+			let geometry = new THREE[ geometryType ]();
 
-			if ( !(params instanceof Object) ) {
+			this.checkParams( params, geometry.parameters );
 
-				console.error( 'params must be an object. Now params are ' + typeof params );
-				return;
+			let paramsArray = Object.values( params );
 
-			}
+			geometry = new THREE[ geometryType ]( ...paramsArray );
 
-			switch ( geometryType ) {
+			 return geometry;
 
-				case 'BoxBufferGeometry':
-
-					geometry = new THREE.BoxBufferGeometry();
-
-					this.checkParams( params, geometry.parameters );
-
-					paramsArray = Object.values( params );
-
-					geometry = new THREE.BoxBufferGeometry( ...paramsArray );
-
-					break;
-
-				case 'SphereBufferGeometry':
-
-					geometry = new THREE.SphereBufferGeometry();
-
-					this.checkParams( params, geometry.parameters );
-
-					paramsArray = Object.values( params );
-
-					geometry = new THREE.SphereBufferGeometry( ...paramsArray );
-
-					break;
-
-				case 'CircleBufferGeometry':
-
-					geometry = new THREE.CircleBufferGeometry();
-
-					this.checkParams( params, geometry.parameters );
-
-					paramsArray = Object.values( params );
-
-					geometry = new THREE.CircleBufferGeometry( ...paramsArray );
-
-					break;
-					
-// CircleBufferGeometry
-
-// ConeBufferGeometry
-
-// CylinderBufferGeometry
-
-// DodecahedronBufferGeometry
-
-// IcosahedronBufferGeometry
-
-// OctahedronBufferGeometry
-
-// PlaneBufferGeometry
-
-// RingBufferGeometry
-
-// ShapeBufferGeometry
-
-// TetrahedronBufferGeometry
-
-// TextBufferGeometry
-
-// TorusBufferGeometry
-
-// TorusKnotBufferGeometry
-
-// TubeBufferGeometry
-
-
-				default:
-
-						console.error( 'Incorrect type of geometry' );
-
-					break;
-
-			}
-
-			return geometry;
-
-		};
+		}
 
 		this.checkParams = function( paramsToCheck, paramsTemplate ) {
 
@@ -143,17 +67,17 @@ class TA_Entities {
 	
 		}
 
-	
-
 		this.createBox = function ( x, y, z, width, height, depth, material ) {
 
 			let params = {
+
 				width: width,
 				height: height,
 				depth: depth,
 				widthSegments: 1,
 				heightSegments: 1,
 				depthSegments: 1
+				
 			};
 
 			let geometry = this.createGeometry('BoxBufferGeometry', params);
@@ -176,6 +100,7 @@ class TA_Entities {
 		this.createSphere = function ( x, y, z, radius, segments, material ) {
 
 			let params = {
+
 				radius: radius,	
 				widthSegments : segments,
 				heightSegments : segments,
@@ -183,6 +108,7 @@ class TA_Entities {
 				phiLength : Math.PI * 2,
 				thetaStart : 0,
 				thetaLength : Math.PI
+
 			};
 			let geometry = this.createGeometry( 'SphereBufferGeometry', params );
 
@@ -196,6 +122,7 @@ class TA_Entities {
 			sphere.position.x = x;
 			sphere.position.y = y;
 			sphere.position.z = z;
+
 			return sphere;
 
 		};
@@ -203,10 +130,12 @@ class TA_Entities {
 		this.createCircle = function ( x, y, z, radius, segments, material ) {
 
 			let params = {
+
 				radius: radius,
 				segments : segments,
 				thetaStart : 0,
 				thetaLength : 2*Math.PI
+
 			};
 			let geometry = this.createGeometry( 'CircleBufferGeometry', params );
 
@@ -215,16 +144,209 @@ class TA_Entities {
 				console.error ( "Invalid geometry. Object not created" );
 
 			}
-			// const geometry = new THREE.SphereGeometry(radius, segments, segments, 0, Math.PI * 2, 0, Math.PI);
-			// const material = new THREE.MeshPhongMaterial({color: new THREE.Color('grey'),  wireframe: true, transparent: true, opacity: 0.5});
-			// const material = new THREE.MeshBasicMaterial();
+
 			let circle = new THREE.Mesh( geometry, material );
 			circle.position.x = x;
 			circle.position.y = y;
 			circle.position.z = z;
+
 			return circle;
 
 		};
+
+		this.createCone = function ( x, y, z, radius, height, radialSegments, heightSegments, material ) {
+
+			let params = {
+
+				radius: radius,
+				height: height,
+				radialSegments : radialSegments,
+				heightSegments : heightSegments,
+				openEnded: false,
+				thetaStart : 0,
+				thetaLength : 2*Math.PI
+
+			};
+			let geometry = this.createGeometry( 'ConeBufferGeometry', params );
+
+			if ( !geometry ) {
+
+				console.error ( "Invalid geometry. Object not created" );
+
+			}
+
+			let cone = new THREE.Mesh( geometry, material );
+			cone.position.x = x;
+			cone.position.y = y;
+			cone.position.z = z;
+
+			return cone;
+
+		};
+
+		this.createCylinder = function ( x, y, z, radiusTop, radiusBottom, height, radialSegments, heightSegments, material ) {
+
+			let params = {
+
+				radiusTop: radiusTop,
+				radiusBottom: radiusBottom,
+				height: height,
+				radialSegments : radialSegments,
+				heightSegments : heightSegments,
+				openEnded: false,
+				thetaStart : 0,
+				thetaLength : 2*Math.PI
+
+			};
+			let geometry = this.createGeometry( 'CylinderBufferGeometry', params );
+
+			if ( !geometry ) {
+
+				console.error ( "Invalid geometry. Object not created" );
+
+			}
+
+			let cylinder = new THREE.Mesh( geometry, material );
+			cylinder.position.x = x;
+			cylinder.position.y = y;
+			cylinder.position.z = z;
+
+			return cylinder;
+
+		};
+
+		this.createDodecahedron = function ( x, y, z, radius, detail, material ) { 
+
+			let params = {
+
+				radius: radius,
+				detail: detail
+
+			};
+			let geometry = this.createGeometry( 'DodecahedronBufferGeometry', params );
+
+			if ( !geometry ) {
+
+				console.error ( "Invalid geometry. Object not created" );
+
+			}
+
+			let dodecahedron = new THREE.Mesh( geometry, material );
+			dodecahedron.position.x = x;
+			dodecahedron.position.y = y;
+			dodecahedron.position.z = z;
+
+			return dodecahedron;
+
+		};
+
+		this.createIcosahedron = function ( x, y, z, radius, detail, material ) { 
+
+			let params = {
+
+				radius: radius,
+				detail: detail
+
+			};
+			let geometry = this.createGeometry( 'IcosahedronBufferGeometry', params );
+
+			if ( !geometry ) {
+
+				console.error ( "Invalid geometry. Object not created" );
+
+			}
+
+			let icosahedron = new THREE.Mesh( geometry, material );
+			icosahedron.position.x = x;
+			icosahedron.position.y = y;
+			icosahedron.position.z = z;
+
+			return icosahedron;
+
+		};
+
+		this.createOctahedron = function ( x, y, z, radius, detail, material ) { 
+
+			let params = {
+
+				radius: radius,
+				detail: detail
+
+			};
+			let geometry = this.createGeometry( 'OctahedronBufferGeometry', params );
+
+			if ( !geometry ) {
+
+				console.error ( "Invalid geometry. Object not created" );
+
+			}
+
+			let octahedron = new THREE.Mesh( geometry, material );
+			octahedron.position.x = x;
+			octahedron.position.y = y;
+			octahedron.position.z = z;
+
+			return octahedron;
+
+		};
+
+		this.createTorus = function ( x, y, z, radius, tube, radialSegments, tubularSegments , material ) {
+
+			let params = {
+
+				radius: radius,
+				tube : tube ,
+				radialSegments: radialSegments,
+				tubularSegments: tubularSegments ,
+				arc : 2*Math.PI
+
+			};
+
+			let geometry = this.createGeometry( 'TorusBufferGeometry', params );
+
+			if ( !geometry ) {
+
+				console.error ( "Invalid geometry. Object not created" );
+
+			}
+
+			let torus = new THREE.Mesh( geometry, material );
+			torus.position.x = x;
+			torus.position.y = y;
+			torus.position.z = z;
+
+			return torus;
+
+		};
+
+		this.createTetrahedron = function ( x, y, z, radius, detail, material ) { 
+
+			let params = {
+
+				radius: radius,
+				detail: detail
+
+			};
+
+			let geometry = this.createGeometry( 'TetrahedronBufferGeometry', params );
+
+			if ( !geometry ) {
+
+				console.error ( "Invalid geometry. Object not created" );
+
+			}
+
+			let tetrahedron = new THREE.Mesh( geometry, material );
+			tetrahedron.position.x = x;
+			tetrahedron.position.y = y;
+			tetrahedron.position.z = z;
+
+			return tetrahedron;
+
+		};
+
+
+		/////////////////////////////
 
 		this.createLine = function (x, y, z, x1, y1, z1, color, dashed) {
 			let material;
@@ -300,13 +422,15 @@ class TA_Entities {
 
 			if ( box.box.min.z === 0) {
 
-			box.box.min.z = -0.001;
-			box.box.max.z = 0.001;
+				box.box.min.z = -0.001;
+				box.box.max.z = 0.001;
 
 			}
 
 			return box;
+
 		};
+
 		this.removeSelection = function (selectedObject) {
 			let wireframeScene = selectedObject.object.children.filter(item => item.name === "wireframe" || item.name === "BoundingBox");
 			wireframeScene.forEach(element => {
@@ -336,16 +460,16 @@ class TA_Entities {
 	
 					let boundingBox = entity.getObjectByName( 'BoundingBox' );
 					entity.geometry.computeBoundingBox();
-					let box = new THREE.Box3Helper( entity.geometry.boundingBox );
+					let box3Helper = new THREE.Box3Helper( entity.geometry.boundingBox );
 
-					if ( box.box.min.z === 0) {
+					if ( box3Helper.box.min.z === 0) {
 
-						box.box.min.z = -0.001;
-						box.box.max.z = 0.001;
+						box3Helper.box.min.z = -0.001;
+						box3Helper.box.max.z = 0.001;
 
 					}
 
-					boundingBox.box = box.box;
+					boundingBox.box = box3Helper.box;
 	
 		}
 
@@ -363,6 +487,15 @@ class TA_Entities {
 					entity.geometry = newGeom;
 
 		}
+
+		this.randomColor = function(){
+
+			let randomColor = new THREE.Color( Math.random(), Math.random(), Math.random() );
+
+			return randomColor;
+
+		}
+
 		
 		this.CreatingEntity = function () {
 
@@ -389,11 +522,17 @@ class TA_Entities {
 					let currentCoordsScreen = new THREE.Vector2(event.x, event.y);
 					let distance = currentCoordsScreen.distanceTo(scope.centerOfObjectScreen);
 					width = 1.00 * distance / ratio;
+
 				}
 				else {
+
 					width = 0.01;
 				}
+
+				material = new THREE.MeshPhongMaterial( { color: GLOBALSCOPE.randomColor() } );
+
 				switch (mode.entity) {
+
 					case 'BoxBufferGeometry':
 
 						if (this.currentEntity !== null ) {
@@ -405,35 +544,31 @@ class TA_Entities {
 						}
 						else{
 
-							material = new THREE.MeshPhongMaterial( { color: new THREE.Color('yellow') } );
-
 							this.currentEntity = GLOBALSCOPE.createBox(x, y, z, width, width, width, material );
 							this.currentEntity.name = "CUBE";
 
-							scene.add(this.currentEntity);
+							scene.add( this.currentEntity );
 
 						}
 
 						break;
 
-					case 'SphereBufferGeometry':
+						case 'SphereBufferGeometry':
 
-						if (this.currentEntity !== null ) {
+							if (this.currentEntity !== null ) {
 
-							GLOBALSCOPE.updateObject( 'radius', width, this.currentEntity);
+								GLOBALSCOPE.updateObject( 'radius', width, this.currentEntity);
 
-						}
-						else{
+							}
+							else{
 
-							material = new THREE.MeshPhongMaterial( { color: new THREE.Color('yellow') } );
+								this.currentEntity = GLOBALSCOPE.createSphere(x, y, z, width, 12, material );
 
-							this.currentEntity = GLOBALSCOPE.createSphere(x, y, z, width, 12, material );
+								this.currentEntity.name = "SPHERE";
 
-							this.currentEntity.name = "SPHERE";
+								scene.add( this.currentEntity );
 
-							scene.add(this.currentEntity);
-
-						}
+							}
 
 						break;
 
@@ -445,18 +580,156 @@ class TA_Entities {
 	
 							}
 							else{
-
-								material = new THREE.MeshPhongMaterial( { color: new THREE.Color('yellow') } );
 	
 								this.currentEntity = GLOBALSCOPE.createCircle(x, y, z, width, 12, material );
 	
 								this.currentEntity.name = "Circle";
 
-								scene.add(this.currentEntity);
+								scene.add( this.currentEntity );
 	
 							}
 	
-							break;
+						break;
+
+						case 'ConeBufferGeometry':
+
+							if (this.currentEntity !== null ) {
+	
+								GLOBALSCOPE.updateObject( 'radius', width, this.currentEntity);
+								GLOBALSCOPE.updateObject( 'height', width * 2, this.currentEntity);
+	
+							}
+							else{
+
+								this.currentEntity = GLOBALSCOPE.createCone(x, y, z, width, width * 2, 8, 1, material );
+	
+								this.currentEntity.name = "Cone";
+
+								scene.add( this.currentEntity );
+	
+							}
+	
+						break;
+
+						case 'CylinderBufferGeometry':
+
+							if (this.currentEntity !== null ) {
+	
+								GLOBALSCOPE.updateObject( 'radiusTop', width, this.currentEntity);
+								GLOBALSCOPE.updateObject( 'radiusBottom', width, this.currentEntity);
+								GLOBALSCOPE.updateObject( 'height', width * 2, this.currentEntity);
+	
+							}
+							else{
+
+								this.currentEntity = GLOBALSCOPE.createCylinder( x, y, z, width, width, width * 2, 8, 1, material );
+	
+								this.currentEntity.name = "Cylinder";
+
+								scene.add( this.currentEntity );
+	
+							}
+	
+						break;
+
+						case 'DodecahedronBufferGeometry':
+
+							if (this.currentEntity !== null ) {
+	
+								GLOBALSCOPE.updateObject( 'radius', width, this.currentEntity);
+	
+							}
+							else{
+
+								this.currentEntity = GLOBALSCOPE.createDodecahedron( x, y, z, width, 0, material );
+	
+								this.currentEntity.name = "Dodecahedron";
+
+								scene.add( this.currentEntity );
+	
+							}
+	
+						break;
+
+						case 'IcosahedronBufferGeometry':
+
+							if (this.currentEntity !== null ) {
+	
+								GLOBALSCOPE.updateObject( 'radius', width, this.currentEntity);
+	
+							}
+							else{
+
+								this.currentEntity = GLOBALSCOPE.createIcosahedron( x, y, z, width, 0, material );
+	
+								this.currentEntity.name = "Icosahedron";
+
+								scene.add( this.currentEntity );
+	
+							}
+	
+						break;
+
+						case 'OctahedronBufferGeometry':
+
+							if (this.currentEntity !== null ) {
+	
+								GLOBALSCOPE.updateObject( 'radius', width, this.currentEntity);
+	
+							}
+							else{
+
+								this.currentEntity = GLOBALSCOPE.createOctahedron( x, y, z, width, 0, material );
+	
+								this.currentEntity.name = "Octahedron";
+
+								scene.add( this.currentEntity );
+	
+							}
+	
+						break;
+
+						case 'TorusBufferGeometry':
+
+							if (this.currentEntity !== null ) {
+	
+								GLOBALSCOPE.updateObject( 'radius', width, this.currentEntity);
+								GLOBALSCOPE.updateObject( 'tube', width/5, this.currentEntity);
+	
+							}
+							else{
+
+								this.currentEntity = GLOBALSCOPE.createTorus( x, y, z, width, width/10, 8, 12, material );
+	
+								this.currentEntity.name = "Torus";
+
+								scene.add( this.currentEntity );
+	
+							}
+	
+						break;
+
+						case 'TetrahedronBufferGeometry':
+
+							if (this.currentEntity !== null ) {
+	
+								GLOBALSCOPE.updateObject( 'radius', width, this.currentEntity);
+	
+							}
+							else{
+
+								this.currentEntity = GLOBALSCOPE.createTetrahedron( x, y, z, width, 0, material );
+	
+								this.currentEntity.name = "Tetrahedron";
+
+								scene.add( this.currentEntity );
+	
+							}
+	
+						break;
+
+							//TorusBufferGeometry
+
 					default:
 						break;
 
@@ -464,7 +737,7 @@ class TA_Entities {
 			};
 			this.stopCreating = function ( ) {
 
-				// console.log( this.currentEntity);
+				console.log( this.currentEntity.geometry.type );
 
 				this.centerOfObjectWorld = null;
 				this.centerOfObjectScreen = null;

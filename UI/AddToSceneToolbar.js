@@ -49,26 +49,28 @@ function createAddToSceneToolbar ( taScene ) {
 
 	let primitivesNamesForButtons = [
 
-		{text:'Box', type: 'BoxBufferGeometry', imgLink: './ico/cubeico.PNG'},
-		{text:'Sphere', type: 'SphereBufferGeometry', imgLink: './ico/sphereico.PNG'},
-		{text:'Circle', type: 'CircleBufferGeometry', imgLink: ''},
-		{text:'Cone', type: 'ConeBufferGeometry', imgLink: ''},
-		{text:'Cylinder', type: 'CylinderBufferGeometry', imgLink: ''},
-		{text:'Dodecahedron', type: 'DodecahedronBufferGeometry', imgLink: ''},
-		{text:'Icosahedron', type: 'IcosahedronBufferGeometry', imgLink: ''},
-		{text:'Octahedron', type: 'OctahedronBufferGeometry', imgLink: ''},
-		{text:'Plane', type: 'PlaneBufferGeometry', imgLink: ''},
-		{text:'Ring', type: 'RingBufferGeometry', imgLink: ''},
+		{text:'Box', type: 'BoxBufferGeometry', imgLink: './ico/cubeico.PNG', active: true},
+		{text:'Sphere', type: 'SphereBufferGeometry', imgLink: './ico/sphereico.PNG', active: true},
+		{text:'Circle', type: 'CircleBufferGeometry', imgLink: '', active: true},
+		{text:'Cone', type: 'ConeBufferGeometry', imgLink: '', active: true},
+		{text:'Cylinder', type: 'CylinderBufferGeometry', imgLink: '', active: true},
+		{text:'Dodecahedron', type: 'DodecahedronBufferGeometry', imgLink: '', active: true},
+		{text:'Icosahedron', type: 'IcosahedronBufferGeometry', imgLink: '', active: true},
+		{text:'Octahedron', type: 'OctahedronBufferGeometry', imgLink: '', active: true},
+		{text:'Plane', type: 'PlaneBufferGeometry', imgLink: '', active: false},
+		{text:'Ring', type: 'RingBufferGeometry', imgLink: '', active: false},
 		{text:'Shape', type: 'ShapeBufferGeometry', imgLink: ''},
-		{text:'Tetrahedron', type: 'TetrahedronBufferGeometry', imgLink: ''},
-		{text:'Text', type: 'TextBufferGeometry', imgLink: ''},
-		{text:'Torus', type: 'TorusBufferGeometry', imgLink: ''},
-		{text:'TorusKnot', type: 'TorusKnotBufferGeometry', imgLink: ''},
-		{text:'Tube', type: 'TubeBufferGeometry', imgLink: ''}
+		{text:'Tetrahedron', type: 'TetrahedronBufferGeometry', imgLink: '', active: true},
+		{text:'Text', type: 'TextBufferGeometry', imgLink: '', active: false},
+		{text:'Torus', type: 'TorusBufferGeometry', imgLink: '', active: true},
+		{text:'TorusKnot', type: 'TorusKnotBufferGeometry', imgLink: '', active: false},
+		{text:'Tube', type: 'TubeBufferGeometry', imgLink: '', active: false}
 
-	]
+	];
 
 	primitivesNamesForButtons.forEach(element => {
+
+		if (element.active){
 
 		ta_UI.addElement(
 			buttonsDiv,
@@ -81,6 +83,8 @@ function createAddToSceneToolbar ( taScene ) {
 			}
 	
 		);
+
+		}
 		
 	});
 

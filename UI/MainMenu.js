@@ -27,23 +27,26 @@ function createMainMenu (){
 	title.className = 'Title';
 
 
-	let buttonOpenScene = ta_UI.addElement(mainMenu, 'button', 'File', '');
+	let buttonOpenScene = ta_UI.addElement( mainMenu, 'button', 'File', '');
 	buttonOpenScene.addEventListener('mouseover', (e) => {
 
 
 	});
 
-	let buttonEdit = ta_UI.addElement(mainMenu, 'button', 'Edit', '');
+	let buttonEdit = ta_UI.addElement( mainMenu, 'button', 'Edit', '');
 	buttonEdit.addEventListener('mouseover', (e) => {
 
 
 	});
 
-	let buttonHelp = ta_UI.addElement(mainMenu, 'button', 'Help', '');
+	let buttonSettings = ta_UI.addElement( mainMenu, 'button', 'Settings', '');
+	buttonSettings.addEventListener('mouseover', (e) => {
+
+
+	});
+
+	let buttonHelp = ta_UI.addElement( mainMenu, 'button', 'Help', '');
 	buttonHelp.addEventListener('click', (e) => {
-
-		
-
 
 	});
 

@@ -417,7 +417,7 @@ body {
 	z-index: 204;
 	margin-top: 2px;
 	/* right: 4px; */
-	cursor: row-resize;
+	cursor: ns-resize;
 
 	border-radius: 5px;
 	background-color: rgb(77, 76, 76);
@@ -426,25 +426,6 @@ body {
 	
 
 }
-
-.ParametersRow select {
-
-	width: 130px;
-	height: 20px;
-	/* position: relative; */
-	z-index: 204;
-	margin-top: 2px;
-	/* right: 4px; */
-	cursor: row-resize;
-
-	border-radius: 5px;
-	background-color: rgb(77, 76, 76);
-	color: rgba(127,255,255, 1);
-	font-size: 12px;
-
-}
-
-
 
 .ParametersRow input[type=number]:hover {
 
@@ -455,6 +436,34 @@ body {
 	
 
 }
+
+.ParametersRow select {
+
+	width: 134px;
+	height: 20px;
+
+	z-index: 204;
+	margin-top: 2px;
+
+	/* border-radius: 5px; */
+	border-color: rgba(127,255,255, 1);
+	border-width: 1px;
+	background-color: rgb(77, 76, 76);
+	color: rgba(127,255,255, 1);
+	font-size: 12px;
+
+}
+
+.ParametersRow select:hover {
+
+	/* border-color: rgba(127,255,255, 1); */
+	/* border-width: 3px; */
+	background-color: rgb(255, 255, 255);
+	color: black;
+
+}
+
+
 
 .ParametersRow input[type=color] {
 
@@ -493,13 +502,12 @@ body {
 	z-index: 204;
 	margin-top: 2px;
 	/* right: 4px; */
-	cursor: row-resize;
+	/* cursor: row-resize; */
 
 	border-radius: 5px;
 	background-color: rgb(77, 76, 76);
 	color: rgba(127,255,255, 1);
 	font-size: 12px;
-	
 
 }
 
@@ -512,7 +520,6 @@ body {
 	
 
 }
-
 
 .sectionName {
 

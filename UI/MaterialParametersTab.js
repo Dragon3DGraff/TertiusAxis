@@ -59,6 +59,7 @@ function fillMaterialParametersTab( entity ) {
 	}
 
 	inputMaterialType.value = entity.material.type;
+	inputMaterialType.disabled = 'true';
 
 	rowDiv.appendChild ( inputMaterialType );
 

@@ -6,7 +6,7 @@ import * as THREE from "./build/three.module.js";
 import {TA_SceneCamera} from "./TA_SceneCamera.js";
 import {CSS2DRenderer} from "./jsm/renderers/CSS2DRenderer.js";
 import {OrbitControls} from "./jsm/controls/OrbitControls.js";
-import {TA_Entities} from "./TA_Entities.js";
+import {TA_Entities} from "./Entities/TA_Entities.js";
 import {TA_SceneLights} from "./TA_SceneLights.js";
 import {TA_Helpers} from "./TA_Helpers.js";
 
@@ -238,11 +238,16 @@ class TA_Scene {
 		function onKeyDown(event) {
 			switch (event.key) {
 				case 'Escape': // Esc
+
+					if (creatingEntity.currentEntity) {
+						selectableObjects.push(creatingEntity.currentEntity);
+						creatingEntity.stopCreating(selectableObjects);
+					}
 					scope.mode = {
 						action: 'select',
 						entity: null
 					};
-					creatingEntity.stopCreating(selectableObjects);
+					
 					break;
 			}
 		}
