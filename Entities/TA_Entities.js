@@ -737,7 +737,9 @@ class TA_Entities {
 			};
 			this.stopCreating = function ( ) {
 
-				console.log( this.currentEntity.geometry.type );
+				this.currentEntity.userData = { createdByUser: true, selectable: true };
+
+				console.log( this.currentEntity );
 
 				this.centerOfObjectWorld = null;
 				this.centerOfObjectScreen = null;

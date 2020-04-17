@@ -17,9 +17,9 @@ class TA_UI {
 	constructor( ) {
 	}
 
-	init() {
+	init( taScene ) {
 
-		createMainMenu();
+		createMainMenu( taScene );
 		createMainToolbar();
 
 		return true;

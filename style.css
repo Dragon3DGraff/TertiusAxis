@@ -101,6 +101,8 @@ body {
 	border-color: lightblue;
 
 }
+
+
 /* 
 .mainMenu button:hover .subMainMenu{
 
@@ -112,18 +114,24 @@ body {
 .subMainMenu{
 
 	position: absolute;
-	top: 18px;
-	left: 0px;
+	/* top: 18px; */
+	/* left: 0px; */
 	z-index: 202;
-	width: 120px;
+	width: 150px;
 	background-color: lightgray;
 	visibility: hidden;
+	
 
 }
 
 .subMainMenu button {
 
 	width: 100%;
+	text-align: left;
+	font-size: 12px;
+	background-color: lightslategrey;
+	border-color: black;
+	font-weight: bold;
 	
 }
 
@@ -132,6 +140,33 @@ body {
 
 	background-color: lightsteelblue;
 
+}
+
+.selectFile {
+
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.subMainMenu label {
+
+	display:inline-block;
+	width: 100%;
+
+	padding: 4px;
+
+	font-size: 12px;
+	background-color: lightslategrey;
+	border-color: black;
+	font-weight: bold;
+}
+
+.subMainMenu label:hover {
+background-color: lightsteelblue;;
 }
 
 .Title {

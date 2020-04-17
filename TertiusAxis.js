@@ -13,8 +13,11 @@ class TertiusAxis {
 
 start (){
 	let taUI = new TA_UI();
-	taUI.init();
 	let taScene = new TA_Scene( taUI );
+	
+	taUI.init( taScene );
+	
+	taScene.createScene();
 
 		if ( taUI.fillMainToolbar( taScene ) ) {
 

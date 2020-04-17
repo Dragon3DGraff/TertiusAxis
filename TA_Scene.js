@@ -13,6 +13,16 @@ import {TA_Helpers} from "./TA_Helpers.js";
 class TA_Scene {
 	constructor( taUI ) {
 		this.taUI = taUI;
+		this.scene;
+	}
+
+	get getScene() {
+
+		return this.scene;
+
+	}
+
+	createScene(){
 		let scene = new THREE.Scene();
 		let sceneCamera = new TA_SceneCamera();
 		let sceneCamera2 = new TA_SceneCamera();
@@ -37,8 +47,8 @@ class TA_Scene {
 			action: 'select',
 			entity: null
 		};
-		let selectableObjects = [];
-		let selectedObject = {
+		this.selectableObjects = [];
+		this.selectedObject = {
 			object: null,
 			objectOwnColor: null
 		};
@@ -124,41 +134,41 @@ class TA_Scene {
 			if (event.target.className === "labelDiv") {
 				if (scope.mode.action === 'creationEntity') {
 					if (creatingEntity.centerOfObjectWorld) {
-						taEntities.selectEntity(creatingEntity.currentEntity, selectedObject);
+						taEntities.selectEntity(creatingEntity.currentEntity, scope.selectedObject);
 						if (creatingEntity.currentEntity) {
-							selectableObjects.push(creatingEntity.currentEntity);
+							scope.selectableObjects.push(creatingEntity.currentEntity);
 						}
 						creatingEntity.stopCreating();
 						return;
 					}
-					if (selectedObject.object) {
-						taEntities.removeSelection(selectedObject);
+					if (scope.selectedObject.object) {
+						taEntities.removeSelection(scope.selectedObject);
 					}
 					creatingEntity.centerOfObjectWorld = intersects[0].point;
 					creatingEntity.createEntity(scope.mode, scene, event, sceneCamera);
-					taUI.createParametersMenu(creatingEntity.currentEntity);
+					scope.taUI.createParametersMenu(creatingEntity.currentEntity);
 				}
 				if (scope.mode.action === 'select') {
-					let intersects = raycaster.intersectObjects(selectableObjects);
+					let intersects = raycaster.intersectObjects(scope.selectableObjects);
 					if (intersects.length > 0) {
-						if (selectedObject.object) {
-							taEntities.removeSelection(selectedObject);
+						if (scope.selectedObject.object) {
+							taEntities.removeSelection(scope.selectedObject);
 						}
 						let objectToSelect = intersects[0].object;
-						selectedObject = taEntities.selectEntity(objectToSelect, selectedObject);
+						scope.selectedObject = taEntities.selectEntity(objectToSelect, scope.selectedObject);
 					}
 					else {
-						if (selectedObject.object) {
-							taEntities.removeSelection(selectedObject);
+						if (scope.selectedObject.object) {
+							taEntities.removeSelection(scope.selectedObject);
 						}
 					}
-					if (selectedObject.object) {
-						taUI.createParametersMenu(selectedObject.object);
+					if (scope.selectedObject.object) {
+						scope.taUI.createParametersMenu(scope.selectedObject.object);
 					}
 					else {
-						taUI.deleteParametersMenu();
+						scope.taUI.deleteParametersMenu();
 					}
-					// let intersects = raycaster.intersectObjects( selectableObjects );
+					// let intersects = raycaster.intersectObjects( scope.selectableObjects );
 					// selectedObject = taEntities.selectEntity( intersects, selectedObject );
 					// console.log (selectedObject);
 				}
@@ -205,7 +215,7 @@ class TA_Scene {
 			intersectionsInfo(intersects);
 			if (creatingEntity.currentEntity) {
 				creatingEntity.createEntity(scope.mode, scene, event, sceneCamera);
-				taUI.updateParametersMenu(creatingEntity.currentEntity);
+				scope.taUI.updateParametersMenu(creatingEntity.currentEntity);
 			}
 			// }
 		}
@@ -240,8 +250,8 @@ class TA_Scene {
 				case 'Escape': // Esc
 
 					if (creatingEntity.currentEntity) {
-						selectableObjects.push(creatingEntity.currentEntity);
-						creatingEntity.stopCreating(selectableObjects);
+						scope.selectableObjects.push(creatingEntity.currentEntity);
+						creatingEntity.stopCreating(scope.selectableObjects);
 					}
 					scope.mode = {
 						action: 'select',
@@ -261,7 +271,7 @@ class TA_Scene {
 		};
 		this.camera = camera;
 		this.scene = scene;
-		// this.animate = animate;
+		this.animate = animate;
 		animate();
 	}
 
