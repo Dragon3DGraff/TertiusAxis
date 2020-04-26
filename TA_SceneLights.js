@@ -2,7 +2,7 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 
-import * as THREE from "./build/three.module.js";
+import * as THREE from "./THREEJS/build/three.module.js";
 class TA_SceneLights {
 
 	constructor() {

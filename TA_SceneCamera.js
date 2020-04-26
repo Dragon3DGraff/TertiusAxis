@@ -1,14 +1,14 @@
 /**
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
-import * as THREE from "./build/three.module.js";
+import * as THREE from "./THREEJS/build/three.module.js";
 
 class TA_SceneCamera {
 	constructor() {
 		this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 10000);
-		this.camera.position.z = 3;
-		this.camera.position.y = 3;
-		this.camera.position.x = 3;
+		this.camera.position.z = 50;
+		this.camera.position.y = 50;
+		this.camera.position.x = 50;
 		this.camera.lookAt(0, 0, 0);
 	}
 

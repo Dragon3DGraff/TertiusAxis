@@ -3,8 +3,9 @@
  */
 
 import { TA_UI } from "./TA_UI.js";
-import * as THREE from "../build/three.module.js";
+import * as THREE from "../THREEJS/build/three.module.js";
 import {TA_Entities} from "../Entities/TA_Entities.js";
+import { GLTFExporter } from '../THREEJS/Add/jsm/exporters/GLTFExporter.js';
 
 function createMainMenu ( ta_scene ){
 
@@ -56,16 +57,27 @@ function createMainMenu ( ta_scene ){
 	});
 
 	let buttonEdit = ta_UI.addElement( mainMenu, 'button', 'Edit', '');
+
 	buttonEdit.addEventListener('mouseover', (e) => {
 
 		let heightMainMenu = mainMenu.offsetHeight;
 
 		let positionButtonFile = offsetPosition( buttonEdit );
 
-		// fileMenu.style.left = positionButtonFile[0] + 'px';
-		// fileMenu.style.top = heightMainMenu + 'px';
+		editMenu.style.left = positionButtonFile[0] + 'px';
+		editMenu.style.top = heightMainMenu + 'px';
 
-		// fileMenu.style.visibility = 'visible';
+		editMenu.style.visibility = 'visible';
+
+	});
+
+	buttonEdit.addEventListener('mouseout', (e) => {
+
+		if ( !e.relatedTarget || e.relatedTarget.offsetParent.id !== 'editMenu') {
+
+			editMenu.style.visibility = 'hidden';
+
+		}
 
 	});
 
@@ -114,41 +126,109 @@ function createMainMenu ( ta_scene ){
 
 	});
 
-	let saveinBrowserButton = ta_UI.addElement( fileMenu, 'label', 'Save in browser', '', saveSceneInBrowser);
+	let clearSceneButton = ta_UI.addElement( fileMenu, 'label', 'Clear Scene', '', clearScene);
+	let saveToDiskButton = ta_UI.addElement( fileMenu, 'label', 'Save to disk', '', saveSceneToDisk);
+	let exportGTLFLButton = ta_UI.addElement( fileMenu, 'label', 'Export glTF', '', exportGLTF);
 
-	let saveToDiskButton = ta_UI.addElement( fileMenu, 'label', 'Save on disk', '', saveSceneOnDisk);
+	ta_UI.createFileSelectionButton( fileMenu, 'Load scene from disk', loadSceneFromDisk );
+	ta_UI.createFileSelectionButton( fileMenu, 'Merge with scene from disk', mergeScenes );
+	
 
-	let loadFromDiskLabel = ta_UI.addElement( fileMenu, 'label', 'Load scene from disk', '');
-	let loadFromDiskButton = ta_UI.addElement( loadFromDiskLabel, 'input', '', '');
-	loadFromDiskButton.type = 'file';
-	loadFromDiskButton.className = 'selectFile';
 
-	loadFromDiskLabel.addEventListener( 'change', function loadSceneFromDisk( e ){
+	function loadSceneFromDisk( e ) {
+		
+		// Loading scene, created in TertiusAxis
+
+		ta_scene.clearScene();
+
+		loadScene( e );
+
+	} 
+
+	function mergeScenes ( e ) {
+		
+		// Merge scenes, created in TertiusAxis
+
+		loadScene( e );
+
+	} 
+
+
+	function clearScene () {
+
+		if( confirm("Al objects will be deleted. Are you shure?")){
+
+			ta_scene.clearScene();
+
+		}
+
+	}
+
+	function loadScene( e ){
 
 		let file = e.srcElement.files[0];
+
+		if( !file.name.endsWith( '.trxs') ){
+
+		alert( 'File is not a TertiusAxis Scene');
+		return;
+
+		}
 
 		let reader = new FileReader();
 
 		reader.readAsText(file);
 
 		reader.onload = function() {
-		
 
-		let loader = new THREE.ObjectLoader();
+			let loader = new THREE.ObjectLoader();
 
-		let loadedScene = loader.parse( JSON.parse( reader.result ) );
+			let loadedObjectsJSON = JSON.parse( reader.result);
 
-		let children = loadedScene.children;
+			loadedObjectsJSON.forEach( element => {
 
-		// ta_scene.scene.add( loadedScene );
+			let loadedObject = loader.parse( element);
 
-		let elemToImport = [];
+			ta_scene.scene.add( loadedObject );
+
+			if ( loadedObject.userData.selectable ){
+
+				ta_scene.selectableObjects.push( loadedObject );
+
+			}
+
+			});
+
+		};
+
+		reader.onerror = function() {
+
+			alert(reader.error);
+
+		};
+
+	}
+
+	function saveSceneToDisk () {
+
+		// Savig scene, created in TertiusAxis
+
+		let ta_entities = new TA_Entities();
+
+		if ( ta_scene.currentSelection.object ) {
+
+			ta_entities.removeSelection(ta_scene.currentSelection);
+
+		}
+
+		let children = ta_scene.scene.children;
+		let elemToExport = [];
 
 		children.forEach( element => {
 
 			if ( element.userData.createdByUser ) {
 
-				elemToImport.push( element );
+				elemToExport.push( element.toJSON() );
 
 				if ( element.userData.selectable ){
 
@@ -156,55 +236,80 @@ function createMainMenu ( ta_scene ){
 
 				}
 
-				Object.assign( ta_scene.scene.children, elemToImport );
-
 			}
-
 
 		});
 
-		reader.onerror = function() {
-			alert(reader.error);
-		  };
+		let blob = new Blob([JSON.stringify( elemToExport, null, 2)], {type: 'text/plain'});
 
-
-  };
-
-	} );
-
-	function saveSceneInBrowser () {
-
-		alert( 'Not implemented' );
-
-		// console.log( 'Scene saved in browser' );
+		saveFile( blob , 'Scene', 'trxs' );
 
 	}
 
-	function saveSceneOnDisk () {
+	function exportGLTF(){
+
+		let gltfExporter = new GLTFExporter();
+
+		gltfExporter.parse( ta_scene.scene, function ( result ) {
+
+		let gltf = JSON.stringify( result, null, 2 );
+
+		let blob = new Blob( [gltf], {type: 'text/plain'});
+
+		saveFile( blob , 'Scene', 'gltf' );
+
+		} );
+
+	}
+
+	function saveFile( blob, name, fileExtention ){
+
+		let fileName = name + '.' + fileExtention;
 
 		let link = document.createElement('a');
-		link.download = 'Scene.txt';
+		link.download = fileName;
 
-		let ta_entities = new TA_Entities();
+		if (window.navigator && window.navigator.msSaveOrOpenBlob) {
 
-		ta_entities.removeSelection(ta_scene.selectedObject);
+			window.navigator.msSaveOrOpenBlob( blob, fileName );
 
-		let blob = new Blob([JSON.stringify(ta_scene.scene.toJSON(), null, 2)], {type: 'text/plain'});
+		} else {
 
-		link.href = URL.createObjectURL(blob);
+			link.href = URL.createObjectURL( blob );
 
-		link.click();
+			link.click();
 
-		URL.revokeObjectURL(link.href);
-
-			// console.log(  'Scene saved on Disk' );
+			URL.revokeObjectURL( link.href );
+			
+		}
 
 	}
 
 
 	//---------------
 
-	let helpMenu = ta_UI.createContainer( 'helpMenu', mainMenu);
+	let editMenu = ta_UI.createContainer( 'editMenu', mainMenu );
+	editMenu.className = 'subMainMenu';
+
+	let cloneObjectButton = ta_UI.addElement( editMenu, 'label', 'Clone object', '', function(){
+		let ta_entities = new TA_Entities();
+		ta_entities.cloneObject( ta_scene)
+
+
+	} );
+	editMenu.addEventListener('mouseout', function(e) {
+
+		if ( !e.relatedTarget || e.relatedTarget.offsetParent.id !== 'editMenu') {
+
+			this.style.visibility = 'hidden';
+
+		}
+
+	});
+
+	//--------------
+
+	let helpMenu = ta_UI.createContainer( 'helpMenu', mainMenu );
 	helpMenu.className = 'subMainMenu';	
 
 	helpMenu.addEventListener('mouseout', function(e) {

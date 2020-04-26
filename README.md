@@ -10,11 +10,20 @@ You can follow my [blog](https://dragon3dgraff.ru/en/ "dragon3dgraff.ru") to see
 
 # New Features!
 
-- Changing value of position/rotaition/ scale
+- Changing value of position/rotaition/scale from parameters menu
 - Color changing
+- changing parameters from parameters menu
+- Manipulating (Move, Rotate, Scale, Drag)
+- Cloning
+- Saving
+- Loading
+- GLtf Export
 
 ### Todos
-To make also digital display of values of color components. Refactoring written over the weekend.
+
+- Make selection of several objects and their manipulation, as well as cloning of all selected objects. To do this, create a multiselect: new Group () field in the currentSelection object and add the selected objects to the group.
+- implement or use the existing library for monitoring application states.
+
 
 
 License

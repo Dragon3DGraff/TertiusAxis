@@ -3,7 +3,7 @@
  */
 
 import { TA_UI } from "./TA_UI.js";
-import * as THREE from "../build/three.module.js";
+ import * as THREE from "../THREEJS/build/three.module.js";
 
 function fillMaterialParametersTab( entity ) {
 

@@ -2,7 +2,7 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
 */
 
-import * as THREE from "./build/three.module.js";
+import * as THREE from "./THREEJS/build/three.module.js";;
 import {TA_Entities} from "./Entities/TA_Entities.js";
 
 let TA_Helpers = function () {
@@ -49,7 +49,7 @@ let TA_Helpers = function () {
 
 						lineY =  taEntities.createLine( x, y, z, x, y, 0, 'red', 'dashed' );
 						lineY.name = "CoordsHelper"; 
-						scene.add(lineY);          
+						scene.add(lineY);
 
 					break;
 
@@ -83,7 +83,7 @@ let TA_Helpers = function () {
 						labelAtPoint.element.innerHTML = "x = " + Math.round( x * 100 ) /100 + "<br>z = " + Math.round( z * 100 ) /100;
 
 						labelX = taEntities.createLabel( x, 0, 0, "");  
-						labelX.name = "CoordsHelper";					
+						labelX.name = "CoordsHelper";
 						labelX.element.innerHTML = "x = " + Math.round( x * 100 ) /100;
 						scene.add( labelX );
 
@@ -124,12 +124,12 @@ let TA_Helpers = function () {
 	this.SceneGrids = function ( scene ) {
 
 		//Small grid
-		this.gridHelperSmall = new THREE.GridHelper( 20, 100, new THREE.Color('grey'), new THREE.Color( 'lightgrey' ) );
+		this.gridHelperSmall = new THREE.GridHelper( 100, 100, new THREE.Color('grey'), new THREE.Color( 'lightgrey' ) );
 		this.gridHelperSmall.position.y = 0;
 		this.gridHelperSmall.position.x = 0;
 	
 		//Big grid
-		this.gridHelperBig = new THREE.GridHelper( 20, 20, 0x0000ff,  new THREE.Color( 'grey' ) );
+		this.gridHelperBig = new THREE.GridHelper( 100, 20, 0x0000ff,  new THREE.Color( 'grey' ) );
 		this.gridHelperBig.position.y = 0;
 		this.gridHelperBig.position.x = 0;
 	

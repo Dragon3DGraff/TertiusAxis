@@ -14,6 +14,10 @@ function fillGeneralParametersTab( entity ) {
 	elemGeneral.id = 'ParametersGeneralRows';
 	divGeneral.appendChild( elemGeneral );
 
+	let rowUUID = ta_UI.addParametersRow( 'ID', 'string', entity.id );
+	elemGeneral.appendChild( rowUUID );
+	
+
 	// this.addElement( elemGeneral, 'p', 'Name', '');
 	let rowDiv = ta_UI.addParametersRow( 'Name', 'string', entity.name );
 	elemGeneral.appendChild( rowDiv );

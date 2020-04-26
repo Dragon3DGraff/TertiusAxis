@@ -2,13 +2,15 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
 */
 
-import * as THREE from "./build/three.module.js";
+import * as THREE from "./THREEJS/build/three.module.js";
 import {TA_SceneCamera} from "./TA_SceneCamera.js";
-import {CSS2DRenderer} from "./jsm/renderers/CSS2DRenderer.js";
-import {OrbitControls} from "./jsm/controls/OrbitControls.js";
+import {CSS2DRenderer} from "./THREEJS/Add/jsm/renderers/CSS2DRenderer.js";
+import {OrbitControls} from "./THREEJS/Add/jsm/controls/OrbitControls.js";
 import {TA_Entities} from "./Entities/TA_Entities.js";
 import {TA_SceneLights} from "./TA_SceneLights.js";
 import {TA_Helpers} from "./TA_Helpers.js";
+import { TransformControls } from './THREEJS/Add/jsm/controls/TransformControls.js';
+import { DragControls } from './THREEJS/Add/jsm/controls/DragControls.js';
 
 class TA_Scene {
 	constructor( taUI ) {
@@ -48,10 +50,14 @@ class TA_Scene {
 			entity: null
 		};
 		this.selectableObjects = [];
-		this.selectedObject = {
+
+		this.currentSelection = {
 			object: null,
-			objectOwnColor: null
+			objectOwnColor: null,
+			multiselection: new THREE.Group()
 		};
+
+		this.transformControlsMode = 'translate';
 		// let objectOwnColor;
 		scene.background = new THREE.Color('white');
 		renderer.setSize(window.innerWidth, window.innerHeight);
@@ -60,12 +66,51 @@ class TA_Scene {
 		labelRenderer.domElement.style.position = 'absolute';
 		labelRenderer.domElement.style.top = 0;
 		labelRenderer.domElement.id = 'labelRenderer';
+
 		sceneLights.initAll(scene);
 		sceneGrid.initBigGrid(scene);
+		// sceneGrid.initSmallGrid(scene);
+
 		document.body.appendChild(renderer.domElement);
 		document.getElementById('secondCanvas').appendChild(renderer2.domElement);
 		document.body.appendChild(labelRenderer.domElement);
-		const controls = new OrbitControls(camera, labelRenderer.domElement);
+		this.controls = new OrbitControls(camera, labelRenderer.domElement);
+		this.transformControls = new TransformControls( camera, labelRenderer.domElement );
+		scene.add( this.transformControls );
+		this.transformControls.addEventListener( 'change', render );
+		this.transformControls.addEventListener( 'change', function( event ) {
+
+			if ( event.target.object ) {
+
+				scope.taUI.createParametersMenu(event.target.object);
+
+			}
+
+		} );
+
+		this.transformControls.addEventListener( 'dragging-changed', function ( event ) {
+
+			scope.controls.enabled = ! event.value;
+
+		} );
+
+		this.dragControls = new DragControls( this.selectableObjects, camera, labelRenderer.domElement );
+		this.dragControls.deactivate();
+		// this.dragControls.addEventListener( 'drag', render );
+
+		this.dragControls.addEventListener( 'drag', function ( event ) {
+
+			// scope.taUI.createParametersMenu( event.object );
+
+			scope.controls.enableRotate = false;
+		
+		} );
+		this.dragControls.addEventListener( 'dragend', function ( event ) {
+
+			scope.controls.enableRotate = true;
+		
+		} );
+
 		//===============TESTING============
 		// let testCube = taEntities.createBox( 0, 0, 0, 0.5, 0.5, 0.5 );
 		// testCube.name = 'testCube'
@@ -124,53 +169,94 @@ class TA_Scene {
 			}
 		}
 		function onDocumentMouseClick(event) {
+
 			if (event.target.parentElement.id === "secondCanvas") {
+
 				resizeSecondCanvas();
+
 				return;
+
 			}
-			let screenPoint = getScreenPoint(event);
-			raycaster.setFromCamera(screenPoint, camera);
-			let intersects = raycaster.intersectObjects(sceneGrid.mainPlanesArray);
-			if (event.target.className === "labelDiv") {
-				if (scope.mode.action === 'creationEntity') {
-					if (creatingEntity.centerOfObjectWorld) {
-						taEntities.selectEntity(creatingEntity.currentEntity, scope.selectedObject);
-						if (creatingEntity.currentEntity) {
-							scope.selectableObjects.push(creatingEntity.currentEntity);
+
+
+
+			if ( event.target.className === "labelDiv" ) {
+
+				let screenPoint = getScreenPoint(event);
+
+				raycaster.setFromCamera(screenPoint, camera);
+	
+				let intersects = raycaster.intersectObjects( sceneGrid.mainPlanesArray );
+
+				if ( scope.mode.action === 'creationEntity' ) {
+
+					if ( creatingEntity.centerOfObjectWorld ) {
+
+						taEntities.selectEntity(creatingEntity.currentEntity, scope.currentSelection);
+
+						if ( creatingEntity.currentEntity ) {
+
+							scope.selectableObjects.push( creatingEntity.currentEntity );
+
 						}
+
 						creatingEntity.stopCreating();
+
 						return;
+
 					}
-					if (scope.selectedObject.object) {
-						taEntities.removeSelection(scope.selectedObject);
+					if ( scope.currentSelection.object ) {
+
+						taEntities.removeSelection(scope.currentSelection);
+
 					}
+
 					creatingEntity.centerOfObjectWorld = intersects[0].point;
 					creatingEntity.createEntity(scope.mode, scene, event, sceneCamera);
 					scope.taUI.createParametersMenu(creatingEntity.currentEntity);
+
 				}
-				if (scope.mode.action === 'select') {
+
+				if ( scope.mode.action === 'select' ) {
+
+					let screenPoint = getScreenPoint(event);
+
+					raycaster.setFromCamera(screenPoint, camera);
+
 					let intersects = raycaster.intersectObjects(scope.selectableObjects);
+
 					if (intersects.length > 0) {
-						if (scope.selectedObject.object) {
-							taEntities.removeSelection(scope.selectedObject);
+
+						if ( scope.currentSelection.object ) {
+							taEntities.removeSelection(scope.currentSelection);
 						}
 						let objectToSelect = intersects[0].object;
-						scope.selectedObject = taEntities.selectEntity(objectToSelect, scope.selectedObject);
+						scope.currentSelection = taEntities.selectEntity(objectToSelect, scope.currentSelection);
+						// console.log( scope.currentSelection.object.parent );
+						
+						if ( scope.transformControlsMode !== '' ) {
+
+							scope.transformControls.setMode( scope.transformControlsMode );
+							scope.transformControls.attach( scope.currentSelection.object );
+
+						}
+						
 					}
 					else {
-						if (scope.selectedObject.object) {
-							taEntities.removeSelection(scope.selectedObject);
+						if (scope.currentSelection.object) {
+							scope.transformControls.detach(scope.currentSelection.object);
+							taEntities.removeSelection(scope.currentSelection);
 						}
 					}
-					if (scope.selectedObject.object) {
-						scope.taUI.createParametersMenu(scope.selectedObject.object);
+					if (scope.currentSelection.object) {
+						scope.taUI.createParametersMenu(scope.currentSelection.object);
 					}
 					else {
 						scope.taUI.deleteParametersMenu();
 					}
 					// let intersects = raycaster.intersectObjects( scope.selectableObjects );
-					// selectedObject = taEntities.selectEntity( intersects, selectedObject );
-					// console.log (selectedObject);
+					// currentSelection = taEntities.selectEntity( intersects, currentSelection );
+					// console.log (currentSelection);
 				}
 			}
 		}
@@ -182,14 +268,14 @@ class TA_Scene {
 			// if ( event.target.id == "labelRenderer") {
 			// coordsHelpers.removeCoordsHelpers( scene );
 			// coordsHelpers.createCoordsHelpers( intersects, scene );
-			controls.enableRotate = false;
+			this.controls.enableRotate = false;
 		}
 		function onTouchEnd(event) {
-			// controls.enableRotate = true;
+			// this.controls.enableRotate = true;
 		}
 		function onTouchMove(event) {
 			// event.preventDefault();
-			controls.enableRotate = false;
+			this.controls.enableRotate = false;
 			console.log(event);
 			// 
 			// let screenPoint = getScreenPoint( event.touches[0] ); 
@@ -246,8 +332,10 @@ class TA_Scene {
 			let screenPoint = getScreenPoint(event);
 		}
 		function onKeyDown(event) {
-			switch (event.key) {
-				case 'Escape': // Esc
+			console.log( event.keyCode );
+			switch (event.keyCode) {
+				
+				case 27: // Esc
 
 					if (creatingEntity.currentEntity) {
 						scope.selectableObjects.push(creatingEntity.currentEntity);
@@ -258,21 +346,82 @@ class TA_Scene {
 						entity: null
 					};
 					
-					break;
+				break;
+
+				case 46: //Delete
+
+					if( scope.currentSelection.object ){
+
+						scope.transformControlsMode = '';
+						scope.transformControls.detach( scope.currentSelection.object );
+
+						scene.remove( scope.currentSelection.object );
+						scope.currentSelection.object = null;
+
+					}
+
+				break;
+
+				case 67:  //'c' copy object
+
+				if( scope.currentSelection.object ){
+
+					taEntities.cloneObject( scope );
+		
+				}
+
+
+				break;
 			}
 		}
 		let animate = function () {
 
 			requestAnimationFrame(animate);
 			scene.updateMatrixWorld();
+			render();
+			
+		};
+
+		function render(){
+
 			renderer.render(scene, camera);
 			renderer2.render(scene, camera2);
 			labelRenderer.render(scene, camera);
-		};
+
+		}
 		this.camera = camera;
 		this.scene = scene;
 		this.animate = animate;
 		animate();
+	}
+
+	clearScene(){
+
+		let taEntities = new TA_Entities();
+
+		if (this.currentSelection.object) {
+			this.transformControls.detach(this.currentSelection.object);
+			taEntities.removeSelection(this.currentSelection);
+		}
+
+		let children = this.scene.children;
+
+		let elementsToRemove = [];
+
+		children.forEach( element => {
+
+			if ( element.userData.createdByUser ) {
+
+					elementsToRemove.push( element );
+
+					this.selectableObjects.splice( this.selectableObjects.indexOf( element ));
+
+			}
+
+		});
+
+		this.scene.remove( ...elementsToRemove );
+
 	}
 
 	// setUI( taUI ) {

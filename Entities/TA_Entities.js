@@ -2,8 +2,8 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 
-import * as THREE from "../build/three.module.js";
-import {CSS2DObject} from '../jsm/renderers/CSS2DRenderer.js';
+import * as THREE from "../THREEJS/build/three.module.js";
+import {CSS2DObject} from '../THREEJS/Add/jsm/renderers/CSS2DRenderer.js';
 import { TA_UI } from "../UI/TA_UI.js";
 
 
@@ -354,8 +354,8 @@ class TA_Entities {
 				case 'dashed':
 					material = new THREE.LineDashedMaterial({
 						color: new THREE.Color(color),
-						dashSize: 0.1,
-						gapSize: 0.05
+						dashSize: 0.9,
+						gapSize: 0.5
 					});
 					break;
 				case 'solid':
@@ -393,31 +393,31 @@ class TA_Entities {
 			return plane;
 		};
 
-		this.selectEntity = function (objectToSelect, selectedObject) {
-			// selectedObject.objectOwnColor = objectToSelect.material.color;
+		this.selectEntity = function (objectToSelect, currentSelection) {
+			// currentSelection.objectOwnColor = objectToSelect.material.color;
 			// objectToSelect.material.color = new THREE.Color('tomato');
-			selectedObject.object = objectToSelect;
-			selectedObject.object.add(this.createWireframe(selectedObject));
-			selectedObject.object.add(this.createBoundingBox(selectedObject));
+			currentSelection.object = objectToSelect;
+			currentSelection.object.add(this.createWireframe(currentSelection));
+			currentSelection.object.add(this.createBoundingBox(currentSelection));
 			let taUI = new TA_UI;
 			taUI.createParametersMenu(objectToSelect);
 
-			return selectedObject;
+			return currentSelection;
 		};
-		this.createWireframe = function ( selectedObject ) {
-			let wireframe = new THREE.EdgesGeometry(selectedObject.object.geometry);
+		this.createWireframe = function ( currentSelection ) {
+			let wireframe = new THREE.EdgesGeometry(currentSelection.object.geometry);
 			let wireframeLines = new THREE.LineSegments(wireframe);
 			wireframeLines.material.depthTest = true;
 			// wireframeLines.material.opacity = 0.25;
 			// wireframeLines.material.transparent = true;
 			wireframeLines.material.color = new THREE.Color('white');
 			wireframeLines.name = 'wireframe';
-			wireframeLines.scale.set(1.001, 1.001, 1.001);
+			wireframeLines.scale.set(1.01, 1.01, 1.01);
 			return wireframeLines;
 		};
-		this.createBoundingBox = function ( selectedObject ) {
-			selectedObject.object.geometry.computeBoundingBox();
-			let box = new THREE.Box3Helper(selectedObject.object.geometry.boundingBox, new THREE.Color('red'));
+		this.createBoundingBox = function ( currentSelection ) {
+			currentSelection.object.geometry.computeBoundingBox();
+			let box = new THREE.Box3Helper(currentSelection.object.geometry.boundingBox, new THREE.Color('red'));
 			box.name = 'BoundingBox';
 
 			if ( box.box.min.z === 0) {
@@ -431,14 +431,14 @@ class TA_Entities {
 
 		};
 
-		this.removeSelection = function (selectedObject) {
-			let wireframeScene = selectedObject.object.children.filter(item => item.name === "wireframe" || item.name === "BoundingBox");
+		this.removeSelection = function (currentSelection) {
+			let wireframeScene = currentSelection.object.children.filter(item => item.name === "wireframe" || item.name === "BoundingBox");
 			wireframeScene.forEach(element => {
-				selectedObject.object.remove(element);
+				currentSelection.object.remove(element);
 			});
-			// selectedObject.object.material.color = selectedObject.objectOwnColor;
-			selectedObject.object = null;
-			selectedObject.objectOwnColor = null;
+			// currentSelection.object.material.color = currentSelection.objectOwnColor;
+			currentSelection.object = null;
+			currentSelection.objectOwnColor = null;
 		};
 
 		this.updateSelectedObject = function( parameterName, parameterValue, entity ) {
@@ -472,6 +472,8 @@ class TA_Entities {
 					boundingBox.box = box3Helper.box;
 	
 		}
+
+
 
 		this.updateObject = function( parameterName, parameterValue, entity ) {
 
@@ -739,17 +741,34 @@ class TA_Entities {
 
 				this.currentEntity.userData = { createdByUser: true, selectable: true };
 
-				console.log( this.currentEntity );
+				// console.log( this.currentEntity );
 
 				this.centerOfObjectWorld = null;
 				this.centerOfObjectScreen = null;
 				this.currentEntity = null;
 
 			};
+
 		};
+
 	}
 
-	
+	cloneObject( ta_scene ) {
+
+		let copiedObjectID = ta_scene.currentSelection.object.id;
+		this.removeSelection( ta_scene.currentSelection );
+		let copiedObject = ta_scene.scene.getObjectById( copiedObjectID );
+
+		let newObject = copiedObject.clone( false );
+
+		ta_scene.selectableObjects.push( newObject );
+
+		ta_scene.scene.add( newObject );
+
+		this.selectEntity( copiedObject, ta_scene.currentSelection );
+
+	}
 
 }
+
 export {TA_Entities};

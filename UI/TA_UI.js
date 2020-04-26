@@ -36,24 +36,49 @@ class TA_UI {
 
 	}
 	
-	addElement( container, elementName, text, imgLink, func ) {
+	addElement( parent, elementName, text, imgLink, func ) {
 
 		let dom = document.createElement( elementName );
-		container.appendChild( dom );
+		parent.appendChild( dom );
 
 		dom.innerHTML = text;
 
 		if ( imgLink !== "" ){
+
 			let img = document.createElement( 'img' );
 			img.src = imgLink;
 			dom.appendChild( img );
+
 		}
 		
 		if (typeof( func ) === 'function') {
+
 			dom.addEventListener( 'click', func, false );
+
 		}
 
 		return dom;
+	}
+
+	createFileSelectionButton ( parent, text = 'Choose File', func ) {
+
+		let label = document.createElement( 'label' );
+		parent.appendChild( label );
+		label.innerHTML = text;
+
+		let fileBrowser = document.createElement( 'input' );
+		fileBrowser.type = 'file';
+		fileBrowser.className = 'selectFile';
+		label.appendChild( fileBrowser );
+		
+		if (typeof( func ) === 'function') {
+
+			label.addEventListener( 'change', func, false );
+
+		}
+
+		return label;
+
 	}
 
 	createContainer( containerName, parentElement ) {

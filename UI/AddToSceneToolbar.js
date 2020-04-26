@@ -25,8 +25,6 @@ function createAddToSceneToolbar ( taScene ) {
 	function () {
 		let addToSceneButtons = document.getElementById( 'addToSceneButtons');
 
-		console.log (title.innerHTML);
-
 		if (addToSceneButtons.style.display === 'block') {
 			addToSceneButtons.style.display = 'none';
 
