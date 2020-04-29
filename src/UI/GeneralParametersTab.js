@@ -40,7 +40,7 @@ function fillGeneralParametersTab( entity ) {
 		let nameOfParameter = parametersGeneral[i][0];
 		let valueOfParameter = Math.round( parametersGeneral[i][1] * 1000 )/1000;;
 
-		let rowDiv = ta_UI.addParametersRow( nameOfParameter, 'number', valueOfParameter );
+		let rowDiv = ta_UI.addParametersRow( 'position_' + nameOfParameter, 'number', valueOfParameter );
 		elemGeneral.appendChild( rowDiv );
 		let input = ta_UI.getInput(rowDiv);
 		input.step = 0.1;
@@ -62,7 +62,7 @@ function fillGeneralParametersTab( entity ) {
 		let nameOfParameter = parametersGeneral[i][0];
 		let valueOfParameter = Math.round( parametersGeneral[i][1] * 1000 )/1000;;
 
-		let rowDiv = ta_UI.addParametersRow( nameOfParameter, 'number', valueOfParameter );
+		let rowDiv = ta_UI.addParametersRow( 'rotation_' + nameOfParameter, 'number', valueOfParameter );
 		elemGeneral.appendChild( rowDiv );
 		let input = ta_UI.getInput(rowDiv);
 
@@ -84,7 +84,7 @@ function fillGeneralParametersTab( entity ) {
 		let nameOfParameter = parametersGeneral[i][0].replace('_','');
 		let valueOfParameter = Math.round( parametersGeneral[i][1] * 1000 )/1000;;
 
-		let rowDiv = ta_UI.addParametersRow( nameOfParameter, 'number', valueOfParameter );
+		let rowDiv = ta_UI.addParametersRow( 'scale_' + nameOfParameter, 'number', valueOfParameter );
 		elemGeneral.appendChild( rowDiv );
 		let input = ta_UI.getInput(rowDiv);
 

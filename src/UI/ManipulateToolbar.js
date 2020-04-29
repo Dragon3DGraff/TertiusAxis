@@ -3,7 +3,7 @@
  */
 
 import { TA_UI } from "./TA_UI.js";
-import {TA_Entities} from "../../Entities/TA_Entities.js";
+import {TA_Entities} from "../Entities/TA_Entities.js";
 
 function createManipulateToolbar ( taScene ){
 
@@ -22,7 +22,7 @@ function createManipulateToolbar ( taScene ){
 		manipulatingContainer,
 		'button',
 		'Select ',
-		"",
+		'',
 		function () {
 			taScene.mode.action = 'select';
 			taScene.transformControlsMode = '';
@@ -93,6 +93,7 @@ function createManipulateToolbar ( taScene ){
 
 			if( taScene.currentSelection.object ) {
 
+				ta_UI.deleteParametersMenu();
 				taScene.transformControls.detach( taScene.currentSelection.object );
 				let taEntities = new TA_Entities();
 				taEntities.removeSelection( taScene.currentSelection );

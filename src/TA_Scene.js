@@ -2,15 +2,16 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
 */
 
-import * as THREE from "./THREEJS/build/three.module.js";
-import {TA_SceneCamera} from "./TA_SceneCamera.js";
-import {CSS2DRenderer} from "./THREEJS/Add/jsm/renderers/CSS2DRenderer.js";
-import {OrbitControls} from "./THREEJS/Add/jsm/controls/OrbitControls.js";
+import * as THREE from "../node_modules/three/build/three.module.js";
+import {CSS2DRenderer} from "../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
+import {OrbitControls} from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
+import { TransformControls } from '../node_modules/three/examples/jsm/controls/TransformControls.js';
+import { DragControls } from '../node_modules/three/examples/jsm/controls/DragControls.js';
+
 import {TA_Entities} from "./Entities/TA_Entities.js";
 import {TA_SceneLights} from "./TA_SceneLights.js";
 import {TA_Helpers} from "./TA_Helpers.js";
-import { TransformControls } from './THREEJS/Add/jsm/controls/TransformControls.js';
-import { DragControls } from './THREEJS/Add/jsm/controls/DragControls.js';
+import {TA_SceneCamera} from "./TA_SceneCamera.js";
 
 class TA_Scene {
 	constructor( taUI ) {
@@ -78,19 +79,38 @@ class TA_Scene {
 		this.transformControls = new TransformControls( camera, labelRenderer.domElement );
 		scene.add( this.transformControls );
 		this.transformControls.addEventListener( 'change', render );
-		this.transformControls.addEventListener( 'change', function( event ) {
 
-			if ( event.target.object ) {
+		this.transformControls.addEventListener( 'objectChange', function( event ) {
 
-				scope.taUI.createParametersMenu(event.target.object);
+			// console.log(event.target.worldPositionStart)
+			// console.log(event.target.worldPosition)
+			if( event.target.mode === 'translate' ){
+
+				if (event.target.worldPositionStart.x !== event.target.worldPosition.x ){
+
+					document.getElementById('position_x').value = event.target.object.position.x;
+
+				}
+
+				if (event.target.worldPositionStart.y !== event.target.worldPosition.y ){
+
+					document.getElementById('position_y').value = event.target.object.position.y;
+
+				}
+
+				if (event.target.worldPositionStart.z !== event.target.worldPosition.z ){
+
+					document.getElementById('position_z').value = event.target.object.position.z;
+
+				}
 
 			}
 
-		} );
+		})
 
 		this.transformControls.addEventListener( 'dragging-changed', function ( event ) {
 
-			scope.controls.enabled = ! event.value;
+			scope.controls.enabled = !event.value;
 
 		} );
 

@@ -3,6 +3,8 @@
  */
 
 import { TA_UI } from "./TA_UI.js";
+import cubeIco from "../ico/cubeico.png";
+import sphereIco from "../ico/sphereico.png";
 
 function createAddToSceneToolbar ( taScene ) {
 
@@ -47,8 +49,8 @@ function createAddToSceneToolbar ( taScene ) {
 
 	let primitivesNamesForButtons = [
 
-		{text:'Box', type: 'BoxBufferGeometry', imgLink: './ico/cubeico.PNG', active: true},
-		{text:'Sphere', type: 'SphereBufferGeometry', imgLink: './ico/sphereico.PNG', active: true},
+		{text:'Box', type: 'BoxBufferGeometry', imgLink: cubeIco, active: true},
+		{text:'Sphere', type: 'SphereBufferGeometry', imgLink: sphereIco, active: true},
 		{text:'Circle', type: 'CircleBufferGeometry', imgLink: '', active: true},
 		{text:'Cone', type: 'ConeBufferGeometry', imgLink: '', active: true},
 		{text:'Cylinder', type: 'CylinderBufferGeometry', imgLink: '', active: true},

@@ -2,10 +2,10 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 
-import { TA_UI } from "./TA_UI.js";
-import * as THREE from "../THREEJS/build/three.module.js";
+import * as THREE from "../../node_modules/three/build/three.module.js";
+import { GLTFExporter } from '../../node_modules/three/examples/jsm/exporters/GLTFExporter.js';
 import {TA_Entities} from "../Entities/TA_Entities.js";
-import { GLTFExporter } from '../THREEJS/Add/jsm/exporters/GLTFExporter.js';
+import { TA_UI } from "./TA_UI.js";
 
 function createMainMenu ( ta_scene ){
 

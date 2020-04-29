@@ -2,7 +2,7 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
 */
 
-import * as THREE from "./THREEJS/build/three.module.js";;
+import * as THREE from "../node_modules/three/build/three.module.js";;
 import {TA_Entities} from "./Entities/TA_Entities.js";
 
 let TA_Helpers = function () {
