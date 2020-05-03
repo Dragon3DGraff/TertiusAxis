@@ -1,11 +1,15 @@
 /**
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
-import * as THREE from "../node_modules/three/build/three.module.js";
+import {
+	PerspectiveCamera,
+	Vector3,
+	Line3
+} from "../node_modules/three/build/three.module.js";
 
 class TA_SceneCamera {
 	constructor() {
-		this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 10000);
+		this.camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 10000);
 		this.camera.position.z = 50;
 		this.camera.position.y = 50;
 		this.camera.position.x = 50;
@@ -20,17 +24,17 @@ class TA_SceneCamera {
 
 	getWorldSizeOfScreen ( camera, point ) {
 
-		let cameraDirection = new THREE.Vector3();
+		let cameraDirection = new Vector3();
 		camera.getWorldDirection ( cameraDirection );
-		let cameraPosition = new THREE.Vector3();
+		let cameraPosition = new Vector3();
 		cameraPosition = camera.position.clone();
 		let distance = point.distanceTo( cameraPosition );
 
 		cameraPosition.add(cameraDirection.multiplyScalar(distance) );
 
-		let line3 = new THREE.Line3(camera.position, cameraPosition);
+		let line3 = new Line3(camera.position, cameraPosition);
 
-		let pointOnLine = new THREE.Vector3();
+		let pointOnLine = new Vector3();
 
 		line3.closestPointToPoint( point, true, pointOnLine);
 

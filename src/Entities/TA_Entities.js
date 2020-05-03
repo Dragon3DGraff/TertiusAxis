@@ -3,6 +3,9 @@
  */
 
 import * as THREE from "../../node_modules/three/build/three.module.js";
+
+// import { BoxBufferGeometry } from "../../node_modules/three/build/three.module.js";
+
 import {CSS2DObject} from '../../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js';
 import { TA_UI } from "../UI/TA_UI.js";
 
@@ -397,8 +400,8 @@ class TA_Entities {
 			// currentSelection.objectOwnColor = objectToSelect.material.color;
 			// objectToSelect.material.color = new THREE.Color('tomato');
 			currentSelection.object = objectToSelect;
-			currentSelection.object.add(this.createWireframe(currentSelection));
-			currentSelection.object.add(this.createBoundingBox(currentSelection));
+			// currentSelection.object.add(this.createWireframe(currentSelection));
+			currentSelection.object.add(this.createBoundingBox(currentSelection.object));
 			let taUI = new TA_UI;
 			taUI.createParametersMenu(objectToSelect);
 
@@ -415,9 +418,9 @@ class TA_Entities {
 			wireframeLines.scale.set(1.01, 1.01, 1.01);
 			return wireframeLines;
 		};
-		this.createBoundingBox = function ( currentSelection ) {
-			currentSelection.object.geometry.computeBoundingBox();
-			let box = new THREE.Box3Helper(currentSelection.object.geometry.boundingBox, new THREE.Color('red'));
+		this.createBoundingBox = function ( object ) {
+			object.geometry.computeBoundingBox();
+			let box = new THREE.Box3Helper(object.geometry.boundingBox, new THREE.Color('red'));
 			box.name = 'BoundingBox';
 
 			if ( box.box.min.z === 0) {
@@ -431,14 +434,19 @@ class TA_Entities {
 
 		};
 
-		this.removeSelection = function (currentSelection) {
-			let wireframeScene = currentSelection.object.children.filter(item => item.name === "wireframe" || item.name === "BoundingBox");
-			wireframeScene.forEach(element => {
-				currentSelection.object.remove(element);
-			});
+		this.removeSelection = function ( currentSelection ) {
+			this.removeWireframeAndBoundingBox( currentSelection.object );
 			// currentSelection.object.material.color = currentSelection.objectOwnColor;
 			currentSelection.object = null;
 			currentSelection.objectOwnColor = null;
+		};
+
+		this.removeWireframeAndBoundingBox = function ( object ) {
+			let wireframeScene = object.children.filter(item => item.name === "wireframe" || item.name === "BoundingBox");
+			wireframeScene.forEach(element => {
+				object.remove(element);
+			});
+
 		};
 
 		this.updateSelectedObject = function( parameterName, parameterValue, entity ) {
@@ -454,9 +462,9 @@ class TA_Entities {
 					entity.geometry.dispose();
 					entity.geometry = newGeom;
 	
-					let wireframe = entity.getObjectByName( 'wireframe' );
-					let newWireframeGeometry = new THREE.WireframeGeometry( newGeom );
-					wireframe.geometry = newWireframeGeometry;
+					// let wireframe = entity.getObjectByName( 'wireframe' );
+					// let newWireframeGeometry = new THREE.WireframeGeometry( newGeom );
+					// wireframe.geometry = newWireframeGeometry;
 	
 					let boundingBox = entity.getObjectByName( 'BoundingBox' );
 					entity.geometry.computeBoundingBox();
@@ -754,18 +762,47 @@ class TA_Entities {
 	}
 
 	cloneObject( ta_scene ) {
+		
+		// if ( ta_scene.currentSelection.object ){
+		// let copiedObjectID = ta_scene.currentSelection.object.id;
+		// this.removeWireframeAndBoundingBox( ta_scene.currentSelection.object );
 
-		let copiedObjectID = ta_scene.currentSelection.object.id;
-		this.removeSelection( ta_scene.currentSelection );
+		// let copiedObject = ta_scene.scene.getObjectById( copiedObjectID );
+
+		// let newObject = copiedObject.clone( false );
+
+		// ta_scene.selectableObjects.push( newObject );
+
+		// ta_scene.scene.add( newObject );
+
+		// this.selectEntity( ta_scene.currentSelection.object, ta_scene.currentSelection );
+
+		// }
+
+		// СДЕЛАТЬ КЛОНИРОВАНИЕ ГРУППЫ!
+
+		if ( ta_scene.currentSelection.multiselection.children.length > 0 ){
+
+			console.log ( ta_scene.currentSelection.multiselection )
+
+			let copiedObjectID = ta_scene.currentSelection.multiselection.id;
+
 		let copiedObject = ta_scene.scene.getObjectById( copiedObjectID );
 
-		let newObject = copiedObject.clone( false );
+		let newObject = copiedObject.clone();
+		console.log ( newObject )
+		
 
-		ta_scene.selectableObjects.push( newObject );
+		ta_scene.selectableObjects.concat( newObject.children );
 
-		ta_scene.scene.add( newObject );
+		ta_scene.scene.add( ...newObject.children );
 
-		this.selectEntity( copiedObject, ta_scene.currentSelection );
+
+
+
+
+
+		}
 
 	}
 

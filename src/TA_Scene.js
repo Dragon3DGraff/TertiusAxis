@@ -2,9 +2,21 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
 */
 
-import * as THREE from "../node_modules/three/build/three.module.js";
-import {CSS2DRenderer} from "../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
-import {OrbitControls} from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
+import {
+	 Scene,
+	 WebGLRenderer,
+	 Raycaster,
+	 PerspectiveCamera,
+	 Group,
+	 Color,
+	 Vector2,
+	 Vector3,
+	 Box3,
+	 Box3Helper
+	} from "../node_modules/three/build/three.module.js";
+
+import { CSS2DRenderer } from "../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
+import { OrbitControls } from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
 import { TransformControls } from '../node_modules/three/examples/jsm/controls/TransformControls.js';
 import { DragControls } from '../node_modules/three/examples/jsm/controls/DragControls.js';
 
@@ -15,6 +27,7 @@ import {TA_SceneCamera} from "./TA_SceneCamera.js";
 
 class TA_Scene {
 	constructor( taUI ) {
+
 		this.taUI = taUI;
 		this.scene;
 	}
@@ -26,19 +39,22 @@ class TA_Scene {
 	}
 
 	createScene(){
-		let scene = new THREE.Scene();
+		let scene = new Scene();
+		let renderer = new WebGLRenderer({ antialias: true });
+		let renderer2 = new WebGLRenderer();
+		const raycaster = new Raycaster();
+
 		let sceneCamera = new TA_SceneCamera();
 		let sceneCamera2 = new TA_SceneCamera();
-		let renderer = new THREE.WebGLRenderer({ antialias: true });
-		let renderer2 = new THREE.WebGLRenderer();
+		
 		let labelRenderer = new CSS2DRenderer();
 		let taEntities = new TA_Entities();
 		let creatingEntity = new taEntities.CreatingEntity();
-		const raycaster = new THREE.Raycaster();
+		
 		const sceneLights = new TA_SceneLights();
 		let camera = sceneCamera.initCamera();
 		let camera2 = sceneCamera2.initCamera();
-		camera2 = new THREE.PerspectiveCamera(50, document.getElementById('secondCanvas').clientWidth / document.getElementById('secondCanvas').clientHeight, 0.01, 10000);
+		camera2 = new PerspectiveCamera(50, document.getElementById('secondCanvas').clientWidth / document.getElementById('secondCanvas').clientHeight, 0.01, 10000);
 		camera2.position.z = 0;
 		camera2.position.y = 4.6;
 		camera2.position.x = 0;
@@ -55,12 +71,13 @@ class TA_Scene {
 		this.currentSelection = {
 			object: null,
 			objectOwnColor: null,
-			multiselection: new THREE.Group()
+			multiselection: new Group()
 		};
+		scene.add( this.currentSelection.multiselection );
 
-		this.transformControlsMode = 'translate';
+		this.transformControlsMode = '';
 		// let objectOwnColor;
-		scene.background = new THREE.Color('white');
+		scene.background = new Color('white');
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer2.setSize(document.getElementById('secondCanvas').clientWidth, document.getElementById('secondCanvas').clientHeight);
 		labelRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -84,23 +101,31 @@ class TA_Scene {
 
 			// console.log(event.target.worldPositionStart)
 			// console.log(event.target.worldPosition)
+			if (event.target.object.type === 'Group') {
+
+				return;
+
+			}
+
+			// СДЕЛАТЬ ОБНОВЛЕНИЕ ПОЛЕЙ ПАРАМЕТРОВ
+
 			if( event.target.mode === 'translate' ){
 
 				if (event.target.worldPositionStart.x !== event.target.worldPosition.x ){
 
-					document.getElementById('position_x').value = event.target.object.position.x;
+					// document.getElementById('position_x').value = event.target.object.position.x;
 
 				}
 
 				if (event.target.worldPositionStart.y !== event.target.worldPosition.y ){
 
-					document.getElementById('position_y').value = event.target.object.position.y;
+					// document.getElementById('position_y').value = event.target.object.position.y;
 
 				}
 
 				if (event.target.worldPositionStart.z !== event.target.worldPosition.z ){
 
-					document.getElementById('position_z').value = event.target.object.position.z;
+					// document.getElementById('position_z').value = event.target.object.position.z;
 
 				}
 
@@ -121,6 +146,7 @@ class TA_Scene {
 		this.dragControls.addEventListener( 'drag', function ( event ) {
 
 			// scope.taUI.createParametersMenu( event.object );
+			// scope.transformControls.detach( scope.currentSelection.multiselection );
 
 			scope.controls.enableRotate = false;
 		
@@ -131,11 +157,6 @@ class TA_Scene {
 		
 		} );
 
-		//===============TESTING============
-		// let testCube = taEntities.createBox( 0, 0, 0, 0.5, 0.5, 0.5 );
-		// testCube.name = 'testCube'
-		// scene.add(testCube);
-		//=============================
 		const infoDiv = document.getElementById("infoParagraph");
 		window.addEventListener('resize', onWindowResize, false);
 		document.addEventListener('click', onDocumentMouseClick, false);
@@ -188,7 +209,18 @@ class TA_Scene {
 				updateSmallWindow();
 			}
 		}
-		function onDocumentMouseClick(event) {
+
+		// ----------TEST-----------------
+
+		// let testCylinder = taEntities.createCylinder(0,0,0,0.2,0.2,30,10,1);
+		// testCylinder.material.color = new Color('red');
+		// testCylinder.name = 'testCylinder';
+		// scene.add( testCylinder );
+
+
+		// //-------------------------------
+
+		function onDocumentMouseClick( event ) {
 
 			if (event.target.parentElement.id === "secondCanvas") {
 
@@ -197,8 +229,6 @@ class TA_Scene {
 				return;
 
 			}
-
-
 
 			if ( event.target.className === "labelDiv" ) {
 
@@ -209,6 +239,9 @@ class TA_Scene {
 				let intersects = raycaster.intersectObjects( sceneGrid.mainPlanesArray );
 
 				if ( scope.mode.action === 'creationEntity' ) {
+
+					scope.returnObjectsToScene();
+					scope.resetMultyselection();
 
 					if ( creatingEntity.centerOfObjectWorld ) {
 
@@ -228,6 +261,8 @@ class TA_Scene {
 					if ( scope.currentSelection.object ) {
 
 						taEntities.removeSelection(scope.currentSelection);
+						scope.currentSelection.object = null;
+						scope.currentSelection.objectOwnColor = null;
 
 					}
 
@@ -239,47 +274,155 @@ class TA_Scene {
 
 				if ( scope.mode.action === 'select' ) {
 
-					let screenPoint = getScreenPoint(event);
+					selectByMouse ( event );
 
-					raycaster.setFromCamera(screenPoint, camera);
+				}
 
-					let intersects = raycaster.intersectObjects(scope.selectableObjects);
+			}
 
-					if (intersects.length > 0) {
+		}
 
-						if ( scope.currentSelection.object ) {
-							taEntities.removeSelection(scope.currentSelection);
+		function selectByMouse ( event ) {
+
+			let screenPoint = getScreenPoint(event);
+
+			raycaster.setFromCamera(screenPoint, camera);
+
+			let intersects = raycaster.intersectObjects( scope.selectableObjects );
+
+			if ( intersects.length > 0 ) {
+
+				let objectToSelect = intersects[0].object;
+
+				if ( event.ctrlKey ){
+
+					if ( scope.currentSelection.object ) {
+
+						taEntities.removeWireframeAndBoundingBox( scope.currentSelection.object );
+						scope.currentSelection.multiselection.attach( scope.currentSelection.object );
+						scope.currentSelection.object = null;
+
+					}
+
+					let arrayObjectsInSelection = [];
+
+					arrayObjectsInSelection = arrayObjectsInSelection.concat( scope.currentSelection.multiselection.children );
+					arrayObjectsInSelection.push( objectToSelect );
+
+					scope.returnObjectsToScene();
+
+					let centerPoints = [];
+
+					arrayObjectsInSelection.forEach( element => {
+
+							centerPoints.push( element.position.clone() )
+
 						}
-						let objectToSelect = intersects[0].object;
-						scope.currentSelection = taEntities.selectEntity(objectToSelect, scope.currentSelection);
-						// console.log( scope.currentSelection.object.parent );
-						
-						if ( scope.transformControlsMode !== '' ) {
 
-							scope.transformControls.setMode( scope.transformControlsMode );
-							scope.transformControls.attach( scope.currentSelection.object );
+					)
 
-						}
-						
+					let baryCenter = findBaryCenter( centerPoints ).clone();
+
+					scope.currentSelection.multiselection.position.set( baryCenter.x, baryCenter.y, baryCenter.z);
+
+					for (let i = arrayObjectsInSelection.length - 1; i >= 0; i--) {
+
+						scope.currentSelection.multiselection.attach( arrayObjectsInSelection[i] );
+
+
+						arrayObjectsInSelection[i].add( taEntities.createBoundingBox( arrayObjectsInSelection[i] ) );
+		
 					}
-					else {
-						if (scope.currentSelection.object) {
-							scope.transformControls.detach(scope.currentSelection.object);
-							taEntities.removeSelection(scope.currentSelection);
-						}
+
+					if ( scope.transformControlsMode !== '' ) {
+
+						scope.transformControls.setMode( scope.transformControlsMode );
+						scope.transformControls.attach( scope.currentSelection.multiselection );
+
 					}
-					if (scope.currentSelection.object) {
-						scope.taUI.createParametersMenu(scope.currentSelection.object);
-					}
-					else {
-						scope.taUI.deleteParametersMenu();
-					}
-					// let intersects = raycaster.intersectObjects( scope.selectableObjects );
-					// currentSelection = taEntities.selectEntity( intersects, currentSelection );
-					// console.log (currentSelection);
+
+				}
+				else{
+
+					scope.returnObjectsToScene();
+					scope.resetMultyselection();
+
+				if ( scope.currentSelection.object ) {
+
+					taEntities.removeSelection( scope.currentSelection );
+
+				}
+				
+				scope.currentSelection = taEntities.selectEntity( objectToSelect, scope.currentSelection );
+			
+				if ( scope.transformControlsMode !== '' ) {
+
+					scope.transformControls.setMode( scope.transformControlsMode );
+					scope.transformControls.attach( scope.currentSelection.object );
+
 				}
 			}
+			}
+			else {
+
+				scope.returnObjectsToScene();
+				scope.resetMultyselection();
+
+				if ( scope.currentSelection.object ) {
+
+					scope.transformControls.detach(scope.currentSelection.object);
+					taEntities.removeSelection(scope.currentSelection);
+
+				}
+			}
+
+			if (scope.currentSelection.object) {
+				scope.taUI.createParametersMenu(scope.currentSelection.object);
+			}
+			else {
+				scope.taUI.deleteParametersMenu();
+			}
+
 		}
+
+		this.returnObjectsToScene = function(){
+			if (scope.currentSelection.multiselection.children.length > 0 ){
+
+				let lengthArray = scope.currentSelection.multiselection.children.length;
+
+				for (let i = lengthArray - 1; i >= 0; i--) {
+
+					taEntities.removeWireframeAndBoundingBox( scope.currentSelection.multiselection.children[i] );
+
+					scene.attach( scope.currentSelection.multiselection.children[i] )
+
+				}
+
+			}
+			scope.transformControls.detach( scope.currentSelection.multiselection )
+		}
+		this.resetMultyselection = function() {
+
+			scope.currentSelection.multiselection.children = [];
+			scope.currentSelection.multiselection.position.set( 0, 0, 0);
+			scope.currentSelection.multiselection.scale.set( 1, 1, 1);
+			scope.currentSelection.multiselection.rotation.set( 0, 0, 0);
+
+		}
+
+		function findBaryCenter( points) {
+
+			if ( !Array.isArray( points) ) return null;
+
+			let pointsCount = points.length;
+
+			let resultVector = points.reduce( (sum, current) => sum.add(current) );
+			let baryCenter = resultVector.divideScalar( pointsCount );
+
+			return baryCenter;
+
+		}
+
 		function onTouchStart(event) {
 			// console.log( event.changedTouches);
 			// let screenPoint = getScreenPoint( event.touches[0] ); 
@@ -288,15 +431,15 @@ class TA_Scene {
 			// if ( event.target.id == "labelRenderer") {
 			// coordsHelpers.removeCoordsHelpers( scene );
 			// coordsHelpers.createCoordsHelpers( intersects, scene );
-			this.controls.enableRotate = false;
+			// scope.transformControls.enableRotate = false;
 		}
 		function onTouchEnd(event) {
 			// this.controls.enableRotate = true;
 		}
 		function onTouchMove(event) {
 			// event.preventDefault();
-			this.controls.enableRotate = false;
-			console.log(event);
+			// this.controls.enableRotate = false;
+			// console.log(event);
 			// 
 			// let screenPoint = getScreenPoint( event.touches[0] ); 
 			// raycaster.setFromCamera( screenPoint, camera );
@@ -327,7 +470,7 @@ class TA_Scene {
 		}
 		function getScreenPoint(event) {
 			// event.preventDefault();
-			const screenPoint = new THREE.Vector2();
+			const screenPoint = new Vector2();
 			return screenPoint.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 		}
 		function intersectionsInfo(intersects) {
@@ -352,7 +495,7 @@ class TA_Scene {
 			let screenPoint = getScreenPoint(event);
 		}
 		function onKeyDown(event) {
-			console.log( event.keyCode );
+			// console.log( event.keyCode );
 			switch (event.keyCode) {
 				
 				case 27: // Esc
@@ -378,6 +521,22 @@ class TA_Scene {
 						scene.remove( scope.currentSelection.object );
 						scope.currentSelection.object = null;
 
+					}
+
+					if (scope.currentSelection.multiselection.children.length > 0 ) {
+
+						scope.transformControls.detach( scope.currentSelection.multiselection )
+
+							let lengthArray = scope.currentSelection.multiselection.children.length;
+			
+							for (let i = lengthArray - 1; i >= 0; i--) {
+			
+								scope.currentSelection.multiselection.remove( scope.currentSelection.multiselection.children[i] )
+			
+							}
+							
+						scope.resetMultyselection();
+						
 					}
 
 				break;
@@ -420,9 +579,13 @@ class TA_Scene {
 		let taEntities = new TA_Entities();
 
 		if (this.currentSelection.object) {
+
 			this.transformControls.detach(this.currentSelection.object);
 			taEntities.removeSelection(this.currentSelection);
+
 		}
+		this.returnObjectsToScene();
+		this.resetMultyselection();
 
 		let children = this.scene.children;
 

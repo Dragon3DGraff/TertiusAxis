@@ -2,7 +2,15 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
 */
 
-import * as THREE from "../node_modules/three/build/three.module.js";;
+import {
+	GridHelper,
+	Color,
+	PlaneBufferGeometry,
+	MeshBasicMaterial,
+	DoubleSide,
+	Mesh,
+	CameraHelper
+	}from "../node_modules/three/build/three.module.js";;
 import {TA_Entities} from "./Entities/TA_Entities.js";
 
 let TA_Helpers = function () {
@@ -124,34 +132,34 @@ let TA_Helpers = function () {
 	this.SceneGrids = function ( scene ) {
 
 		//Small grid
-		this.gridHelperSmall = new THREE.GridHelper( 100, 100, new THREE.Color('grey'), new THREE.Color( 'lightgrey' ) );
+		this.gridHelperSmall = new GridHelper( 100, 100, new Color('grey'), new Color( 'lightgrey' ) );
 		this.gridHelperSmall.position.y = 0;
 		this.gridHelperSmall.position.x = 0;
 	
 		//Big grid
-		this.gridHelperBig = new THREE.GridHelper( 100, 20, 0x0000ff,  new THREE.Color( 'grey' ) );
+		this.gridHelperBig = new GridHelper( 100, 20, 0x0000ff, new Color( 'grey' ) );
 		this.gridHelperBig.position.y = 0;
 		this.gridHelperBig.position.x = 0;
 	
 		//planes on axises    
 		this.mainPlanesArray = [];
 	
-		let mainPlaneGeom = new THREE.PlaneBufferGeometry( 200, 200 );
-		let mainPlaneMaterial = new THREE.MeshBasicMaterial( { color: new THREE.Color('lightgrey'), transparent: true, opacity: 0.0, side: THREE.DoubleSide } );
+		let mainPlaneGeom = new PlaneBufferGeometry( 200, 200 );
+		let mainPlaneMaterial = new MeshBasicMaterial( { color: new Color('lightgrey'), transparent: true, opacity: 0.0, side: DoubleSide } );
 	
-		let mainPlaneZY = new THREE.Mesh( mainPlaneGeom, mainPlaneMaterial );
+		let mainPlaneZY = new Mesh( mainPlaneGeom, mainPlaneMaterial );
 		
 		mainPlaneZY.name = 'mainPlaneXY'
 		scene.add( mainPlaneZY );
 		this.mainPlanesArray.push ( mainPlaneZY );
 	
-		let mainPlaneXY = new THREE.Mesh( mainPlaneGeom, mainPlaneMaterial );
+		let mainPlaneXY = new Mesh( mainPlaneGeom, mainPlaneMaterial );
 		mainPlaneXY.rotation.y = 90*Math.PI/180;
 		mainPlaneXY.name = 'mainPlaneZY'
 		scene.add( mainPlaneXY );
 		this.mainPlanesArray.push ( mainPlaneXY );
 	   
-		let mainPlaneXZ = new THREE.Mesh( mainPlaneGeom, mainPlaneMaterial );
+		let mainPlaneXZ = new Mesh( mainPlaneGeom, mainPlaneMaterial );
 		mainPlaneXZ.rotation.x = 90*Math.PI/180;
 		mainPlaneXZ.name = 'mainPlaneXZ'
 		scene.add( mainPlaneXZ );
@@ -213,7 +221,7 @@ let TA_Helpers = function () {
 	
 	this.addCameraHelper = function ( scene, camera ) {
 
-		var helper = new THREE.CameraHelper( camera );
+		var helper = new CameraHelper( camera );
 		scene.add( helper );
 
 	}

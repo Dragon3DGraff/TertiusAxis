@@ -310,7 +310,7 @@ background-color: lightsteelblue;;
 
 	display: flex;
 	flex-wrap: nowrap;
-	width: 99%;
+	width: 100%;
 	/* overflow: auto; */
 	background-color: rgba(119, 136, 153, 0.589);
 	position: relative;
@@ -327,15 +327,16 @@ background-color: lightsteelblue;;
 }
 
 .ManipulateToolbar input[type=radio] + label {
-    display:inline-block;
-    margin:-2px;
-	padding: 4px 12px;
+	display:inline-block;
+	/* margin:-2px; */
+	padding-top: 6px;
 	font-size: 12px;
 	width: 110px;
 	height: 20px;
 	color: rgba(127,255,255, 1);
-    background-color: rgb(51, 51, 51);
-    border-color: #ddd;
+	background-color: rgb(51, 51, 51);
+	border-color: #ddd;
+	text-align: center;
 }
 
 .ManipulateToolbar input[type=radio]:hover + label { 
@@ -348,6 +349,35 @@ background-color: lightsteelblue;;
 	 background-color:rgb(6, 170, 199);
 	 color: rgb(14, 3, 80);
  }
+
+ .ManipulateToolbar input[type=checkbox] {
+	display:none; 
+	margin:10px;
+}
+
+.ManipulateToolbar input[type=checkbox] + label {
+	display:inline-block;
+	/* margin:-2px; */
+	padding-top: 6px;
+	font-size: 12px;
+	width: 110px;
+	height: 20px;
+	color: rgba(127,255,255, 1);
+	background-color: rgb(51, 51, 51);
+	border-color: #ddd;
+	text-align: center;
+}
+
+.ManipulateToolbar input[type=checkbox]:hover + label { 
+	background-image: none;
+	background-color:darkslategrey;
+}
+
+.ManipulateToolbar input[type=checkbox]:checked + label { 
+	background-image: none;
+	 background-color:rgb(6, 170, 199);
+	 color: rgb(14, 3, 80);
+}
 
 
 

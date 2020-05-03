@@ -3,7 +3,7 @@
  */
 
 import { TA_UI } from "./TA_UI.js";
- import * as THREE from "../../node_modules/three/build/three.module.js";
+ import { Color } from "../../node_modules/three/build/three.module.js";
 
 function fillMaterialParametersTab( entity ) {
 
@@ -75,7 +75,7 @@ function fillMaterialParametersTab( entity ) {
 	
 		function(){
 
-			entity.material.color = new THREE.Color( this.value );
+			entity.material.color = new Color( this.value );
 
 			let color = entity.material.color;
 			

@@ -15,6 +15,7 @@ function createManipulateToolbar ( taScene ){
 	}
 
 	let ta_UI = new TA_UI();
+	let taEntities = new TA_Entities();
 
 	let manipulatingContainer = ta_UI.createContainer( 'ManipulateToolbar', mainToolbar );
 
@@ -76,17 +77,17 @@ function createManipulateToolbar ( taScene ){
 		manipulatingContainer.appendChild( labelScale );
 
 		// Drag Button
-		let radioDrag = document.createElement( 'input' );
-		radioDrag.type = 'radio';
-		radioDrag.name = 'manupulateRadio';
-		radioDrag.id = 'DragRadio';
-		radioDrag.value = 'Drag';
-		radioDrag.addEventListener( 'click', switchMode );
-		manipulatingContainer.appendChild( radioDrag );
+		let DragCheck = document.createElement( 'input' );
+		DragCheck.type = 'checkbox';
+		DragCheck.name = 'DragCheck';
+		DragCheck.id = 'DragCheck';
+		DragCheck.value = 'Drag';
+		DragCheck.addEventListener( 'click', switchDrag );
+		manipulatingContainer.appendChild( DragCheck );
 
 		let labelDrag = document.createElement( 'label' );
 		labelDrag.innerHTML = 'Drag';
-		labelDrag.htmlFor = radioDrag.id;
+		labelDrag.htmlFor = DragCheck.id;
 		manipulatingContainer.appendChild( labelDrag );
 
 
@@ -108,8 +109,13 @@ function switchMode( selectedRadio ) {
 		case 'MoveRadio':
 
 			taScene.transformControlsMode = 'translate';
+
 			if( taScene.currentSelection.object ) {
 				taScene.transformControls.attach( taScene.currentSelection.object );
+			}
+			if ( taScene.currentSelection.multiselection.children.length > 0 ){
+
+				taScene.transformControls.attach( taScene.currentSelection.multiselection );
 			}
 			taScene.transformControls.setMode( taScene.transformControlsMode );
 			taScene.dragControls.deactivate();
@@ -124,6 +130,9 @@ function switchMode( selectedRadio ) {
 			if( taScene.currentSelection.object ) {
 				taScene.transformControls.attach( taScene.currentSelection.object );
 			}
+			if ( taScene.currentSelection.multiselection.children.length > 0 ){
+				taScene.transformControls.attach( taScene.currentSelection.multiselection );
+			}
 			taScene.transformControls.setMode( taScene.transformControlsMode );
 			taScene.dragControls.deactivate();
 			taScene.mode.action = 'select';
@@ -136,6 +145,9 @@ function switchMode( selectedRadio ) {
 			if( taScene.currentSelection.object ) {
 				taScene.transformControls.attach( taScene.currentSelection.object );
 			}
+			if ( taScene.currentSelection.multiselection.children.length > 0 ){
+				taScene.transformControls.attach( taScene.currentSelection.multiselection );
+			}
 
 			taScene.transformControlsMode = 'scale';
 			taScene.transformControls.setMode( taScene.transformControlsMode );
@@ -145,27 +157,44 @@ function switchMode( selectedRadio ) {
 		
 			break;
 
-		case 'DragRadio':
-
-			if( taScene.currentSelection.object ) {
-
-				ta_UI.deleteParametersMenu();
-				taScene.transformControls.detach( taScene.currentSelection.object );
-				let taEntities = new TA_Entities();
-				taEntities.removeSelection( taScene.currentSelection );
-
-			}
-
-			taScene.transformControlsMode = '';
-			taScene.mode.action = '';
-			taScene.dragControls.activate();
-
-			break;
-	
 		default:
 			break;
 	}
 
+}
+
+function switchDrag () {
+
+	if (this.checked ) {
+
+	if( taScene.currentSelection.object ) {
+
+		// ta_UI.deleteParametersMenu();
+
+			if( taScene.currentSelection.object ) {
+				// taScene.transformControls.detach( taScene.currentSelection.object );
+			}
+			if ( taScene.currentSelection.multiselection.children.length === 0 ){
+				// taScene.transformControls.detach( taScene.currentSelection.multiselection );
+			}
+			// taScene.transformControls.detach( taScene.currentSelection.object );
+			
+			taEntities.removeWireframeAndBoundingBox( taScene.currentSelection.object );
+
+		}
+
+		// taScene.transformControlsMode = '';
+		// taScene.mode.action = '';
+		taScene.dragControls.activate();
+	}
+	else{
+		if( taScene.currentSelection.object ) {
+			taEntities.selectEntity( taScene.currentSelection.object, taScene.currentSelection );
+		}
+		taScene.dragControls.deactivate();
+	}
+
+	
 }
 
 	console.log( 'ManipulateToolbar created' );

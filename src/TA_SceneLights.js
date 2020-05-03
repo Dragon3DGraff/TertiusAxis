@@ -2,15 +2,20 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 
-import * as THREE from "../node_modules/three/build/three.module.js";
+import {
+	AmbientLight,
+	SpotLight,
+	Color,
+
+} from "../node_modules/three/build/three.module.js";
 class TA_SceneLights {
 
 	constructor() {
-		this.ambientLight = new THREE.AmbientLight(new THREE.Color('white'), 0.5);
+		this.ambientLight = new AmbientLight(new Color('white'), 0.5);
 		// soft white light 0x404040   
-		this.spotLight = new THREE.SpotLight(new THREE.Color('grey'));
+		this.spotLight = new SpotLight(new Color('grey'));
 		this.spotLight.position.set(-3, 0, 2);
-		// let pointLightHelper = new THREE.SpotLightHelper( spotLight );
+		// let pointLightHelper = new SpotLightHelper( spotLight );
 		// scene.add( pointLightHelper );    
 		this.spotLight.castShadow = true;
 		this.spotLight.shadow.mapSize.width = 1024;

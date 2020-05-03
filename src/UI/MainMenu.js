@@ -2,7 +2,7 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 
-import * as THREE from "../../node_modules/three/build/three.module.js";
+import { ObjectLoader } from "../../node_modules/three/build/three.module.js";
 import { GLTFExporter } from '../../node_modules/three/examples/jsm/exporters/GLTFExporter.js';
 import {TA_Entities} from "../Entities/TA_Entities.js";
 import { TA_UI } from "./TA_UI.js";
@@ -181,7 +181,7 @@ function createMainMenu ( ta_scene ){
 
 		reader.onload = function() {
 
-			let loader = new THREE.ObjectLoader();
+			let loader = new ObjectLoader();
 
 			let loadedObjectsJSON = JSON.parse( reader.result);
 

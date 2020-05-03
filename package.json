@@ -16,6 +16,7 @@
     "eslint-plugin-import": "^2.20.1",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.2.1",
+    "jest": "^25.5.4",
     "mini-css-extract-plugin": "^0.9.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "style-loader": "^1.2.1",
@@ -28,7 +29,8 @@
     "build": "cross-env NODE_ENV=production webpack --mode production",
     "dev": "cross-env NODE_ENV=development webpack --mode development ",
     "watch": "cross-env NODE_ENV=development webpack --mode development --watch",
-    "start": "cross-env NODE_ENV=development webpack-dev-server --open"
+	"start": "cross-env NODE_ENV=development webpack-dev-server --open",
+	"test": "jest"
   },
   "author": "Dragon3DGraff",
   "license": "MIT",
