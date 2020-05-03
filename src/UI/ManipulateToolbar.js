@@ -4,6 +4,8 @@
 
 import { TA_UI } from "./TA_UI.js";
 import {TA_Entities} from "../Entities/TA_Entities.js";
+import * as Actions from "../Actions.js";
+
 
 function createManipulateToolbar ( taScene ){
 
@@ -15,7 +17,7 @@ function createManipulateToolbar ( taScene ){
 	}
 
 	let ta_UI = new TA_UI();
-	let taEntities = new TA_Entities();
+
 
 	let manipulatingContainer = ta_UI.createContainer( 'ManipulateToolbar', mainToolbar );
 
@@ -98,63 +100,26 @@ function switchMode( selectedRadio ) {
 	switch (selectedButton) {
 		case 'SelectRadio':
 
-			taScene.mode.action = 'select';
-			taScene.transformControlsMode = '';
-			taScene.transformControls.detach( taScene.currentSelection.object );
-			taScene.dragControls.deactivate();
-			taScene.controls.enableRotate = true;
-			
+			Actions.switchOnSelectMode ( taScene )
+
 			break;
 
 		case 'MoveRadio':
 
-			taScene.transformControlsMode = 'translate';
-
-			if( taScene.currentSelection.object ) {
-				taScene.transformControls.attach( taScene.currentSelection.object );
-			}
-			if ( taScene.currentSelection.multiselection.children.length > 0 ){
-
-				taScene.transformControls.attach( taScene.currentSelection.multiselection );
-			}
-			taScene.transformControls.setMode( taScene.transformControlsMode );
-			taScene.dragControls.deactivate();
-			taScene.mode.action = 'select';
-			taScene.controls.enableRotate = true;
+			Actions.switchOnMoveMode( taScene );
 		
 			break;
 
 		case 'RotateRadio':
 
-			taScene.transformControlsMode = 'rotate';
-			if( taScene.currentSelection.object ) {
-				taScene.transformControls.attach( taScene.currentSelection.object );
-			}
-			if ( taScene.currentSelection.multiselection.children.length > 0 ){
-				taScene.transformControls.attach( taScene.currentSelection.multiselection );
-			}
-			taScene.transformControls.setMode( taScene.transformControlsMode );
-			taScene.dragControls.deactivate();
-			taScene.mode.action = 'select';
-			taScene.controls.enableRotate = true;
+			Actions.switchOnRotationMode ( taScene );
 		
 			break;
 
 		case 'ScaleRadio':
 
-			if( taScene.currentSelection.object ) {
-				taScene.transformControls.attach( taScene.currentSelection.object );
-			}
-			if ( taScene.currentSelection.multiselection.children.length > 0 ){
-				taScene.transformControls.attach( taScene.currentSelection.multiselection );
-			}
+			Actions.switchOnScaleMode ( taScene );
 
-			taScene.transformControlsMode = 'scale';
-			taScene.transformControls.setMode( taScene.transformControlsMode );
-			taScene.dragControls.deactivate();
-			taScene.mode.action = 'select';
-			taScene.controls.enableRotate = true;
-		
 			break;
 
 		default:
@@ -165,36 +130,8 @@ function switchMode( selectedRadio ) {
 
 function switchDrag () {
 
-	if (this.checked ) {
+	Actions.switchOnDragMode( this.checked, taScene );
 
-	if( taScene.currentSelection.object ) {
-
-		// ta_UI.deleteParametersMenu();
-
-			if( taScene.currentSelection.object ) {
-				// taScene.transformControls.detach( taScene.currentSelection.object );
-			}
-			if ( taScene.currentSelection.multiselection.children.length === 0 ){
-				// taScene.transformControls.detach( taScene.currentSelection.multiselection );
-			}
-			// taScene.transformControls.detach( taScene.currentSelection.object );
-			
-			taEntities.removeWireframeAndBoundingBox( taScene.currentSelection.object );
-
-		}
-
-		// taScene.transformControlsMode = '';
-		// taScene.mode.action = '';
-		taScene.dragControls.activate();
-	}
-	else{
-		if( taScene.currentSelection.object ) {
-			taEntities.selectEntity( taScene.currentSelection.object, taScene.currentSelection );
-		}
-		taScene.dragControls.deactivate();
-	}
-
-	
 }
 
 	console.log( 'ManipulateToolbar created' );

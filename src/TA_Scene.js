@@ -9,10 +9,7 @@ import {
 	 PerspectiveCamera,
 	 Group,
 	 Color,
-	 Vector2,
-	 Vector3,
-	 Box3,
-	 Box3Helper
+	 Vector2
 	} from "../node_modules/three/build/three.module.js";
 
 import { CSS2DRenderer } from "../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
@@ -24,6 +21,7 @@ import {TA_Entities} from "./Entities/TA_Entities.js";
 import {TA_SceneLights} from "./TA_SceneLights.js";
 import {TA_Helpers} from "./TA_Helpers.js";
 import {TA_SceneCamera} from "./TA_SceneCamera.js";
+import * as Actions from "./Actions.js";
 
 class TA_Scene {
 	constructor( taUI ) {
@@ -255,6 +253,13 @@ class TA_Scene {
 
 						creatingEntity.stopCreating();
 
+						if ( scope.transformControlsMode !== '' ) {
+
+							scope.transformControls.setMode( scope.transformControlsMode );
+							scope.transformControls.attach( scope.currentSelection.object );
+	
+						}
+
 						return;
 
 					}
@@ -307,7 +312,19 @@ class TA_Scene {
 					let arrayObjectsInSelection = [];
 
 					arrayObjectsInSelection = arrayObjectsInSelection.concat( scope.currentSelection.multiselection.children );
-					arrayObjectsInSelection.push( objectToSelect );
+
+					if ( arrayObjectsInSelection.includes( objectToSelect )) {
+
+						taEntities.removeWireframeAndBoundingBox( objectToSelect );
+
+						arrayObjectsInSelection.splice( arrayObjectsInSelection.indexOf( objectToSelect), 1 );
+
+					}
+					else {
+
+						arrayObjectsInSelection.push( objectToSelect );
+
+					}
 
 					scope.returnObjectsToScene();
 
@@ -495,7 +512,7 @@ class TA_Scene {
 			let screenPoint = getScreenPoint(event);
 		}
 		function onKeyDown(event) {
-			// console.log( event.keyCode );
+			console.log( event.keyCode );
 			switch (event.keyCode) {
 				
 				case 27: // Esc
@@ -534,7 +551,7 @@ class TA_Scene {
 								scope.currentSelection.multiselection.remove( scope.currentSelection.multiselection.children[i] )
 			
 							}
-							
+
 						scope.resetMultyselection();
 						
 					}
@@ -543,14 +560,42 @@ class TA_Scene {
 
 				case 67:  //'c' copy object
 
-				if( scope.currentSelection.object ){
-
 					taEntities.cloneObject( scope );
-		
-				}
-
 
 				break;
+
+				case 77: //'m' move object or group
+
+				Actions.switchOnMoveMode( scope );
+				 let moveButton = document.getElementById( 'MoveRadio' );
+				 moveButton.checked = true;
+
+				break;
+
+				case 82: //'r' rotate object or group
+
+				Actions.switchOnRotationMode ( scope );
+				 let rotateButton = document.getElementById( 'RotateRadio' );
+				 rotateButton.checked = true;
+
+				break;
+
+				case 83: //'s' scale object or group
+
+				Actions.switchOnScaleMode ( scope );
+				 let scaleButton = document.getElementById( 'ScaleRadio' );
+				 scaleButton.checked = true;
+
+				break;
+
+				case 68: //'d' drag object or group
+
+				 let dragButton = document.getElementById( 'DragCheck' );
+				 dragButton.checked = dragButton.checked ? false: true;
+				 Actions.switchOnDragMode ( dragButton.checked, scope );
+
+				break;
+
 			}
 		}
 		let animate = function () {
