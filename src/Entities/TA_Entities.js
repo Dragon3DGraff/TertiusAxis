@@ -763,44 +763,50 @@ class TA_Entities {
 
 	cloneObject( ta_scene ) {
 		
-		// if ( ta_scene.currentSelection.object ){
-		// let copiedObjectID = ta_scene.currentSelection.object.id;
-		// this.removeWireframeAndBoundingBox( ta_scene.currentSelection.object );
+		if ( ta_scene.currentSelection.object ){
 
-		// let copiedObject = ta_scene.scene.getObjectById( copiedObjectID );
+			let copiedObjectID = ta_scene.currentSelection.object.id;
+			this.removeWireframeAndBoundingBox( ta_scene.currentSelection.object );
 
-		// let newObject = copiedObject.clone( false );
+			let copiedObject = ta_scene.scene.getObjectById( copiedObjectID );
 
-		// ta_scene.selectableObjects.push( newObject );
+			let newObject = copiedObject.clone( false );
 
-		// ta_scene.scene.add( newObject );
+			ta_scene.selectableObjects.push( newObject );
 
-		// this.selectEntity( ta_scene.currentSelection.object, ta_scene.currentSelection );
+			ta_scene.scene.add( newObject );
 
-		// }
+			this.selectEntity( ta_scene.currentSelection.object, ta_scene.currentSelection );
 
-		// СДЕЛАТЬ КЛОНИРОВАНИЕ ГРУППЫ!
+		}
+
 
 		if ( ta_scene.currentSelection.multiselection.children.length > 0 ){
 
-			console.log ( ta_scene.currentSelection.multiselection )
+			let lengthArray = ta_scene.currentSelection.multiselection.children.length;
 
-			let copiedObjectID = ta_scene.currentSelection.multiselection.id;
+			let multuSelectionArray = ta_scene.currentSelection.multiselection.children;
 
-		let copiedObject = ta_scene.scene.getObjectById( copiedObjectID );
+			for (let i = lengthArray - 1; i >= 0; i--) {
 
-		let newObject = copiedObject.clone();
-		console.log ( newObject )
-		
+				this.removeWireframeAndBoundingBox( multuSelectionArray[i] );
 
-		ta_scene.selectableObjects.concat( newObject.children );
+				let id = multuSelectionArray[i].id;
+				let copiedObject = ta_scene.scene.getObjectById( id );
 
-		ta_scene.scene.add( ...newObject.children );
+				ta_scene.scene.attach( multuSelectionArray[i]);
 
+				let newObject = copiedObject.clone();
 
+				ta_scene.scene.add( newObject );
 
+				ta_scene.selectableObjects.push( newObject );
 
+				ta_scene.currentSelection.multiselection.attach( copiedObject );
 
+				copiedObject.add( this.createBoundingBox( copiedObject ) );
+
+			}
 
 		}
 
