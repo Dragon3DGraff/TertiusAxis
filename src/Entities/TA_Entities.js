@@ -402,13 +402,13 @@ class TA_Entities {
 			currentSelection.object = objectToSelect;
 			// currentSelection.object.add(this.createWireframe(currentSelection));
 			currentSelection.object.add(this.createBoundingBox(currentSelection.object));
-			let taUI = new TA_UI;
-			taUI.createParametersMenu(objectToSelect);
+			let ta_UI = new TA_UI;
+			ta_UI.createParametersMenu(objectToSelect);
 
 			return currentSelection;
 		};
-		this.createWireframe = function ( currentSelection ) {
-			let wireframe = new THREE.EdgesGeometry(currentSelection.object.geometry);
+		this.createWireframe = function ( object ) {
+			let wireframe = new THREE.EdgesGeometry(object.geometry);
 			let wireframeLines = new THREE.LineSegments(wireframe);
 			wireframeLines.material.depthTest = true;
 			// wireframeLines.material.opacity = 0.25;
@@ -453,31 +453,31 @@ class TA_Entities {
 
 			let geom = entity.geometry;
 	
-					let params = {};
-					Object.assign( params, geom.parameters );
-					params[ parameterName ] = parameterValue;
-	
-					let newGeom = this.createGeometry ( entity.geometry.type, params );
-	
-					entity.geometry.dispose();
-					entity.geometry = newGeom;
-	
-					// let wireframe = entity.getObjectByName( 'wireframe' );
-					// let newWireframeGeometry = new THREE.WireframeGeometry( newGeom );
-					// wireframe.geometry = newWireframeGeometry;
-	
-					let boundingBox = entity.getObjectByName( 'BoundingBox' );
-					entity.geometry.computeBoundingBox();
-					let box3Helper = new THREE.Box3Helper( entity.geometry.boundingBox );
+			let params = {};
+			Object.assign( params, geom.parameters );
+			params[ parameterName ] = parameterValue;
 
-					if ( box3Helper.box.min.z === 0) {
+			let newGeom = this.createGeometry ( entity.geometry.type, params );
 
-						box3Helper.box.min.z = -0.001;
-						box3Helper.box.max.z = 0.001;
+			entity.geometry.dispose();
+			entity.geometry = newGeom;
 
-					}
+			// let wireframe = entity.getObjectByName( 'wireframe' );
+			// let newWireframeGeometry = new THREE.WireframeGeometry( newGeom );
+			// wireframe.geometry = newWireframeGeometry;
 
-					boundingBox.box = box3Helper.box;
+			let boundingBox = entity.getObjectByName( 'BoundingBox' );
+			entity.geometry.computeBoundingBox();
+			let box3Helper = new THREE.Box3Helper( entity.geometry.boundingBox );
+
+			if ( box3Helper.box.min.z === 0) {
+
+				box3Helper.box.min.z = -0.001;
+				box3Helper.box.max.z = 0.001;
+
+			}
+
+			boundingBox.box = box3Helper.box;
 	
 		}
 
@@ -487,14 +487,14 @@ class TA_Entities {
 
 			let geom = entity.geometry;
 	
-					let params = {};
-					Object.assign( params, geom.parameters );
-					params[ parameterName ] = parameterValue;
-	
-					let newGeom = this.createGeometry ( entity.geometry.type, params );
-	
-					entity.geometry.dispose();
-					entity.geometry = newGeom;
+			let params = {};
+			Object.assign( params, geom.parameters );
+			params[ parameterName ] = parameterValue;
+
+			let newGeom = this.createGeometry ( entity.geometry.type, params );
+
+			entity.geometry.dispose();
+			entity.geometry = newGeom;
 
 		}
 

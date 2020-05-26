@@ -62,6 +62,8 @@ function createMainToolbar (){
 		let paragraph = ta_UI.addElement( infoDiv, 'p', '', '');
 		paragraph.id = "infoParagraph"
 
+		let mainContainer = ta_UI.createContainer( 'mainContainer', mainToolbar );
+
 	
 
 	console.log( 'MainToolbar created' );

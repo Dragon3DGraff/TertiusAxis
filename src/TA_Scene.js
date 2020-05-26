@@ -9,25 +9,51 @@ import {
 	 PerspectiveCamera,
 	 Group,
 	 Color,
-	 Vector2
+	 Vector2,
+	 Vector3,
+	 SphereBufferGeometry,
+	 LineCurve3,
+	 Line,
+	 BufferGeometry,
+	 LineBasicMaterial,
+	 Mesh,
+	 MeshBasicMaterial,
+	 MeshPhongMaterial,
+	 BoxBufferGeometry
 	} from "../node_modules/three/build/three.module.js";
 
 import { CSS2DRenderer } from "../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
 import { OrbitControls } from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
 import { TransformControls } from '../node_modules/three/examples/jsm/controls/TransformControls.js';
-import { DragControls } from '../node_modules/three/examples/jsm/controls/DragControls.js';
+
+ //if you want to use this see bug fix in Action.js (function switchDragMode)
+// import { DragControls } from '../node_modules/three/examples/jsm/controls/DragControls.js';
+import { DragControls } from './DragControls.js';
 
 import {TA_Entities} from "./Entities/TA_Entities.js";
 import {TA_SceneLights} from "./TA_SceneLights.js";
 import {TA_Helpers} from "./TA_Helpers.js";
 import {TA_SceneCamera} from "./TA_SceneCamera.js";
 import * as Actions from "./Actions.js";
+import { MeshEdit } from "./MeshEdit.js";
+import { findBaryCenter } from "./Calculations.js"
+
+import * as CustomGeometry from "./Entities/CustomGeometry.js";
 
 class TA_Scene {
-	constructor( taUI ) {
+	constructor( ta_UI ) {
 
-		this.taUI = taUI;
+		// singltone
+		if (TA_Scene.exist){
+			return TA_Scene.instance;
+		}
+		TA_Scene.instance = this;
+		TA_Scene.exist = true;
+
+		this.ta_UI = ta_UI;
 		this.scene;
+		this.mousePosition = { x: null, y: null };
+
 	}
 
 	get getScene() {
@@ -46,8 +72,8 @@ class TA_Scene {
 		let sceneCamera2 = new TA_SceneCamera();
 		
 		let labelRenderer = new CSS2DRenderer();
-		let taEntities = new TA_Entities();
-		let creatingEntity = new taEntities.CreatingEntity();
+		let ta_Entities = new TA_Entities();
+		let creatingEntity = new ta_Entities.CreatingEntity();
 		
 		const sceneLights = new TA_SceneLights();
 		let camera = sceneCamera.initCamera();
@@ -64,7 +90,9 @@ class TA_Scene {
 			action: 'select',
 			entity: null
 		};
+		this.meshEditObject = {};
 		this.selectableObjects = [];
+		this.tempSelectableObjects = [];
 
 		this.currentSelection = {
 			object: null,
@@ -75,6 +103,10 @@ class TA_Scene {
 
 		this.transformControlsMode = '';
 		// let objectOwnColor;
+		this.controlsChanged = false;
+
+
+
 		scene.background = new Color('white');
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer2.setSize(document.getElementById('secondCanvas').clientWidth, document.getElementById('secondCanvas').clientHeight);
@@ -94,11 +126,24 @@ class TA_Scene {
 		this.transformControls = new TransformControls( camera, labelRenderer.domElement );
 		scene.add( this.transformControls );
 		this.transformControls.addEventListener( 'change', render );
+		this.transformControls.addEventListener( 'change', function(){
+
+			scope.controlsChanged = true;
+
+		} );
+
+		this.controls.addEventListener( 'start', function( event ){
+
+		})
+
+		this.controls.addEventListener( 'change', function( event ){
+
+			scope.controlsChanged = true;
+
+		})
 
 		this.transformControls.addEventListener( 'objectChange', function( event ) {
 
-			// console.log(event.target.worldPositionStart)
-			// console.log(event.target.worldPosition)
 			if (event.target.object.type === 'Group') {
 
 				return;
@@ -108,6 +153,14 @@ class TA_Scene {
 			// СДЕЛАТЬ ОБНОВЛЕНИЕ ПОЛЕЙ ПАРАМЕТРОВ
 
 			if( event.target.mode === 'translate' ){
+
+				if ( scope.mode.action === 'meshEdit' ){
+
+					let editHelper = event.target.object;
+
+					scope.meshEditObject.transformMesh( editHelper );
+
+				}
 
 				if (event.target.worldPositionStart.x !== event.target.worldPosition.x ){
 
@@ -143,15 +196,17 @@ class TA_Scene {
 
 		this.dragControls.addEventListener( 'drag', function ( event ) {
 
-			// scope.taUI.createParametersMenu( event.object );
+			// scope.ta_UI.createParametersMenu( event.object );
 			// scope.transformControls.detach( scope.currentSelection.multiselection );
 
 			scope.controls.enableRotate = false;
+			scope.transformControls.enabled = false;
 		
 		} );
 		this.dragControls.addEventListener( 'dragend', function ( event ) {
 
 			scope.controls.enableRotate = true;
+			scope.transformControls.enabled = true;
 		
 		} );
 
@@ -210,15 +265,86 @@ class TA_Scene {
 
 		// ----------TEST-----------------
 
-		// let testCylinder = taEntities.createCylinder(0,0,0,0.2,0.2,30,10,1);
+
+
+		// let testCylinder = ta_Entities.createCylinder(0,0,0,0.2,0.2,30,10,1);
 		// testCylinder.material.color = new Color('red');
 		// testCylinder.name = 'testCylinder';
 		// scene.add( testCylinder );
 
+		////////////////////////////////
+		// let testBuffer = CustomGeometry.createCustomGeometry();
+		// scene.add( testBuffer );
+		// this.selectableObjects.push( testBuffer );
 
-		// //-------------------------------
+		// let sphereGeometry = new SphereBufferGeometry(0.5, 4, 4);
+		let material = new MeshPhongMaterial( { color: new Color( 'green' ), transparent: true, opacity: 1 });
+
+		// let sphere = new Mesh( sphereGeometry, material);
+		// scene.add( sphere );
+
+		let cubeGeometry = new BoxBufferGeometry( 10, 10, 10);
+		let mesh = new Mesh( cubeGeometry, material );
+		scene.add( mesh );
+		mesh.position.set( 0, 0, 20 );
+		this.selectableObjects.push( mesh );
+
+
+
+
+		// let lineMaterial = new LineBasicMaterial( { color: 'red' } );
+
+		// let vec0 = new Vector3( 0, 0, 0 );
+
+		// let vec1 = new Vector3( 0, 0, 10 );
+		// let vec2 = new Vector3( 0, 0, 10 );
+		// let vec3 = new Vector3( 0, 10, 0 );
+
+		// let points1 = [ vec0, vec2 ];
+		// let points2 = [ vec0, vec1 ];
+		// let points3 = [ vec0, vec3 ];
+
+		// let lineGeometry1 = new BufferGeometry().setFromPoints( points1 );
+		// let lineGeometry2 = new BufferGeometry().setFromPoints( points2 );
+		// let lineGeometry3 = new BufferGeometry().setFromPoints( points3 );
+
+		// let line1 = new Line( lineGeometry1, lineMaterial );
+		// let line2 = new Line( lineGeometry2, lineMaterial );
+		// let line3 = new Line( lineGeometry3, lineMaterial );
+
+		// scene.add( line1 );
+		// scene.add( line2 );
+		// scene.add( line3 );
+
+		// let cross = vec3.cross( vec2 );
+		// console.log( cross );
+
+		// let pointsCross = [ vec0, cross ];
+		// let lineGeometryCross = new BufferGeometry().setFromPoints( pointsCross );
+		// let lineCross = new Line( lineGeometryCross, lineMaterial );
+		// scene.add( lineCross );
+
+		// let dot = vec1.dot( cross );
+
+		// console.log( `dot = ${dot}` )
+		// console.log( `volume = ${dot/6.0}` )
+
+
+		
+
+
+
+		//////////////////-------------------------------
 
 		function onDocumentMouseClick( event ) {
+
+			if ( scope.controlsChanged ) {
+
+				scope.controlsChanged = false;
+
+				return;
+
+			}
 
 			if (event.target.parentElement.id === "secondCanvas") {
 
@@ -228,7 +354,7 @@ class TA_Scene {
 
 			}
 
-			if ( event.target.className === "labelDiv" ) {
+			if ( event.target.id === "labelRenderer" ) {
 
 				let screenPoint = getScreenPoint(event);
 
@@ -243,7 +369,8 @@ class TA_Scene {
 
 					if ( creatingEntity.centerOfObjectWorld ) {
 
-						taEntities.selectEntity(creatingEntity.currentEntity, scope.currentSelection);
+						ta_Entities.selectEntity(creatingEntity.currentEntity, scope.currentSelection);
+						scope.ta_UI.elements.meshEditContainer.style.display = 'block';
 
 						if ( creatingEntity.currentEntity ) {
 
@@ -265,7 +392,7 @@ class TA_Scene {
 					}
 					if ( scope.currentSelection.object ) {
 
-						taEntities.removeSelection(scope.currentSelection);
+						ta_Entities.removeSelection(scope.currentSelection);
 						scope.currentSelection.object = null;
 						scope.currentSelection.objectOwnColor = null;
 
@@ -273,13 +400,49 @@ class TA_Scene {
 
 					creatingEntity.centerOfObjectWorld = intersects[0].point;
 					creatingEntity.createEntity(scope.mode, scene, event, sceneCamera);
-					scope.taUI.createParametersMenu(creatingEntity.currentEntity);
+					scope.ta_UI.createParametersMenu(creatingEntity.currentEntity);
 
 				}
 
 				if ( scope.mode.action === 'select' ) {
 
 					selectByMouse ( event );
+
+				}
+
+				if ( scope.mode.action === 'meshEdit') {
+
+					let screenPoint = getScreenPoint(event);
+
+					raycaster.setFromCamera(screenPoint, camera);
+		
+					let intersects = raycaster.intersectObjects( scope.selectableObjects );
+		
+					if ( intersects.length > 0 ) {
+		
+						let objectToSelect = intersects[0].object;
+
+						if( scope.meshEditObject.mode === 'Faces' && objectToSelect.name === "createMeshHelpers" ){
+
+							// objectToSelect.material.color.setHex( '#F64545' );
+
+							scope.transformControlsMode = 'translate' ;
+						
+							scope.transformControls.attach( objectToSelect );
+
+							// console.log( objectToSelect )
+
+						} else{
+
+						// if ( scope.transformControlsMode !== '' ) {
+
+							scope.transformControlsMode = 'translate' ;
+						
+							scope.transformControls.attach( objectToSelect );
+
+						 }
+
+					}
 
 				}
 
@@ -303,7 +466,7 @@ class TA_Scene {
 
 					if ( scope.currentSelection.object ) {
 
-						taEntities.removeWireframeAndBoundingBox( scope.currentSelection.object );
+						ta_Entities.removeWireframeAndBoundingBox( scope.currentSelection.object );
 						scope.currentSelection.multiselection.attach( scope.currentSelection.object );
 						scope.currentSelection.object = null;
 
@@ -315,7 +478,7 @@ class TA_Scene {
 
 					if ( arrayObjectsInSelection.includes( objectToSelect )) {
 
-						taEntities.removeWireframeAndBoundingBox( objectToSelect );
+						ta_Entities.removeWireframeAndBoundingBox( objectToSelect );
 
 						arrayObjectsInSelection.splice( arrayObjectsInSelection.indexOf( objectToSelect), 1 );
 
@@ -347,7 +510,7 @@ class TA_Scene {
 						scope.currentSelection.multiselection.attach( arrayObjectsInSelection[i] );
 
 
-						arrayObjectsInSelection[i].add( taEntities.createBoundingBox( arrayObjectsInSelection[i] ) );
+						arrayObjectsInSelection[i].add( ta_Entities.createBoundingBox( arrayObjectsInSelection[i] ) );
 		
 					}
 
@@ -364,21 +527,36 @@ class TA_Scene {
 					scope.returnObjectsToScene();
 					scope.resetMultyselection();
 
-				if ( scope.currentSelection.object ) {
+					if ( scope.currentSelection.object ) {
 
-					taEntities.removeSelection( scope.currentSelection );
+						ta_Entities.removeSelection( scope.currentSelection );
 
-				}
+					}
+
+					// if ( objectToSelect.name !== 'createMeshHelpers' ) {
 				
-				scope.currentSelection = taEntities.selectEntity( objectToSelect, scope.currentSelection );
+						scope.currentSelection = ta_Entities.selectEntity( objectToSelect, scope.currentSelection );
+
+					// }
+					// else {
+
+
+					// }
+					
 			
-				if ( scope.transformControlsMode !== '' ) {
+					if ( scope.transformControlsMode !== '' ) {
 
-					scope.transformControls.setMode( scope.transformControlsMode );
-					scope.transformControls.attach( scope.currentSelection.object );
+						scope.transformControls.setMode( scope.transformControlsMode );
 
+						// if ( objectToSelect.name !== 'createMeshHelpers' ) {
+							scope.transformControls.attach( scope.currentSelection.object );
+						// }
+						// else{
+							// scope.transformControls.attach( objectToSelect );
+						// }
+
+					}
 				}
-			}
 			}
 			else {
 
@@ -388,17 +566,20 @@ class TA_Scene {
 				if ( scope.currentSelection.object ) {
 
 					scope.transformControls.detach(scope.currentSelection.object);
-					taEntities.removeSelection(scope.currentSelection);
+					ta_Entities.removeSelection(scope.currentSelection);
+					scope.ta_UI.elements.meshEditContainer.style.display = 'none';
 
 				}
 			}
 
 			if (scope.currentSelection.object) {
-				scope.taUI.createParametersMenu(scope.currentSelection.object);
+				scope.ta_UI.createParametersMenu(scope.currentSelection.object);
+				scope.ta_UI.elements.meshEditContainer.style.display = 'inline';
 			}
 			else {
-				scope.taUI.deleteParametersMenu();
+				scope.ta_UI.deleteParametersMenu();
 			}
+
 
 		}
 
@@ -409,7 +590,7 @@ class TA_Scene {
 
 				for (let i = lengthArray - 1; i >= 0; i--) {
 
-					taEntities.removeWireframeAndBoundingBox( scope.currentSelection.multiselection.children[i] );
+					ta_Entities.removeWireframeAndBoundingBox( scope.currentSelection.multiselection.children[i] );
 
 					scene.attach( scope.currentSelection.multiselection.children[i] )
 
@@ -424,19 +605,6 @@ class TA_Scene {
 			scope.currentSelection.multiselection.position.set( 0, 0, 0);
 			scope.currentSelection.multiselection.scale.set( 1, 1, 1);
 			scope.currentSelection.multiselection.rotation.set( 0, 0, 0);
-
-		}
-
-		function findBaryCenter( points) {
-
-			if ( !Array.isArray( points) ) return null;
-
-			let pointsCount = points.length;
-
-			let resultVector = points.reduce( (sum, current) => sum.add(current) );
-			let baryCenter = resultVector.divideScalar( pointsCount );
-
-			return baryCenter;
 
 		}
 
@@ -467,29 +635,39 @@ class TA_Scene {
 			// intersectionsInfo( intersects );
 			// if (creatingEntity.currentEntity) {
 			// 	creatingEntity.createEntity( scope.mode, scene, event, sceneCamera );
-			// 	this.taUI.updateParametersMenu( creatingEntity.currentEntity );
+			// 	this.ta_UI.updateParametersMenu( creatingEntity.currentEntity );
 			// }
 			// }
 		}
-		function onDocumentMouseMove(event) {
+		function onDocumentMouseMove( event ) {
+
 			let screenPoint = getScreenPoint(event);
+
+			scope.mousePosition.x = screenPoint.x;
+			scope.mousePosition.y = screenPoint.y;
+
 			raycaster.setFromCamera(screenPoint, camera);
 			let intersects = raycaster.intersectObjects(sceneGrid.mainPlanesArray);
 			// if ( event.target.id == "labelRenderer") {
-			coordsHelpers.removeCoordsHelpers(scene);
-			coordsHelpers.createCoordsHelpers(intersects, scene);
-			intersectionsInfo(intersects);
+			// coordsHelpers.removeCoordsHelpers(scene);
+			// coordsHelpers.createCoordsHelpers(intersects, scene);
+			// intersectionsInfo(intersects);
+
 			if (creatingEntity.currentEntity) {
+
 				creatingEntity.createEntity(scope.mode, scene, event, sceneCamera);
-				scope.taUI.updateParametersMenu(creatingEntity.currentEntity);
+				scope.ta_UI.updateParametersMenu(creatingEntity.currentEntity);
+
 			}
 			// }
 		}
+
 		function getScreenPoint(event) {
 			// event.preventDefault();
 			const screenPoint = new Vector2();
 			return screenPoint.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 		}
+
 		function intersectionsInfo(intersects) {
 			if (intersects.length > 0) {
 				let objectName = intersects[0].object.name;
@@ -506,13 +684,13 @@ class TA_Scene {
 			}
 		}
 		function onDocumentMouseDown() {
-			let screenPoint = getScreenPoint(event);
+			// let screenPoint = getScreenPoint(event);
 		}
 		function onDocumentMouseUp() {
-			let screenPoint = getScreenPoint(event);
+			// let screenPoint = getScreenPoint(event);
 		}
 		function onKeyDown(event) {
-			console.log( event.keyCode );
+			// console.log( event.keyCode );
 			switch (event.keyCode) {
 				
 				case 27: // Esc
@@ -521,6 +699,11 @@ class TA_Scene {
 						scope.selectableObjects.push(creatingEntity.currentEntity);
 						creatingEntity.stopCreating(scope.selectableObjects);
 					}
+
+					let addToSceneForm = document.getElementById( 'addToSceneButtons' );
+					addToSceneForm.reset();
+					let finishButton = document.getElementById( 'Finish' );
+					finishButton.style.display = 'none';
 					scope.mode = {
 						action: 'select',
 						entity: null
@@ -560,14 +743,14 @@ class TA_Scene {
 
 				case 67:  //'c' copy object
 
-					taEntities.cloneObject( scope );
+					ta_Entities.cloneObject( scope );
 
 				break;
 
 				case 77: //'m' move object or group
 
 				Actions.switchOnMoveMode( scope );
-				 let moveButton = document.getElementById( 'MoveRadio' );
+				 let moveButton = document.getElementById( 'Move' );
 				 moveButton.checked = true;
 
 				break;
@@ -575,7 +758,7 @@ class TA_Scene {
 				case 82: //'r' rotate object or group
 
 				Actions.switchOnRotationMode ( scope );
-				 let rotateButton = document.getElementById( 'RotateRadio' );
+				 let rotateButton = document.getElementById( 'Rotate' );
 				 rotateButton.checked = true;
 
 				break;
@@ -583,16 +766,22 @@ class TA_Scene {
 				case 83: //'s' scale object or group
 
 				Actions.switchOnScaleMode ( scope );
-				 let scaleButton = document.getElementById( 'ScaleRadio' );
+				 let scaleButton = document.getElementById( 'Scale' );
 				 scaleButton.checked = true;
 
 				break;
 
 				case 68: //'d' drag object or group
 
-				 let dragButton = document.getElementById( 'DragCheck' );
+				 let dragButton = document.getElementById( 'dragCheck' );
 				 dragButton.checked = dragButton.checked ? false: true;
-				 Actions.switchOnDragMode ( dragButton.checked, scope );
+
+				 if (creatingEntity.currentEntity) {
+					scope.selectableObjects.push(creatingEntity.currentEntity);
+					creatingEntity.stopCreating(scope.selectableObjects);
+				}
+
+				 Actions.switchDragMode ( dragButton.checked, scope );
 
 				break;
 
@@ -621,12 +810,12 @@ class TA_Scene {
 
 	clearScene(){
 
-		let taEntities = new TA_Entities();
+		let ta_Entities = new TA_Entities();
 
 		if (this.currentSelection.object) {
 
 			this.transformControls.detach(this.currentSelection.object);
-			taEntities.removeSelection(this.currentSelection);
+			ta_Entities.removeSelection(this.currentSelection);
 
 		}
 		this.returnObjectsToScene();
@@ -652,9 +841,9 @@ class TA_Scene {
 
 	}
 
-	// setUI( taUI ) {
+	// setUI( ta_UI ) {
 
-	// 	this.taUI = taUI;
+	// 	this.ta_UI = ta_UI;
 
 	// }
 	

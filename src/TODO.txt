@@ -1,0 +1,11 @@
+В режиме MeshEdit не удалять wireframe
+
+Drag multiselection (Group)
+
+all DonElements to one object
+
+MainToolbar make with scroll
+
+switching modes to Action.js
+
+запретить включение Drag при создании объекта

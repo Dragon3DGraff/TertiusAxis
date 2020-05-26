@@ -10,14 +10,14 @@ import { TA_Scene } from "./TA_Scene.js";
 // header[0].getElementsByTagName('link')[0].href = favicon;
 
 
-	let taUI = new TA_UI();
-	let taScene = new TA_Scene( taUI );
+	let ta_UI = new TA_UI();
+	let taScene = new TA_Scene( ta_UI );
 	
-	taUI.init( taScene );
+	ta_UI.init( taScene );
 	
 	taScene.createScene();
 
-		if ( taUI.fillMainToolbar( taScene ) ) {
+		if ( ta_UI.fillMainToolbar( taScene ) ) {
 
 			console.log( 'TertiusAxis loaded');
 

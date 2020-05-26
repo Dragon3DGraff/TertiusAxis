@@ -145,7 +145,7 @@ let TA_Helpers = function () {
 		this.mainPlanesArray = [];
 	
 		let mainPlaneGeom = new PlaneBufferGeometry( 200, 200 );
-		let mainPlaneMaterial = new MeshBasicMaterial( { color: new Color('lightgrey'), transparent: true, opacity: 0.0, side: DoubleSide } );
+		let mainPlaneMaterial = new MeshBasicMaterial( { color: new Color('lightgrey'), transparent: true, opacity: 0.0, alphaTest: 0.1, side: DoubleSide } );
 	
 		let mainPlaneZY = new Mesh( mainPlaneGeom, mainPlaneMaterial );
 		

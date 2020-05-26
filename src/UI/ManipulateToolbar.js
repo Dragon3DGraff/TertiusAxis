@@ -19,104 +19,99 @@ function createManipulateToolbar ( taScene ){
 	let ta_UI = new TA_UI();
 
 
-	let manipulatingContainer = ta_UI.createContainer( 'ManipulateToolbar', mainToolbar );
+	let manipulatingContainer = ta_UI.createContainer( 'ManipulateToolbar', mainContainer );
 
-		// Select Button
-		let radioSelect = document.createElement( 'input' );
-		radioSelect.type = 'radio';
-		radioSelect.name = 'manupulateRadio';
-		radioSelect.id = 'SelectRadio';
-		radioSelect.value = 'Select';
-		radioSelect.checked = true;
-		radioSelect.addEventListener( 'click', switchMode );
-		manipulatingContainer.appendChild( radioSelect );
+	ta_UI.elements.selectButton = ta_UI.createSwitchButton (
+			{
+				parent:manipulatingContainer,
+				text: 'Select',
+				id: 'Select',
+				name: 'manupulateRadio',
+				value: 'Select',
+				tooltip: 'Select',
+				imgLink: ''
+			},
+			switchMode
+			);
+			// ta_UI.elements.selectButton.checked = true;
+			// ta_UI.elements.selectButton.checked = false;
 
-		let labelSelect = document.createElement( 'label' );
-		labelSelect.innerHTML = 'Select';
-		labelSelect.htmlFor = radioSelect.id;
-		manipulatingContainer.appendChild( labelSelect );
+		ta_UI.elements.moveButton = ta_UI.createSwitchButton (
+			{
+				parent:manipulatingContainer,
+				text: 'Move',
+				id: 'Move',
+				name: 'manupulateRadio',
+				value: 'Move',
+				tooltip: 'Move(m)',
+				imgLink: ''
+			},
+			switchMode
+		);
 
-		// Move Button
-		let radioMove = document.createElement( 'input' );
-		radioMove.type = 'radio';
-		radioMove.name = 'manupulateRadio';
-		radioMove.id = 'MoveRadio';
-		radioMove.value = 'Move';
-		radioMove.addEventListener( 'click', switchMode );
-		manipulatingContainer.appendChild( radioMove );
+		ta_UI.elements.rotateButton = ta_UI.createSwitchButton (
+			{
+				parent:manipulatingContainer,
+				text: 'Rotate',
+				id: 'Rotate',
+				name: 'manupulateRadio',
+				value: 'Rotate',
+				tooltip: 'Rotate(r)',
+				imgLink: ''
+			},
+			switchMode
+		);
 
-		let labelMove = document.createElement( 'label' );
-		labelMove.innerHTML = 'Move';
-		labelMove.htmlFor = radioMove.id;
-		manipulatingContainer.appendChild( labelMove );
+		ta_UI.elements.scaleButton = ta_UI.createSwitchButton (
+			{
+				parent:manipulatingContainer,
+				text: 'Scale',
+				id: 'Scale',
+				name: 'manupulateRadio',
+				value: 'Scale',
+				tooltip: 'Scale(s)',
+				imgLink: ''
+			},
+			switchMode
+		);
 
-		// Rotate Button
-		let radioRotate = document.createElement( 'input' );
-		radioRotate.type = 'radio';
-		radioRotate.name = 'manupulateRadio';
-		radioRotate.id = 'RotateRadio';
-		radioRotate.value = 'Rotate';
-		radioRotate.addEventListener( 'click', switchMode );
-		manipulatingContainer.appendChild( radioRotate );
-
-		let labelRotate = document.createElement( 'label' );
-		labelRotate.innerHTML = 'Rotate';
-		labelRotate.htmlFor = radioRotate.id;
-		manipulatingContainer.appendChild( labelRotate );
-
-		// Scale Button
-		let radioScale = document.createElement( 'input' );
-		radioScale.type = 'radio';
-		radioScale.name = 'manupulateRadio';
-		radioScale.id = 'ScaleRadio';
-		radioScale.value = 'Scale';
-		radioScale.addEventListener( 'click', switchMode );
-		manipulatingContainer.appendChild( radioScale );
-
-		let labelScale = document.createElement( 'label' );
-		labelScale.innerHTML = 'Scale';
-		labelScale.htmlFor = radioScale.id;
-		manipulatingContainer.appendChild( labelScale );
-
-		// Drag Button
-		let DragCheck = document.createElement( 'input' );
-		DragCheck.type = 'checkbox';
-		DragCheck.name = 'DragCheck';
-		DragCheck.id = 'DragCheck';
-		DragCheck.value = 'Drag';
-		DragCheck.addEventListener( 'click', switchDrag );
-		manipulatingContainer.appendChild( DragCheck );
-
-		let labelDrag = document.createElement( 'label' );
-		labelDrag.innerHTML = 'Drag';
-		labelDrag.htmlFor = DragCheck.id;
-		manipulatingContainer.appendChild( labelDrag );
-
+		ta_UI.elements.dragButton = ta_UI.createStayPressedButton(
+			{
+			parent: manipulatingContainer,
+			text: 'Drag',
+			id: 'dragCheck',
+			name: 'dragCheck',
+			value: 'dragCheck',
+			tooltip: '(d)',
+			imgLink: ''
+		},
+			switchDrag
+		);
 
 function switchMode( selectedRadio ) {
 
 	let selectedButton = selectedRadio.target.id;
 
 	switch (selectedButton) {
-		case 'SelectRadio':
+		case 'Select':
 
 			Actions.switchOnSelectMode ( taScene )
 
 			break;
 
-		case 'MoveRadio':
+		case 'Move':
 
 			Actions.switchOnMoveMode( taScene );
 		
 			break;
 
-		case 'RotateRadio':
+		case 'Rotate':
 
 			Actions.switchOnRotationMode ( taScene );
 		
 			break;
 
-		case 'ScaleRadio':
+		case 'Scale':
 
 			Actions.switchOnScaleMode ( taScene );
 
@@ -130,7 +125,7 @@ function switchMode( selectedRadio ) {
 
 function switchDrag () {
 
-	Actions.switchOnDragMode( this.checked, taScene );
+	Actions.switchDragMode( this.checked, taScene );
 
 }
 

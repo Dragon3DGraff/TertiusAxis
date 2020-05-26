@@ -15,7 +15,7 @@ function createParametersToolbar() {
 
 	let ta_UI = new TA_UI();
 
-	let paramContainer = ta_UI.createContainer( 'paramContainer', mainToolbar );
+	let paramContainer = ta_UI.createContainer( 'paramContainer', mainContainer );
 	paramContainer.className = 'paramContainer';
 	
 	let title = ta_UI.addElement( paramContainer,'p', 'Object parameters &#9650', '');
@@ -106,9 +106,9 @@ function createParametersToolbar() {
 	tabs.className = 'tabs';
 	tabs.id = 'tabs';
 
-	let geometryParameters = ta_UI.addElement( tabs, 'div','','');
-	geometryParameters.className = 'GeometryParameters';
-	geometryParameters.id = 'GeometryParameters';
+	ta_UI.elements.geometryParameters = ta_UI.addElement( tabs, 'div','','');
+	ta_UI.elements.geometryParameters.className = 'GeometryParameters';
+	ta_UI.elements.geometryParameters.id = 'GeometryParameters';
 
 	let materialParameters = ta_UI.addElement( tabs, 'div','','');
 	materialParameters.className = 'MaterialParameters';

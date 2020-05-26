@@ -207,6 +207,8 @@ background-color: lightsteelblue;;
 
 	padding: 0px;
 	margin: 2px;
+	font-size: 12px;
+	/* font-weight: 700; */
 
 }
 
@@ -215,11 +217,19 @@ background-color: lightsteelblue;;
 	padding: 0px;
 	margin: 0px;
 	/* display: grid; */
+	/* grid-template-rows: 100px 200px 300px; */
+	/* grid-template-rows: 0.1fr 0.6fr 1fr 3fr; */
+	/* display: flex; */
+	/* flex-direction: column; */
+	flex: 1 1;
+
+
 	position: absolute;
 	z-index: 200;
 	width: 250px;
 	height: 98%;
 	background-color:rgba(205, 214, 219, 0.63);
+	/* overflow-x: auto; */
 	/* opacity: 0.8; */
 	top: 18px;
 
@@ -240,10 +250,14 @@ background-color: lightsteelblue;;
 	bottom:100px;
 	text-align: center;	 */
 
-	/* display: flex; */
-	/* flex-wrap: wrap; */
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
 
-	display: block;
+	/* flex-direction: column ;
+	flex-wrap: wrap;
+	align-content: stretch;
+	justify-content: center; */
+
 
 	background-color: rgba(119, 136, 153, 0.589);
 	position: relative;
@@ -256,25 +270,21 @@ background-color: lightsteelblue;;
 
 }
 
-.mainToolbar button {
 
-	/* position: absolute;	 */
+/* .mainToolbar button {
+
 	z-index: 203;
 	background-color:rgb(51, 51, 51) ;
-	/* background-color: #06aac7; */
 	color: rgba(127,255,255, 1);
-	/* color: rgb(14, 3, 80); */
-	width: 111px;
-	height: 22px;
 	font-size: 12px;
-	/* top:130px; */
-	/* border-color: rgba(0, 0, 0, 1); */
-	/* border-radius: 3px; */
+
 	text-align: center;
 	margin-left: 4px;
 	padding: 0px;
 	
-}
+} */
+
+
 
 
 .mainToolbar button:hover {
@@ -305,6 +315,18 @@ background-color: lightsteelblue;;
 	margin: 0px;
 
 }
+.finishButton {
+
+	z-index: 203;
+	background-color:rgb(88, 2, 2) ;
+	color: rgba(127,255,255, 1);
+	font-size: 12px;
+
+	text-align: center;
+	margin-left: 4px;
+	padding: 0px;
+
+}
 
 .ManipulateToolbar {
 
@@ -314,66 +336,79 @@ background-color: lightsteelblue;;
 	/* overflow: auto; */
 	background-color: rgba(119, 136, 153, 0.589);
 	position: relative;
-	height: 25px;
+	height: 20px;
 	border-style: solid;
 	border-width: 0.1px;
 	border-color: firebrick;
 
 }
 
-.ManipulateToolbar input[type=radio] {
+.meshEditForm {
+	
+	display: flex;
+}
+
+input[type=radio] {
+
 	display:none; 
 	margin:10px;
 }
 
-.ManipulateToolbar input[type=radio] + label {
+input[type=radio] + label {
+
+	flex-grow: 1;
+
 	display:inline-block;
 	/* margin:-2px; */
-	padding-top: 6px;
+	padding: 2px;
 	font-size: 12px;
-	width: 110px;
-	height: 20px;
+	/* width: 70px; */
+	height: 16px;
 	color: rgba(127,255,255, 1);
 	background-color: rgb(51, 51, 51);
 	border-color: #ddd;
 	text-align: center;
 }
 
-.ManipulateToolbar input[type=radio]:hover + label { 
+ input[type=radio]:hover + label { 
 	background-image: none;
 	 background-color:darkslategrey;
  }
 
-.ManipulateToolbar input[type=radio]:checked + label { 
+ input[type=radio]:checked + label { 
 	background-image: none;
 	 background-color:rgb(6, 170, 199);
 	 color: rgb(14, 3, 80);
  }
 
- .ManipulateToolbar input[type=checkbox] {
+ input[type=checkbox] {
+
 	display:none; 
 	margin:10px;
 }
 
-.ManipulateToolbar input[type=checkbox] + label {
+ input[type=checkbox] + label {
+
+	flex-grow: 1;
+
 	display:inline-block;
 	/* margin:-2px; */
-	padding-top: 6px;
+	padding: 2px;
 	font-size: 12px;
-	width: 110px;
-	height: 20px;
+	/* width: 110px; */
+	height: 16px;
 	color: rgba(127,255,255, 1);
 	background-color: rgb(51, 51, 51);
 	border-color: #ddd;
 	text-align: center;
 }
 
-.ManipulateToolbar input[type=checkbox]:hover + label { 
+input[type=checkbox]:hover + label { 
 	background-image: none;
 	background-color:darkslategrey;
 }
 
-.ManipulateToolbar input[type=checkbox]:checked + label { 
+input[type=checkbox]:checked + label { 
 	background-image: none;
 	 background-color:rgb(6, 170, 199);
 	 color: rgb(14, 3, 80);
@@ -407,7 +442,8 @@ background-color: lightsteelblue;;
 }
 .paramContainer {
 
-	height: 50%;
+	/* height: 50%; */
+	/* overflow-y: auto; */
 	background-color: rgba(119, 136, 153, 0.589);
 
 }
@@ -415,24 +451,32 @@ background-color: lightsteelblue;;
 .tabsButtons {
 
 	display: flex;
+	flex-wrap: nowrap;
 	/* flex-wrap: wrap; */
 	/* flex-shrink: inherit; */
 	/* flex: 1 1 1; */
-	width: 100%;
+	/* width: 100%; */
+
 	
 
-	height: 28px;
+	height: 25px;
 	/* background-color: salmon; */
 
 }
 
 .tabsButtons button {
 
-	padding: 0px;
-	margin: 0px;
-	height: 100%;
+	flex-grow: 1;
 
-	font-size: 16px;
+	z-index: 203;
+	background-color:rgb(51, 51, 51) ;
+	color: rgba(127,255,255, 1);
+	font-size: 12px;
+	height: 25px;
+
+	text-align: center;
+
+	/* font-size: 16px; */
 	border-width: 0.1px;
 	border-color: snow;
 	
@@ -440,27 +484,35 @@ background-color: lightsteelblue;;
 
 .tabs {
 
-	height: 85%;
+	/* height: 200px; */
+	height: 10rem;
+	overflow: auto;
 	/* display: block; */
 
-
 }
+
+/* .tabs p{
+
+	font-size: 12px;
+	color: rgb(6, 170, 199);
+
+} */
 
 .MaterialParameters {
 
 	display: none;
-	height: 100%;
+	/* height: 100%; */
 	
-	overflow: auto;
+	/* overflow: auto; */
 	
 }
 
 .GeneralParameters {
 
 	display: none;
-	height: 100%;
+	/* height: 100%; */
 	
-	overflow: auto;
+	/* overflow-y: auto; */
 
 
 }
@@ -490,14 +542,14 @@ background-color: lightsteelblue;;
 	display: flex;
 	flex-wrap: wrap;
 	padding-left: 5px;
-	height: 24px;
+	height: 15px;
 	width: 225px;
-	border-style: solid;
-	border-width: 0.2px;
+	/* border-style: solid; */
+	/* border-width: 0.2px; */
 	/* align-content: center; */
 	color: rgba(127,255,255, 1);
 	background-color: rgb(51, 51, 51);
-	font-size: 12px;
+	font-size: 11px;
 
 }
 
@@ -505,30 +557,32 @@ background-color: lightsteelblue;;
 .ParametersRow p{
 
 	width: 83px;
+	
 }
 
 .ParametersRow input {
 
-	width: 130px;
-	height: 14px;
+	width: 100px;
+	height: 9px;
 	/* position: relative; */
 	z-index: 204;
 	margin-top: 2px;
 	/* right: 4px; */
 	cursor: ns-resize;
+	border-width: 0px;
 
-	border-radius: 5px;
-	background-color: rgb(77, 76, 76);
+	/* border-radius: 3px; */
+	background-color: rgb(77, 73, 73);
 	color: rgba(127,255,255, 1);
-	font-size: 12px;
+	font-size: 9px;
 	
 
 }
 
 .ParametersRow input[type=number]:hover {
 
-	border-color: rgba(127,255,255, 1);
-	border-width: 3px;
+	/* border-color: rgba(127,255,255, 1); */
+	/* border-width: 3px; */
 	background-color: rgb(255, 255, 255);
 	color: black;
 	
@@ -538,17 +592,17 @@ background-color: lightsteelblue;;
 .ParametersRow select {
 
 	width: 134px;
-	height: 20px;
+	height: 15px;
 
 	z-index: 204;
-	margin-top: 2px;
+	/* margin-top: 2px; */
 
 	/* border-radius: 5px; */
-	border-color: rgba(127,255,255, 1);
-	border-width: 1px;
-	background-color: rgb(77, 76, 76);
+	/* border-color: rgba(127,255,255, 1); */
+	/* border-width: 1px; */
+	background-color: rgb(77, 73, 73);
 	color: rgba(127,255,255, 1);
-	font-size: 12px;
+	font-size: 11px;
 
 }
 
@@ -565,7 +619,7 @@ background-color: lightsteelblue;;
 
 .ParametersRow input[type=color] {
 
-	width: 125px;
+	width: 100px;
 
 }
 
@@ -575,7 +629,7 @@ background-color: lightsteelblue;;
 	display: flex;
 	flex-wrap: wrap;
 	padding-left: 5px;
-	height: 37px;
+	height: 26px;
 	width: 225px;
 	border-style: solid;
 	border-width: 0.2px;
@@ -594,18 +648,19 @@ background-color: lightsteelblue;;
 
 .ParametersRowRange input[type=number] {
 
-	width: 130px;
-	height: 14px;
+	width: 100px;
+	height: 10px;
 	/* position: relative; */
 	z-index: 204;
 	margin-top: 2px;
 	/* right: 4px; */
 	/* cursor: row-resize; */
+	border: 0px;
 
-	border-radius: 5px;
-	background-color: rgb(77, 76, 76);
+	/* border-radius: 5px; */
+	background-color: rgb(77, 73, 73);
 	color: rgba(127,255,255, 1);
-	font-size: 12px;
+	font-size: 9px;
 
 }
 
@@ -642,9 +697,10 @@ background-color: lightsteelblue;;
 .info{
 
 	position: absolute;
-	bottom: 20px;
+	bottom: 0px;
 	height: 40px;
-	width: 100%;
+	left: 250px;
+	width: 150px;
 	background: rgba(0, 0, 0,0.75);
 	color: limegreen;
 	font-size: 10px;
@@ -670,7 +726,7 @@ background-color: lightsteelblue;;
   height: 3px; /* Specified height */
   background: #d3d3d3; /* Grey background */
   outline: none; /* Remove outline */
-  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  opacity: 1; /* Set transparency (for mouse-over effects on hover) */
   -webkit-transition: .2s; /* 0.2 seconds transition on hover */
   transition: opacity .2s;
 }
@@ -685,9 +741,9 @@ background-color: lightsteelblue;;
   -webkit-appearance: none; /* Override default look */
   appearance: none;
   width: 15px; /* Set a specific slider handle width */
-  height: 10px; /* Slider handle height */
+  height: 6px; /* Slider handle height */
   background: rgba(127,255,255, 1); /* Green background */
-  border-radius: 7px;
+  border-radius: 2px;
   cursor: pointer; /* Cursor on hover */
 }
 
@@ -695,9 +751,15 @@ background-color: lightsteelblue;;
 	-webkit-appearance: none; /* Override default look */
 	appearance: none;
 	width: 15px; /* Set a specific slider handle width */
-	height: 10px; /* Slider handle height */
+	height: 8px; /* Slider handle height */
 	background: rgba(127,255,255, 1); /* Green background */
-	border-radius: 7px;
+	border-radius: 2px;
 	cursor: pointer; /* Cursor on hover */
 } 
+
+.meshEditElementsForm {
+
+	display: none;
+
+}
 

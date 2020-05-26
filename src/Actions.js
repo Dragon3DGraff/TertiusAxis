@@ -2,6 +2,7 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 import { TA_Entities } from "./Entities/TA_Entities.js";
+import { TA_UI } from "./UI/TA_UI.js";
 
 export function switchOnMoveMode ( taScene ) {
 
@@ -65,9 +66,10 @@ export function switchOnSelectMode ( taScene ) {
 
 }
 
-export function switchOnDragMode ( checked, taScene ) {
+export function switchDragMode ( checked, taScene ) {
 
 	let taEntities = new TA_Entities();
+	let ta_UI = new TA_UI();
 	
 	if ( checked ) {
 
@@ -90,8 +92,17 @@ export function switchOnDragMode ( checked, taScene ) {
 			}
 	
 			// taScene.transformControlsMode = '';
-			// taScene.mode.action = '';
+			taScene.mode.action = '';
 			taScene.dragControls.activate();
+
+			//bug fixing. See https://github.com/mrdoob/three.js/issues/19290
+			// document.getElementById('labelRenderer').dispatchEvent( new Event( 'mousemove', { clientX: taScene.mousePosition.x, clientY: taScene.mousePosition.y } ) );
+
+			ta_UI.elements.finishButton.form.reset()
+			ta_UI.elements.finishButton.style.display = 'none';
+			taScene.mode.action = 'select';
+			taScene.mode.entity = null;
+			
 		}
 		else{
 			if( taScene.currentSelection.object ) {
@@ -99,6 +110,12 @@ export function switchOnDragMode ( checked, taScene ) {
 				taEntities.selectEntity( taScene.currentSelection.object, taScene.currentSelection );
 			}
 			taScene.dragControls.deactivate();
+			labelRenderer.style.cursor = 'auto'; //bug fixing. See https://github.com/mrdoob/three.js/issues/19290
+
 		}
 
+}
+
+export function switchEditVertices() {
+	
 }

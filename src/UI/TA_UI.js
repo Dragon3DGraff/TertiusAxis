@@ -10,11 +10,22 @@ import { createParametersToolbar } from "./ParametersToolbar.js";
 import { fillGeometryParametersTab } from "./GeometryParametersTab.js";
 import { fillMaterialParametersTab } from "./MaterialParametersTab.js";
 import { fillGeneralParametersTab } from "./GeneralParametersTab.js";
+import { createMeshEditToobar } from "./MeshEditToolbar.js";
+
+
 
 
 class TA_UI {
 
-	constructor( ) {
+	constructor() {
+		// singltone
+		if (TA_UI.exist){
+			return TA_UI.instance;
+		}
+		TA_UI.instance = this;
+		TA_UI.exist = true;
+
+		this.elements= {};
 	}
 
 	init( taScene ) {
@@ -31,6 +42,7 @@ class TA_UI {
 		createManipulateToolbar( taScene );
 		createAddToSceneToolbar( taScene );
 		createParametersToolbar();
+		createMeshEditToobar( taScene );
 
 		return true;
 
@@ -80,6 +92,101 @@ class TA_UI {
 		return label;
 
 	}
+	    /**
+     * creates radio button with label
+     * @param params - { Object } {
+	 * 	parent:  {domElement},
+	*	text: {string},
+	*	id: {string},
+	*	name: {string},
+	*	value: {string},
+	*	tooltip: {string},
+	*	imgLink: 'path'
+	* }
+	 * @param function function, which will be assign on Click
+     */
+	createSwitchButton ( params, func ) {
+
+		if( typeof func !== 'function') {
+
+			console.error( func + " is not a function" );
+			return;
+
+		}
+
+		let radio = document.createElement( 'input' );
+		radio.type = 'radio';
+		radio.name = params.name;
+		radio.id = params.id;
+		radio.value = params.value;
+		radio.addEventListener( 'click', func );
+		params.parent.appendChild( radio );
+
+		let label = document.createElement( 'label' );
+		label.innerHTML = params.text;
+		label.htmlFor = radio.id;
+		label.title = params.tooltip;
+		params.parent.appendChild( label );
+
+		if ( params.imgLink && params.imgLink !== '' ){
+
+			let img = document.createElement( 'img' );
+			img.src = params.imgLink;
+			label.appendChild( img );
+
+		}
+
+		return radio;
+
+	}
+
+	/**
+	 * creates radio button with label
+	 * @param params - { Object } {
+	*		parent:  {domElement},
+	*		text: {string},
+	*		id: '{string},
+	*		name: {string},
+	*		value: {string},
+	*		tooltip: {string},
+	*		imgLink: 'path'
+	*	},
+	 * @param function function, which will be assign on Click
+	 */
+	createStayPressedButton( params, func ){
+
+		if( typeof func !== 'function') {
+
+			console.error( func + " is not a function" );
+			return;
+
+		}
+
+		let checkbox = document.createElement( 'input' );
+		checkbox.type = 'checkbox';
+		checkbox.name = params.name;
+		checkbox.id = params.id;
+		checkbox.value = params.value;
+		checkbox.addEventListener( 'click', func );
+		params.parent.appendChild( checkbox );
+	
+		let label = document.createElement( 'label' );
+		label.innerHTML = params.text;
+		label.htmlFor = checkbox.id;
+		label.title = params.tooltip;
+		params.parent.appendChild( label );
+
+		if ( params.imgLink && params.imgLink !== ''){
+
+			let img = document.createElement( 'img' );
+			img.src = params.imgLink;
+			label.appendChild( img );
+
+		}
+
+		return checkbox;
+
+	}
 
 	createContainer( containerName, parentElement ) {
 
@@ -93,20 +200,25 @@ class TA_UI {
 
 	createParametersMenu( entity ) {
 
-		if ( !entity.geometry.parameters) {
+		// if ( !entity.geometry.parameters) {
 
-			console.warn( "No Params" );
+		// 	console.warn( "No Params" );
 
-			return;
+		// 	return;
 
-		}
+		// }
 
 		this.deleteParametersMenu();
 
 		let tabsButtons = document.getElementById ( 'tabsButtons' );
 		tabsButtons.style.display = 'flex';
 
-		fillGeometryParametersTab( entity );
+		if ( entity.geometry.parameters) {
+
+			fillGeometryParametersTab( entity );
+
+		}
+
 		fillMaterialParametersTab( entity );
 		fillGeneralParametersTab( entity );
 
@@ -170,11 +282,18 @@ class TA_UI {
 		
 	}
 
-	deleteParametersMenu() {
+	deleteGeometryParametersTab() {
 
 		let rows = document.getElementById( 'ParametersGoemetryRows' );
 		if (rows) rows.remove();
-		rows = document.getElementById( 'ParametersMaterialRows' );
+
+	}
+
+	deleteParametersMenu() {
+
+		this.deleteGeometryParametersTab();
+
+		let rows = document.getElementById( 'ParametersMaterialRows' );
 		if (rows) rows.remove();
 		rows = document.getElementById( 'ParametersGeneralRows' );
 		if (rows) rows.remove();

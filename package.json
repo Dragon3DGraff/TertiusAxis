@@ -29,8 +29,8 @@
     "build": "cross-env NODE_ENV=production webpack --mode production",
     "dev": "cross-env NODE_ENV=development webpack --mode development ",
     "watch": "cross-env NODE_ENV=development webpack --mode development --watch",
-	"start": "cross-env NODE_ENV=development webpack-dev-server --open",
-	"test": "jest"
+    "start": "cross-env NODE_ENV=development webpack-dev-server --open",
+    "test": "jest"
   },
   "author": "Dragon3DGraff",
   "license": "MIT",
