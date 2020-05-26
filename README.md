@@ -6,9 +6,11 @@ This will be a 3d editor / game engine in a browser
 
 You can follow my [blog](https://dragon3dgraff.ru/en/ "dragon3dgraff.ru") to see the process of creation
 
-
-
 # New Features!
+
+- Edit mesh moving vertices or faces
+
+# Features
 
 - Changing value of position/rotaition/scale from parameters menu
 - Color changing

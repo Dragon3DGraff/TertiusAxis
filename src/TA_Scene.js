@@ -144,22 +144,23 @@ class TA_Scene {
 
 		this.transformControls.addEventListener( 'objectChange', function( event ) {
 
-			if (event.target.object.type === 'Group') {
-
-				return;
-
-			}
-
-			// СДЕЛАТЬ ОБНОВЛЕНИЕ ПОЛЕЙ ПАРАМЕТРОВ
-
 			if( event.target.mode === 'translate' ){
 
 				if ( scope.mode.action === 'meshEdit' ){
 
-					let editHelper = event.target.object;
+					let editHelper = event.target;
 
 					scope.meshEditObject.transformMesh( editHelper );
 
+				}
+
+
+							// СДЕЛАТЬ ОБНОВЛЕНИЕ ПОЛЕЙ ПАРАМЕТРОВ
+
+				if (event.target.object.type === 'Group') {
+
+					return;
+	
 				}
 
 				if (event.target.worldPositionStart.x !== event.target.worldPosition.x ){
@@ -422,15 +423,16 @@ class TA_Scene {
 		
 						let objectToSelect = intersects[0].object;
 
-						if( scope.meshEditObject.mode === 'Faces' && objectToSelect.name === "createMeshHelpers" ){
+						if( scope.meshEditObject.mode === 'Faces' && objectToSelect.userData.type === "createMeshHelpers" ){
+
+							let name = objectToSelect.name;
+							let sphere = objectToSelect.parent.getObjectByName( 'Sphere' + name );
 
 							// objectToSelect.material.color.setHex( '#F64545' );
 
 							scope.transformControlsMode = 'translate' ;
 						
-							scope.transformControls.attach( objectToSelect );
-
-							// console.log( objectToSelect )
+							scope.transformControls.attach( sphere );
 
 						} else{
 

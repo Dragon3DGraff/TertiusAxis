@@ -72,13 +72,24 @@ class MeshEdit {
 
 			// console.log( editHelper.userData.vertexNumber )
 
-			this.moveVertex( editHelper.userData.vertexNumber, editHelper.position );
+			this.moveVertex( editHelper.object.userData.vertexNumber, editHelper.object.position );
 
 		}
 
 		if( this.mode === "Faces" ){
 
-			let attrArray = editHelper.geometry.attributes.position.array;
+			let sphereName = editHelper.object.name;
+
+			let face = editHelper.object.parent.getObjectByName( editHelper.object.name.replace('Sphere','') );
+			let sphere = editHelper.object;
+
+			let shift = sphere.position;
+
+			shift.subVectors( sphere.position, face.userData.baryCenter )
+
+			face.position.set( shift.x, shift.y, shift.z );
+
+			let attrArray = face.geometry.attributes.position.array;
 			let vertices = [];
 
 			for (let i = 0; i < attrArray.length; i += 3 ) {
@@ -87,7 +98,7 @@ class MeshEdit {
 		
 			}
 
-			let verticesNumbers = editHelper.userData.verticesNumbers;
+			let verticesNumbers = face.userData.verticesNumbers;
 
 			for (let i = 0; i < verticesNumbers.length; i ++ ) {
 
@@ -95,13 +106,17 @@ class MeshEdit {
 
 				let point = vertices[ i ].clone();
 
-				let pointPosition = point.add( editHelper.position.clone() ).clone();
+				let pointPosition = point.add( face.position.clone() ).clone();
 
 				this.moveVertex( pointNumber, pointPosition );
 
 				this.removeMeshHelpers();
 				this.createMeshHelpers();
-		
+
+				let sphere = this.ta_Scene.scene.getObjectByName( sphereName );
+
+				this.ta_Scene.transformControls.attach( sphere );
+
 			}
 
 
@@ -162,7 +177,7 @@ class MeshEdit {
 	
 	addTriangles( mesh, points ){
 
-		let sphereGeometry = new SphereBufferGeometry( 0.1, 4, 4 );
+		let sphereGeometry = new SphereBufferGeometry( 0.5, 4, 4 );
 		let material = new MeshBasicMaterial( { color: new Color( 'lightgrey' ) } )
 
 		let triangleNumber = 0;
@@ -186,9 +201,9 @@ class MeshEdit {
 			]
 
 			let triangle = createTriangle( vert );
-			triangle.name = 'createMeshHelpers';
+			triangle.name = 'Face_' + triangleNumber;
 
-			triangle.userData.triangleNumber = triangleNumber;
+			triangle.userData.type = 'createMeshHelpers';
 
 			triangle.userData.indexes = [
 				 indexArray[ i ],
@@ -216,12 +231,15 @@ class MeshEdit {
 			let verticesClones = vert.map( ( item ) => item.clone() );
 			let baryCenter = findBaryCenter( verticesClones );
 
+			triangle.userData.baryCenter = baryCenter;
+
 			let sphere = new Mesh( sphereGeometry, material );
 			sphere.position.set( baryCenter.x, baryCenter.y, baryCenter.z );
-			sphere.userData.triangleNumber = triangleNumber;
+			sphere.name = 'SphereFace_' + triangleNumber;
+			sphere.userData.type = 'createMeshHelpers';
 			
 
-			triangle.add( sphere );
+			group.add( sphere );
 
 			
 
