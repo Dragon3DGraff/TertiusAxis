@@ -13,7 +13,8 @@ import {
 	SphereBufferGeometry,
 	Mesh,
 	MeshBasicMaterial,
-	DoubleSide
+	DoubleSide,
+	FaceColors
    } from "../node_modules/three/build/three.module.js";
 import { TA_Entities } from "./Entities/TA_Entities.js";
 import { TA_Scene } from "./TA_Scene.js";
@@ -27,9 +28,65 @@ class MeshEdit {
 		this.vertices;
 		this.points;
 		this.mode = 'Vertices';
+
 		this.ta_UI = new TA_UI();
 		this.ta_Entities = new TA_Entities();
 		this.ta_Scene = new TA_Scene();
+		this.faceHighlighting = true;
+
+
+		this.materialHighlight = new MeshBasicMaterial({
+			color: new Color( "yellow"),
+			transparent: true,
+			opacity: 0.9
+			// side: DoubleSide
+			// alphaTest: 0.5, 
+		} );
+
+		this.triangleForHighlighting = createTriangle(
+
+			[
+			new Vector3( 0, 0, 0 ),
+			new Vector3( 0, 0, 0 ),
+			new Vector3( 0, 0, 0 )
+			],
+
+			this.materialHighlight
+
+		);
+
+	}
+
+	highlightFace( intersectsObjects ) {
+
+		if ( intersectsObjects.length > 0 ){
+
+			let mesh = intersectsObjects[0].object;
+			let face = intersectsObjects[0].face;
+
+			let points = getPoints( mesh );
+
+			let vertices = [
+				points[face.a],
+				points[face.b],
+				points[face.c],
+
+			];
+
+			let arr = [];
+			vertices.map( item => {
+				arr.push( item.x);
+				arr.push( item.y);
+				arr.push( item.z);
+
+			});
+			arr.map( (item, index ) => this.triangleForHighlighting.geometry.attributes.position.array[ index ] = item );
+			this.triangleForHighlighting.geometry.attributes.position.needsUpdate = true;
+			this.triangleForHighlighting.name = 'FaceHighlight';
+
+			mesh.add ( this.triangleForHighlighting );
+
+		}
 
 	}
 
@@ -38,6 +95,8 @@ class MeshEdit {
 		this.points = getPoints( this.mesh );
 		this.vertices = getVertices( this.points );
 
+		// this.mesh.add( this.ta_Entities.createWireframe( this.mesh ) );
+
 		if ( this.mode === 'Vertices' ){
 
 			this.addSpheresToVertexes( this.mesh, this.vertices );
@@ -45,7 +104,7 @@ class MeshEdit {
 		}
 		if ( this.mode === 'Faces' ){
 
-			this.addTriangles( this.mesh, this.points );
+			// this.addTriangles( this.mesh, this.points );
 
 		}
 
@@ -56,21 +115,13 @@ class MeshEdit {
 		this.ta_Entities.removeWireframeAndBoundingBox( this.mesh );
 
 		this.mesh.remove( this.mesh.getObjectByName( 'shperesForMeshEdit') );
-		this.mesh.remove( this.mesh.getObjectByName( 'FacesForMeshEdit') );
-		
-
-		this.ta_Scene.selectableObjects = [];
-
-		this.ta_Scene.selectableObjects = this.ta_Scene.selectableObjects.concat( this.ta_Scene.tempSelectableObjects );
-		this.ta_Scene.tempSelectableObjects = [];
+		this.mesh.remove( this.mesh.getObjectByName( 'FaceHelperGroup') );
 
 	}
 
 	transformMesh( editHelper ) {
 
-		if( this.mode === 'Vertices'){
-
-			// console.log( editHelper.userData.vertexNumber )
+		if ( this.mode === 'Vertices' ){
 
 			this.moveVertex( editHelper.object.userData.vertexNumber, editHelper.object.position );
 
@@ -81,13 +132,20 @@ class MeshEdit {
 			let sphereName = editHelper.object.name;
 
 			let face = editHelper.object.parent.getObjectByName( editHelper.object.name.replace('Sphere','') );
+
+
 			let sphere = editHelper.object;
 
-			let shift = sphere.position;
+			let shift = sphere.position.clone();
+
+
 
 			shift.subVectors( sphere.position, face.userData.baryCenter )
 
 			face.position.set( shift.x, shift.y, shift.z );
+
+			// console.log (shift)
+
 
 			let attrArray = face.geometry.attributes.position.array;
 			let vertices = [];
@@ -110,15 +168,15 @@ class MeshEdit {
 
 				this.moveVertex( pointNumber, pointPosition );
 
-				this.removeMeshHelpers();
-				this.createMeshHelpers();
+				// this.removeMeshHelpers();
+				
 
 				let sphere = this.ta_Scene.scene.getObjectByName( sphereName );
 
 				this.ta_Scene.transformControls.attach( sphere );
 
 			}
-
+			this.createMeshHelpers();
 
 		}
 
@@ -129,7 +187,6 @@ class MeshEdit {
 		let object = this.mesh;
 
 		object.geometry.parameters = null;
-		this.ta_UI.deleteGeometryParametersTab();
 
 		let VertexesPointsIndexes = getVertexesPointsIndexes( this.points, this.vertices);
 
@@ -138,26 +195,23 @@ class MeshEdit {
 		this.vertices[ +vertexNumber ] = position;
 
 		let newPoints = vertexesChangePoints ( this.vertices, this.points, VertexesPointsIndexes);
-		
 
 		pointsChangeAttributesPosition( object, newPoints );
 		object.geometry.attributes.position.needsUpdate = true;
-	
-		object.updateMatrix();
-		// object.add( ta_Entities.createBoundingBox( object ) );
+
+		//without this raycaster will not work correct
+		object.geometry.computeBoundingSphere();
+		object.geometry.computeBoundingBox();
+
 		object.add( this.ta_Entities.createWireframe( object ) );
 
 	}
 
 	addSpheresToVertexes( mesh, vertices ){
 
-		let sphereGeometry = new SphereBufferGeometry( 0.3, 4, 4 );
-		let material = new MeshBasicMaterial( { color: new Color( 'red' ) } )
-		
-		this.ta_Scene.tempSelectableObjects = this.ta_Scene.tempSelectableObjects.concat( this.ta_Scene.selectableObjects );
-	
-		this.ta_Scene.selectableObjects = [];
-	
+		let sphereGeometry = new SphereBufferGeometry( 0.3, 3, 2 );
+		let material = new MeshBasicMaterial( { color: new Color( 'red' ) } );
+
 		let group = new Group();
 		group.name = 'shperesForMeshEdit';
 	
@@ -174,17 +228,88 @@ class MeshEdit {
 		mesh.add( group );
 	
 	}
+
+	addTriangle( intersectsObjects ){
+
+		let group = new Group();
+		group.name = 'FaceHelperGroup';
+
+		let sphereGeometry = new SphereBufferGeometry( 0.2, 3, 2 );
+		let material = new MeshBasicMaterial({
+			color: new Color( "lightgrey"),
+			transparent: true,
+			opacity: 0.9
+			// side: DoubleSide
+			// alphaTest: 0.5, 
+		} )
+
+		if ( intersectsObjects.length > 0 ){
+
+			let mesh = intersectsObjects[0].object;
+			let face = intersectsObjects[0].face;
+
+			mesh.remove( mesh.getObjectByName( 'FaceHelperGroup') );
+
+			let points = getPoints( mesh );
+
+			let vertices = [
+				points[face.a],
+				points[face.b],
+				points[face.c],
+
+			]
+
+			let triangle = createTriangle( vertices, material );
+			triangle.name = 'Face_';
+			triangle.userData.type = 'createMeshHelpers';
+	
+			triangle.userData.verticesNumbers = [];	
+
+			vertices.map( ( item ) => {
+				this.vertices.forEach( ( itemVert, index ) => {
+					if (item.equals( itemVert )){
+						triangle.userData.verticesNumbers.push( index );
+						return;
+					}
+
+				})
+				
+
+			})
+
+			// triangle.add( this.ta_Entities.createWireframe( triangle ) );
+
+			let verticesClones = vertices.map( ( item ) => item.clone() );
+			let baryCenter = findBaryCenter( verticesClones );
+
+			triangle.userData.baryCenter = baryCenter;
+
+			let sphere = new Mesh( sphereGeometry, material );
+			sphere.position.set( baryCenter.x, baryCenter.y, baryCenter.z );
+			sphere.name = 'SphereFace_';
+			sphere.userData.type = 'createMeshHelpers';
+			
+
+			group.add( sphere );
+
+			group.add( triangle );
+			mesh.add( group );
+
+
+		}
+
+	}
 	
 	addTriangles( mesh, points ){
 
-		let sphereGeometry = new SphereBufferGeometry( 0.5, 4, 4 );
+		let sphereGeometry = new SphereBufferGeometry( 0.2, 3, 2 );
 		let material = new MeshBasicMaterial( { color: new Color( 'lightgrey' ) } )
 
 		let triangleNumber = 0;
 
-		this.ta_Scene.tempSelectableObjects = this.ta_Scene.tempSelectableObjects.concat( this.ta_Scene.selectableObjects );
+		// this.ta_Scene.tempSelectableObjects = this.ta_Scene.tempSelectableObjects.concat( this.ta_Scene.selectableObjects );
 	
-		this.ta_Scene.selectableObjects = [];
+		// this.ta_Scene.selectableObjects = [];
 
 		let group = new Group();
 		group.name = 'FacesForMeshEdit';
@@ -200,7 +325,8 @@ class MeshEdit {
 				points[ indexArray[ i + 2 ] ]
 			]
 
-			let triangle = createTriangle( vert );
+			let triangle = createTriangle( vert, material );
+
 			triangle.name = 'Face_' + triangleNumber;
 
 			triangle.userData.type = 'createMeshHelpers';
@@ -210,7 +336,6 @@ class MeshEdit {
 				 indexArray[ i + 1 ],
 				 indexArray[ i + 2 ]
 			];
-
 
 			triangle.userData.verticesNumbers = [];	
 
@@ -241,8 +366,6 @@ class MeshEdit {
 
 			group.add( sphere );
 
-			
-
 			group.add( triangle );
 			mesh.add( group );
 
@@ -252,6 +375,9 @@ class MeshEdit {
 	}
 
 }
+
+
+
 function getPoints( mesh ) {
 
 	let pointsArray = mesh.geometry.attributes.position.array;
@@ -356,15 +482,7 @@ function pointsChangeAttributesPosition( mesh, points ) {
 
 }
 
-function createTriangle( vertices ){
-
-	let faceMaterial = new MeshBasicMaterial({
-		color: new Color( "lightgrey"),
-		transparent: true,
-		opacity: 0.5,
-		side: DoubleSide
-		// alphaTest: 0.5, 
-	} )
+function createTriangle( vertices, material ){
 
 	if( vertices.length != 3 ){
 
@@ -394,7 +512,7 @@ function createTriangle( vertices ){
 
 	geometry.setIndex( [ 0, 1, 2 ]);
 
-	const mesh = new Mesh( geometry, faceMaterial);
+	const mesh = new Mesh( geometry, material);
 
 	return mesh;
 

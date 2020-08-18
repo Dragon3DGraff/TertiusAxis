@@ -156,7 +156,7 @@ function createMainMenu ( ta_scene ){
 
 	function clearScene () {
 
-		if( confirm("Al objects will be deleted. Are you shure?")){
+		if( confirm("All objects will be deleted. Are you shure?")){
 
 			ta_scene.clearScene();
 

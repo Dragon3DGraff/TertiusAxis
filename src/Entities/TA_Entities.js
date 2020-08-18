@@ -415,7 +415,7 @@ class TA_Entities {
 			// wireframeLines.material.transparent = true;
 			wireframeLines.material.color = new THREE.Color('white');
 			wireframeLines.name = 'wireframe';
-			wireframeLines.scale.set(1.01, 1.01, 1.01);
+			wireframeLines.scale.set(1.001, 1.001, 1.001);
 			return wireframeLines;
 		};
 		this.createBoundingBox = function ( object ) {

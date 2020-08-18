@@ -7,11 +7,13 @@ import { TA_Scene } from '../TA_Scene.js';
 import { MeshEdit } from "../MeshEdit.js";
 import { TA_Entities } from "../Entities/TA_Entities.js";
 import { switchEditVertices } from "../Actions.js";
+import { State } from '../State.js';
 
 function createMeshEditToobar (){
 	
 	let ta_UI = new TA_UI();
 	let taScene = new TA_Scene();
+	let state = new State();
 	
 
 	ta_UI.elements.meshEditContainer = ta_UI.createContainer( 'meshEditContainer', mainContainer );
@@ -45,13 +47,20 @@ function createMeshEditToobar (){
 			ta_UI.elements.finishButton.style.display = 'none';
 			ta_UI.elements.meshEditElementsForm.style.display = 'flex';
 
-			taScene.mode.action = 'meshEdit';
+			// taScene.mode.action = 'meshEdit';
+			state.appMode.meshEdit = true;
 
 			let selectedEditElement = document.querySelector('input[name="meshEditElements"]:checked');
+
+			
 			
 			taScene.meshEditObject = new MeshEdit( taScene.currentSelection.object );
 			
 			taScene.meshEditObject.mode = selectedEditElement.id;
+
+			taScene.tempSelectableObjects = taScene.tempSelectableObjects.concat( taScene.selectableObjects );
+	
+			taScene.selectableObjects = [];
 
 			// if ( taScene.transformControlsMode !== '' ) {
 
@@ -65,6 +74,8 @@ function createMeshEditToobar (){
 			// meshEdit = new MeshEdit( taScene.meshEditObject );
 			taScene.meshEditObject.mesh.add( ta_Entities.createWireframe( taScene.meshEditObject.mesh ) );
 			taScene.meshEditObject.createMeshHelpers();
+
+			
 
 			// meshEdit.createMeshHelpers( );
 			// taScene.meshEditObject = meshEdit.mesh;
@@ -82,10 +93,23 @@ function createMeshEditToobar (){
 			taScene.transformControls.detach( taScene.meshEditObject.mesh );
 
 			taScene.meshEditObject.removeMeshHelpers( );
+			
+
+			taScene.meshEditObject.mesh.remove( taScene.meshEditObject.mesh.getObjectByName( 'FaceHighlight') );
+
+			taScene.meshEditObject.faceHighlighting = false;
+
+			
+
+			taScene.selectableObjects = [];
+
+			taScene.selectableObjects = taScene.selectableObjects.concat( taScene.tempSelectableObjects );
+			taScene.tempSelectableObjects = [];
 
 			taScene.meshEditObject = null;
 
-			taScene.mode.action = 'select';
+			// taScene.mode.action = 'select';
+			state.appMode.meshEdit = false;
 			// taScene.mode.editElements = '';
 			// meshEdit.removeMeshHelpers( );
 			taScene.mode.entity = null;
@@ -111,10 +135,15 @@ function createMeshEditToobar (){
 		},
 		function(){
 
+			let ta_Entities = new TA_Entities();
+
 			taScene.meshEditObject.mode = 'Vertices';
 			taScene.meshEditObject.removeMeshHelpers();
+			taScene.meshEditObject.mesh.remove( taScene.meshEditObject.mesh.getObjectByName( 'FaceHighlight') );
+			taScene.meshEditObject.faceHighlighting = false;
 			taScene.meshEditObject.addSpheresToVertexes( taScene.meshEditObject.mesh, taScene.meshEditObject.vertices );
 			taScene.transformControls.detach( taScene.transformControls.object );
+			taScene.meshEditObject.mesh.add( ta_Entities.createWireframe( taScene.meshEditObject.mesh ) );
 
 			switchEditVertices();
 
@@ -153,10 +182,14 @@ function createMeshEditToobar (){
 		},
 		function(){
 
+			let ta_Entities = new TA_Entities();
+
 			taScene.meshEditObject.mode = 'Faces';
 			taScene.meshEditObject.removeMeshHelpers();
-			taScene.meshEditObject.addTriangles( taScene.meshEditObject.mesh, taScene.meshEditObject.points );
+			taScene.meshEditObject.createMeshHelpers();
+			// taScene.meshEditObject.addTriangles( taScene.meshEditObject.mesh, taScene.meshEditObject.points );
 			taScene.transformControls.detach( taScene.transformControls.object );
+			taScene.meshEditObject.mesh.add( ta_Entities.createWireframe( taScene.meshEditObject.mesh ) );
 
 			switchEditVertices();
 

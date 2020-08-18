@@ -18,7 +18,7 @@ import { createMeshEditToobar } from "./MeshEditToolbar.js";
 class TA_UI {
 
 	constructor() {
-		// singltone
+		// singleton
 		if (TA_UI.exist){
 			return TA_UI.instance;
 		}

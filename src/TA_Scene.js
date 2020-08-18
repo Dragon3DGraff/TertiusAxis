@@ -19,7 +19,9 @@ import {
 	 Mesh,
 	 MeshBasicMaterial,
 	 MeshPhongMaterial,
-	 BoxBufferGeometry
+	 BoxBufferGeometry,
+	 DoubleSide,
+	 BufferAttribute
 	} from "../node_modules/three/build/three.module.js";
 
 import { CSS2DRenderer } from "../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
@@ -37,13 +39,14 @@ import {TA_SceneCamera} from "./TA_SceneCamera.js";
 import * as Actions from "./Actions.js";
 import { MeshEdit } from "./MeshEdit.js";
 import { findBaryCenter } from "./Calculations.js"
+import { State } from './State.js';
 
 import * as CustomGeometry from "./Entities/CustomGeometry.js";
 
 class TA_Scene {
 	constructor( ta_UI ) {
 
-		// singltone
+		// singleton
 		if (TA_Scene.exist){
 			return TA_Scene.instance;
 		}
@@ -54,6 +57,30 @@ class TA_Scene {
 		this.scene;
 		this.mousePosition = { x: null, y: null };
 
+		this.mode = {
+			action: 'select',
+			entity: null
+		};
+
+		this.state = new State();
+
+		this.meshEditObject = {};
+
+		this.selectableObjects = [];
+		this.tempSelectableObjects = [];
+
+		this.currentSelection = {
+			object: null,
+			objectOwnColor: null,
+			multiselection: new Group()
+		};
+		
+
+		this.transformControlsMode = '';
+		// let objectOwnColor;
+		this.transformControlsChanged = false;
+		this.orbitControlsChanged = false;
+
 	}
 
 	get getScene() {
@@ -63,6 +90,9 @@ class TA_Scene {
 	}
 
 	createScene(){
+
+		let scope = this;
+
 		let scene = new Scene();
 		let renderer = new WebGLRenderer({ antialias: true });
 		let renderer2 = new WebGLRenderer();
@@ -86,26 +116,8 @@ class TA_Scene {
 		const ta_sHelpers = new TA_Helpers();
 		const coordsHelpers = new ta_sHelpers.coordsHelpers();
 		const sceneGrid = new ta_sHelpers.SceneGrids(scene);
-		this.mode = {
-			action: 'select',
-			entity: null
-		};
-		this.meshEditObject = {};
-		this.selectableObjects = [];
-		this.tempSelectableObjects = [];
 
-		this.currentSelection = {
-			object: null,
-			objectOwnColor: null,
-			multiselection: new Group()
-		};
 		scene.add( this.currentSelection.multiselection );
-
-		this.transformControlsMode = '';
-		// let objectOwnColor;
-		this.controlsChanged = false;
-
-
 
 		scene.background = new Color('white');
 		renderer.setSize(window.innerWidth, window.innerHeight);
@@ -120,37 +132,92 @@ class TA_Scene {
 		// sceneGrid.initSmallGrid(scene);
 
 		document.body.appendChild(renderer.domElement);
+		
 		document.getElementById('secondCanvas').appendChild(renderer2.domElement);
 		document.body.appendChild(labelRenderer.domElement);
-		this.controls = new OrbitControls(camera, labelRenderer.domElement);
+
+		this.orbitControls = new OrbitControls(camera, labelRenderer.domElement);
 		this.transformControls = new TransformControls( camera, labelRenderer.domElement );
 		scene.add( this.transformControls );
 		this.transformControls.addEventListener( 'change', render );
 		this.transformControls.addEventListener( 'change', function(){
 
-			scope.controlsChanged = true;
 
 		} );
 
-		this.controls.addEventListener( 'start', function( event ){
+		this.orbitControls.addEventListener( 'start', function( event ){
+
+			// document.removeEventListener('mousedown', onDocumentMouseDown, false);
+			// console.log('orbitControls start');
+			// 
 
 		})
 
-		this.controls.addEventListener( 'change', function( event ){
+		this.orbitControls.addEventListener( 'change', function( event ){
 
-			scope.controlsChanged = true;
+			// console.log('orbitControls change');
+
+			scope.orbitControlsChanged = true;
+			// document.removeEventListener('mousedown', onDocumentMouseDown, false);
+
 
 		})
+
+		this.orbitControls.addEventListener( 'end', function( event ){
+
+
+			document.addEventListener('mousedown', onDocumentMouseDown, false);
+
+		})
+
+		this.transformControls.addEventListener( 'mouseDown', function( event ) {
+
+			document.removeEventListener('click', onDocumentMouseClick, false);
+			scope.transformControlsChanged = true;
+
+
+			if ( scope.state.appMode.meshEdit ){
+
+				scope.meshEditObject.mesh.remove( scope.meshEditObject.mesh.getObjectByName( 'FaceHighlight') );
+
+				scope.meshEditObject.faceHighlighting = false;
+
+			}
+
+		});
+
+		this.transformControls.addEventListener( 'mouseUp', function( event ) {
+
+			// console.log('transformControls mouseUp');
+
+
+			document.addEventListener('click', onDocumentMouseClick, false);
+			scope.transformControlsChanged = true;
+
+
+			if ( scope.state.appMode.meshEdit ){
+
+				scope.meshEditObject.faceHighlighting = true;
+
+			}
+
+		});
 
 		this.transformControls.addEventListener( 'objectChange', function( event ) {
 
+			document.removeEventListener('click', onDocumentMouseClick, false);
+			// scope.transformControlsChanged = true;
+
+
 			if( event.target.mode === 'translate' ){
 
-				if ( scope.mode.action === 'meshEdit' ){
+				if ( scope.state.appMode.meshEdit ){
 
 					let editHelper = event.target;
 
 					scope.meshEditObject.transformMesh( editHelper );
+					
+					// scope.ta_UI.deleteGeometryParametersTab();
 
 				}
 
@@ -187,7 +254,7 @@ class TA_Scene {
 
 		this.transformControls.addEventListener( 'dragging-changed', function ( event ) {
 
-			scope.controls.enabled = !event.value;
+			scope.orbitControls.enabled = !event.value;
 
 		} );
 
@@ -200,18 +267,19 @@ class TA_Scene {
 			// scope.ta_UI.createParametersMenu( event.object );
 			// scope.transformControls.detach( scope.currentSelection.multiselection );
 
-			scope.controls.enableRotate = false;
+			scope.orbitControls.enableRotate = false;
 			scope.transformControls.enabled = false;
 		
 		} );
 		this.dragControls.addEventListener( 'dragend', function ( event ) {
 
-			scope.controls.enableRotate = true;
+			scope.orbitControls.enableRotate = true;
 			scope.transformControls.enabled = true;
 		
 		} );
 
 		const infoDiv = document.getElementById("infoParagraph");
+
 		window.addEventListener('resize', onWindowResize, false);
 		document.addEventListener('click', onDocumentMouseClick, false);
 		document.addEventListener('mousemove', onDocumentMouseMove, false);
@@ -221,7 +289,9 @@ class TA_Scene {
 		document.addEventListener('touchstart', onTouchStart, false);
 		document.addEventListener('touchend', onTouchEnd, false);
 		document.addEventListener('touchmove', onTouchMove, false);
+
 		function onWindowResize() {
+
 			camera.aspect = window.innerWidth / window.innerHeight;
 			camera.updateProjectionMatrix();
 			camera2.aspect = document.getElementById('secondCanvas').clientWidth / document.getElementById('secondCanvas').clientHeight;
@@ -230,7 +300,7 @@ class TA_Scene {
 			renderer.setSize(window.innerWidth, window.innerHeight);
 			labelRenderer.setSize(window.innerWidth, window.innerHeight);
 		}
-		let scope = this;
+
 		function updateSmallWindow() {
 			let secondCanvasWidth = document.getElementById('secondCanvas').clientWidth;
 			let secondCanvasHeight = document.getElementById('secondCanvas').clientHeight;
@@ -288,6 +358,7 @@ class TA_Scene {
 		let mesh = new Mesh( cubeGeometry, material );
 		scene.add( mesh );
 		mesh.position.set( 0, 0, 20 );
+		mesh.name = 'TestCube'
 		this.selectableObjects.push( mesh );
 
 
@@ -339,9 +410,12 @@ class TA_Scene {
 
 		function onDocumentMouseClick( event ) {
 
-			if ( scope.controlsChanged ) {
+			// console.log(scope.orbitControlsChanged);
 
-				scope.controlsChanged = false;
+
+			if ( scope.orbitControlsChanged ) {
+
+				scope.orbitControlsChanged = false;
 
 				return;
 
@@ -357,9 +431,9 @@ class TA_Scene {
 
 			if ( event.target.id === "labelRenderer" ) {
 
-				let screenPoint = getScreenPoint(event);
+				let screenPoint = getScreenPoint( event );
 
-				raycaster.setFromCamera(screenPoint, camera);
+				raycaster.setFromCamera( screenPoint, camera );
 	
 				let intersects = raycaster.intersectObjects( sceneGrid.mainPlanesArray );
 
@@ -370,7 +444,7 @@ class TA_Scene {
 
 					if ( creatingEntity.centerOfObjectWorld ) {
 
-						ta_Entities.selectEntity(creatingEntity.currentEntity, scope.currentSelection);
+						ta_Entities.selectEntity( creatingEntity.currentEntity, scope.currentSelection );
 						scope.ta_UI.elements.meshEditContainer.style.display = 'block';
 
 						if ( creatingEntity.currentEntity ) {
@@ -405,50 +479,68 @@ class TA_Scene {
 
 				}
 
-				if ( scope.mode.action === 'select' ) {
 
-					selectByMouse ( event );
 
-				}
+				if ( scope.state.appMode.meshEdit ) {
 
-				if ( scope.mode.action === 'meshEdit') {
+					let screenPoint = getScreenPoint( event );
 
-					let screenPoint = getScreenPoint(event);
+					raycaster.setFromCamera( screenPoint, camera );
 
-					raycaster.setFromCamera(screenPoint, camera);
+					if( scope.meshEditObject.mode === 'Faces' ){
+
+						scope.meshEditObject.mesh.remove( scope.meshEditObject.mesh.getObjectByName( 'FaceHighlight') );
+
+						let intersects = raycaster.intersectObject( scope.meshEditObject.mesh );
+
+						if ( intersects.length > 0 ) {
 		
-					let intersects = raycaster.intersectObjects( scope.selectableObjects );
-		
-					if ( intersects.length > 0 ) {
-		
-						let objectToSelect = intersects[0].object;
+							let objectToSelect = intersects[0].object;
 
-						if( scope.meshEditObject.mode === 'Faces' && objectToSelect.userData.type === "createMeshHelpers" ){
+							objectToSelect.remove( intersects[0].object.getObjectByName( 'FaceHighlight') );
 
-							let name = objectToSelect.name;
-							let sphere = objectToSelect.parent.getObjectByName( 'Sphere' + name );
+							scope.meshEditObject.addTriangle( intersects );
 
-							// objectToSelect.material.color.setHex( '#F64545' );
+							let sphere = scope.meshEditObject.mesh.getObjectByName( 'SphereFace_');
 
 							scope.transformControlsMode = 'translate' ;
 						
 							scope.transformControls.attach( sphere );
-
-						} else{
-
-						// if ( scope.transformControlsMode !== '' ) {
-
-							scope.transformControlsMode = 'translate' ;
-						
-							scope.transformControls.attach( objectToSelect );
-
-						 }
+						}
 
 					}
+
+					if( scope.meshEditObject.mode === 'Vertices' ){
+
+						let intersects = raycaster.intersectObjects( scope.selectableObjects );
+
+							if ( intersects.length > 0 ) {
+
+								let objectToSelect = intersects[0].object;
+
+								scope.transformControlsMode = 'translate' ;
+						
+								scope.transformControls.attach( objectToSelect );
+
+							}
+
+						}
+
+
 
 				}
 
 			}
+
+			// if ( scope.transformControlsChanged ) {
+
+				scope.transformControlsChanged = false;
+
+			// } else {
+
+			// 	scope.returnObjectsToScene();
+			// 	scope.resetMultyselection();
+			// }
 
 		}
 
@@ -562,16 +654,35 @@ class TA_Scene {
 			}
 			else {
 
-				scope.returnObjectsToScene();
-				scope.resetMultyselection();
 
-				if ( scope.currentSelection.object ) {
 
-					scope.transformControls.detach(scope.currentSelection.object);
-					ta_Entities.removeSelection(scope.currentSelection);
-					scope.ta_UI.elements.meshEditContainer.style.display = 'none';
+
+				//при перемещении трансформконтролс тоже срабатывает. Обработать!
+				//обработать так же если курсор надо объектом
+				// console.log( "scope.transformControlsChanged = ", scope.transformControlsChanged);
+				
+
+				if ( !scope.transformControlsChanged ) {
+
+				// console.log( "click emptiness");
+
+					scope.returnObjectsToScene();
+					scope.resetMultyselection();
+
+// ИЩИ ТУТ!!!
+					if ( !scope.state.meshEditMode || scope.currentSelection.object ) {
+
+					// console.log(  scope.currentSelection.object )
+
+						scope.transformControls.detach(scope.currentSelection.object);
+						ta_Entities.removeSelection(scope.currentSelection);
+						scope.ta_UI.elements.meshEditContainer.style.display = 'none';
+
+					}
 
 				}
+
+				
 			}
 
 			if (scope.currentSelection.object) {
@@ -582,10 +693,16 @@ class TA_Scene {
 				scope.ta_UI.deleteParametersMenu();
 			}
 
+			if ( scope.transformControlsChanged ) {
+
+				scope.transformControlsChanged = false;
+
+			}
 
 		}
 
 		this.returnObjectsToScene = function(){
+
 			if (scope.currentSelection.multiselection.children.length > 0 ){
 
 				let lengthArray = scope.currentSelection.multiselection.children.length;
@@ -598,8 +715,12 @@ class TA_Scene {
 
 				}
 
+				scope.transformControls.detach( scope.currentSelection.multiselection );
+
 			}
-			scope.transformControls.detach( scope.currentSelection.multiselection )
+
+
+
 		}
 		this.resetMultyselection = function() {
 
@@ -621,11 +742,11 @@ class TA_Scene {
 			// scope.transformControls.enableRotate = false;
 		}
 		function onTouchEnd(event) {
-			// this.controls.enableRotate = true;
+			// this.orbitControls.enableRotate = true;
 		}
 		function onTouchMove(event) {
 			// event.preventDefault();
-			// this.controls.enableRotate = false;
+			// this.orbitControls.enableRotate = false;
 			// console.log(event);
 			// 
 			// let screenPoint = getScreenPoint( event.touches[0] ); 
@@ -649,7 +770,7 @@ class TA_Scene {
 			scope.mousePosition.y = screenPoint.y;
 
 			raycaster.setFromCamera(screenPoint, camera);
-			let intersects = raycaster.intersectObjects(sceneGrid.mainPlanesArray);
+			// let intersects = raycaster.intersectObjects(sceneGrid.mainPlanesArray);
 			// if ( event.target.id == "labelRenderer") {
 			// coordsHelpers.removeCoordsHelpers(scene);
 			// coordsHelpers.createCoordsHelpers(intersects, scene);
@@ -661,11 +782,23 @@ class TA_Scene {
 				scope.ta_UI.updateParametersMenu(creatingEntity.currentEntity);
 
 			}
-			// }
+
+			if ( scope.state.appMode.meshEdit && scope.meshEditObject.mode === 'Faces') {
+
+				if ( scope.meshEditObject.faceHighlighting ) {
+
+					let intersectsObjects = raycaster.intersectObjects( [ scope.meshEditObject.mesh ] );
+
+					scope.meshEditObject.highlightFace( intersectsObjects );
+
+				}
+
+			}
+
 		}
 
 		function getScreenPoint(event) {
-			// event.preventDefault();
+			event.preventDefault();
 			const screenPoint = new Vector2();
 			return screenPoint.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 		}
@@ -685,10 +818,39 @@ class TA_Scene {
 				infoDiv.innerHTML = "";
 			}
 		}
-		function onDocumentMouseDown() {
-			// let screenPoint = getScreenPoint(event);
+		function onDocumentMouseDown( event ) {
+
 		}
 		function onDocumentMouseUp() {
+
+			
+			// console.log('onDocumentMouseUp');
+
+			if ( event.target.id !== "labelRenderer" ) return;
+			if ( scope.state.appMode.meshEdit ) return;
+
+			// event.stopPropagation();
+
+			// console.log(scope.orbitControlsChanged);
+
+			if ( scope.orbitControlsChanged ) {
+
+				scope.orbitControlsChanged = false;
+
+				return;
+
+			}
+
+			if ( scope.mode.action === 'select' ) {
+
+				if ( !scope.transformControlsChanged ) {
+
+					selectByMouse ( event );
+
+				}
+
+			}
+			
 			// let screenPoint = getScreenPoint(event);
 		}
 		function onKeyDown(event) {

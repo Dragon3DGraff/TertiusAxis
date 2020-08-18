@@ -4,6 +4,7 @@
 import { TA_Entities } from "./Entities/TA_Entities.js";
 import { TA_UI } from "./UI/TA_UI.js";
 
+
 export function switchOnMoveMode ( taScene ) {
 
 taScene.transformControlsMode = 'translate';
@@ -18,7 +19,7 @@ taScene.transformControlsMode = 'translate';
 	taScene.transformControls.setMode( taScene.transformControlsMode );
 	// taScene.dragControls.deactivate();
 	taScene.mode.action = 'select';
-	taScene.controls.enableRotate = true;
+	taScene.orbitControls.enableRotate = true;
 
 }
 
@@ -34,7 +35,7 @@ export function switchOnRotationMode ( taScene ) {
 	taScene.transformControls.setMode( taScene.transformControlsMode );
 	// taScene.dragControls.deactivate();
 	taScene.mode.action = 'select';
-	taScene.controls.enableRotate = true;
+	taScene.orbitControls.enableRotate = true;
 
 }
 
@@ -51,7 +52,7 @@ export function switchOnScaleMode ( taScene ) {
 	taScene.transformControls.setMode( taScene.transformControlsMode );
 	// taScene.dragControls.deactivate();
 	taScene.mode.action = 'select';
-	taScene.controls.enableRotate = true;
+	taScene.orbitControls.enableRotate = true;
 
 
 }
@@ -62,7 +63,7 @@ export function switchOnSelectMode ( taScene ) {
 	taScene.transformControlsMode = '';
 	taScene.transformControls.detach( taScene.currentSelection.object );
 	// taScene.dragControls.deactivate();
-	taScene.controls.enableRotate = true;
+	taScene.orbitControls.enableRotate = true;
 
 }
 

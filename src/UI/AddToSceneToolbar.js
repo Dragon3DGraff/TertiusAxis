@@ -5,6 +5,7 @@
 import { TA_UI } from "./TA_UI.js";
 import cubeIco from "../ico/cubeico.png";
 import sphereIco from "../ico/sphereico.png";
+import { State } from '../State.js';
 
 function createAddToSceneToolbar ( taScene ) {
 
@@ -16,6 +17,7 @@ function createAddToSceneToolbar ( taScene ) {
 	}
 
 	let ta_UI = new TA_UI();
+	let state = new State();
 
 	let addToSceneContainer = ta_UI.createContainer( 'sectionDiv', mainContainer );
 	addToSceneContainer.id = 'AddToSceneToolbar';
@@ -86,7 +88,7 @@ function createAddToSceneToolbar ( taScene ) {
 
 					let selectedButton = selectedRadio.target;
 
-					if ( taScene.mode.action === 'meshEdit' ){
+					if ( state.appMode.meshEdit ){
 						
 						selectedButton.form.reset()
 						return;
