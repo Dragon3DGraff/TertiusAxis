@@ -9,3 +9,5 @@ draft.js
 node_modules/*
 dist/*
 Transportation/*
+
+src/_Resources/*

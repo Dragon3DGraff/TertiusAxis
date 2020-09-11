@@ -47,11 +47,20 @@ module.exports = {
 		template: './src/index.html',
 		minify: isProd
 		}),
-		new CopyWebpackPlugin([
+		new CopyWebpackPlugin(
+			 { patterns : [
 			{ from: path.resolve( __dirname, 'src/logo5_Small5.png'),
 			 to: path.resolve( __dirname, 'dist/logo5_Small5.png')
 			}
-		  ]),
+		  ]}
+		  ),
+		  new CopyWebpackPlugin(
+			{ patterns : [
+		   { from: path.resolve( __dirname, 'src/_Resources/'),
+			to: path.resolve( __dirname, 'dist/_Resources/')
+		   }
+		 ]}
+		 ),
 		  new MiniCssExtractPlugin({
 			filename: filename('css')
 		  })
@@ -71,6 +80,12 @@ module.exports = {
 					'css-loader'
 				]
 			},
+			{
+				test: /\.(js|jsx)$/,
+				exclude: /(node_modules|bower_components)/,
+				loader: "babel-loader",
+				options: { presets: ["@babel/env"] }
+			  },
 				{
 					test: /\.(png|svg|jpg|gif)$/,
 					use: [

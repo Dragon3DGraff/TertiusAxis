@@ -38,6 +38,8 @@ body {
 	border: solid;
 	border-color:  black;
 
+	display: none;
+
 }
 
 .secondCanvas canvas {
@@ -166,7 +168,9 @@ body {
 }
 
 .subMainMenu label:hover {
-background-color: lightsteelblue;;
+
+	background-color: lightsteelblue;
+	
 }
 
 .Title {
@@ -762,4 +766,5 @@ input[type=checkbox]:checked + label {
 	display: none;
 
 }
+
 

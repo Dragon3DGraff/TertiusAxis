@@ -1,0 +1,13 @@
+.Main {
+	/* width: 160px; */
+	/* height: 24px; */
+
+	/* text-align: center; */
+
+	position: absolute;
+	z-index: 9999;
+	background-color: lightslategray;
+
+	left: 280px;
+	top: 18px
+}

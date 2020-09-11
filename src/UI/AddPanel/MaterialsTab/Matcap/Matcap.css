@@ -1,0 +1,124 @@
+.MatCap {
+	z-index: 9999;
+	position: absolute;
+	/* left: 50px; */
+	/* top: 30px; */
+	width: 300px;
+	/* height: calc(100% - 60px); */
+	height: 350px;
+	font-size: 16px;
+	color: aqua;
+	text-align: center;
+	background-color: lightslategray;
+/* 
+	display: flex;
+	flex-direction: row; */
+
+	/* flex-wrap: wrap; */
+
+	border-style: solid;
+	border-color: black;
+
+	
+}
+
+.MatCap input {
+	/* display: inline; */
+}
+
+
+.dragLine {
+	height: 20px;
+	width: 100%;
+	background-color: black;
+
+}
+.dragLine:hover {
+	/* background-color: brown; */
+	cursor: grab;
+}
+.addPanel_CloseButton {
+	width: 20px;
+	height: 20px;
+	z-index: 203;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	background-color:rgb(51, 51, 51) ;
+	color: rgba(127,255,255, 1);
+	font-size: 12px;
+	text-align: center;
+	/* margin-left: 4px; */
+	padding: 0px;
+
+}
+.HeadMatCab {
+	display: flex;
+	flex-direction: row;
+	flex-grow: 1 1;
+
+}
+.HeadMatCab input {
+	display: inline;
+}
+.matCapPreview{
+	width: 50%;
+}
+.HeadMatCabButtons {
+	/* width: 50%; */
+	display: flex ;
+	flex-direction: column;
+	align-items: flex-start;
+
+}
+.MatCapImages {
+
+	position: inherit;
+	bottom: 5px;
+	left: 5px;
+	height: calc(100% - 120px);
+	/* height: 300px; */
+
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: flex-start;
+	align-content: flex-start;
+	overflow: auto;
+
+
+}
+.MatcabCard {
+
+	width: 52px;
+	height: 52px;
+	margin: 1px;
+	background-color: teal;
+	text-align: center;
+	font-size: 12px;
+
+	border: 1px;
+	border-style: solid;
+	/* border-color: black; */
+
+
+}
+
+
+
+
+.cardImg {
+	width: 52px;
+	height: 52px;
+}
+.cardImgSelected {
+	padding: 3px;
+	width: 80px;
+	height: 80px;
+}
+.cardImg :hover {
+
+	border: 2px;
+	border-color: red;
+}

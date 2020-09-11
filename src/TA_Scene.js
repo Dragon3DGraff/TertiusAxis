@@ -16,12 +16,17 @@ import {
 	 Line,
 	 BufferGeometry,
 	 LineBasicMaterial,
+	 MeshMatcapMaterial,
 	 Mesh,
 	 MeshBasicMaterial,
 	 MeshPhongMaterial,
 	 BoxBufferGeometry,
 	 DoubleSide,
-	 BufferAttribute
+	 BufferAttribute,
+	 Material,
+	 Texture,
+	 TextureLoader,
+	 sRGBEncoding
 	} from "../node_modules/three/build/three.module.js";
 
 import { CSS2DRenderer } from "../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
@@ -63,6 +68,7 @@ class TA_Scene {
 		};
 
 		this.state = new State();
+
 
 		this.meshEditObject = {};
 
@@ -350,9 +356,20 @@ class TA_Scene {
 
 		// let sphereGeometry = new SphereBufferGeometry(0.5, 4, 4);
 		let material = new MeshPhongMaterial( { color: new Color( 'green' ), transparent: true, opacity: 1 });
+		// let texture = new TextureLoader().load( "_Resources/Matcabs/Test/FBB82D_FBEDBF_FBDE7D_FB7E05-64px.png" );
+		// texture.encoding = sRGBEncoding;
+		// let material =  new MeshMatcapMaterial( { matcap: texture });
 
 		// let sphere = new Mesh( sphereGeometry, material);
 		// scene.add( sphere );
+
+		let sphereGeometry = new SphereBufferGeometry(20, 30, 30 );
+		let testSphere = new Mesh( sphereGeometry, material );
+		scene.add( testSphere );
+		this.selectableObjects.push( testSphere );
+		testSphere.position.set( 25, 0, 0 );
+
+
 
 		let cubeGeometry = new BoxBufferGeometry( 10, 10, 10);
 		let mesh = new Mesh( cubeGeometry, material );
@@ -951,6 +968,37 @@ class TA_Scene {
 
 			}
 		}
+
+		this.state.eventEmitter.onEvent('matcapChanged', matcapChanging );
+
+		function matcapChanging(img) {
+
+			if ( !scope.currentSelection.object ) return;
+			// console.log(img);
+
+			// let material = scope.currentSelection.object.material;
+			scope.currentSelection.object.material.dispose();
+			scope.currentSelection.object.material = new MeshMatcapMaterial();
+			let texture = new TextureLoader().load( "_Resources/Matcabs/Test/"
+									+ img,
+									// + img[0].replace("-64px","-256px"), 
+									function () {
+
+			// console.log('loaded');
+
+			} )
+
+			// texture.encoding = sRGBEncoding;
+				scope.currentSelection.object.material.matcap = texture;
+				// scope.currentSelection.object.material.matcap.needsUpdate = true;
+				// scope.currentSelection.object.material.needsUpdate = true;
+
+				// material.matcap.encoding = THREE.sRGBEncoding; // assume it is sRGB
+				// material.needsUpdate = true;
+			//  console.log(scope.currentSelection.object.material)
+
+		}
+
 		let animate = function () {
 
 			requestAnimationFrame(animate);

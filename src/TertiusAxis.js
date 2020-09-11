@@ -9,19 +9,33 @@ import { TA_Scene } from "./TA_Scene.js";
 // let header = document.getElementsByTagName("head");
 // header[0].getElementsByTagName('link')[0].href = favicon;
 
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactPanel from './UI/ReactPanel';
+import MatcapImages from './UI/MatcapImages';
 
-	let ta_UI = new TA_UI();
-	let taScene = new TA_Scene( ta_UI );
-	
-	ta_UI.init( taScene );
-	
-	taScene.createScene();
+let matcapImages = new MatcapImages();
 
-		if ( ta_UI.fillMainToolbar( taScene ) ) {
+ReactDOM.render(
+	<React.StrictMode>
+		<ReactPanel matcapImages={matcapImages}></ReactPanel>
+	</React.StrictMode>,
+	document.getElementById('MatCab')
+);
 
-			console.log( 'TertiusAxis loaded');
+let ta_UI = new TA_UI();
+let taScene = new TA_Scene( ta_UI );
 
-		}
+ta_UI.init( taScene );
+
+taScene.createScene();
+
+if ( ta_UI.fillMainToolbar( taScene ) ) {
+	console.log( 'TertiusAxis loaded');
+}
+
+
+
 
 
 // git add .
