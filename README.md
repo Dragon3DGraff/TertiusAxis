@@ -8,7 +8,7 @@ You can follow my [blog](https://dragon3dgraff.ru/en/ "dragon3dgraff.ru") to see
 
 # New Features!
 
-- Edit mesh moving vertices or faces
+- Matcap
 
 # Features
 
@@ -20,11 +20,15 @@ You can follow my [blog](https://dragon3dgraff.ru/en/ "dragon3dgraff.ru") to see
 - Saving
 - Loading
 - GLtf Export
+- Matcap
 
 ### Todos
 
-- Make selection of several objects and their manipulation, as well as cloning of all selected objects. To do this, create a multiselect: new Group () field in the currentSelection object and add the selected objects to the group.
 - implement or use the existing library for monitoring application states.
+- working with material and textures
+- moving several vertices in edit mode
+- moving several triangles in edit mode
+- moving edges
 
 
 
