@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import AddPanel from './AddPanel/AddPanel';
 import MatcabCard from './AddPanel/MaterialsTab/Matcap/MatcabCard.js';
-import { State } from '../State';
+import { TA_State } from '../TA_State';
+import DebuggingPanel from './DebuggingPanel'
 
 export const MatcapContext = React.createContext();
 
@@ -21,11 +22,11 @@ const cardsDiv = (
 	</div>
 )
 
-let appState = new State();
+let ta_State = new TA_State();
 const [selectedCard, setSelectedCard] = useState('');
 
 useEffect( () => {
-	appState.changeAppState( 'matcapChanged', selectedCard.src );
+	ta_State.changeAppState( 'matcapChanged', selectedCard.src );
 		}, [selectedCard] );
 
 function setImage(img) {
@@ -35,6 +36,7 @@ function setImage(img) {
 return (
 	<MatcapContext.Provider value={selectedCard} >
 		<AddPanel cardsDiv={cardsDiv}></AddPanel>
+		<DebuggingPanel></DebuggingPanel>
 	</MatcapContext.Provider>
 	)
 }

@@ -4,10 +4,12 @@
 
 import { TA_UI } from "./TA_UI.js";
 import { TA_Entities } from "../Entities/TA_Entities.js";
+import { TA_State } from '../TA_State';
 
 function fillGeometryParametersTab( entity ) {
 
 	let ta_UI = new TA_UI();
+	let ta_State = new TA_State();
 
 	let divGeometry = document.getElementById( 'GeometryParameters');
 		let elem = document.createElement( 'div' );
@@ -51,6 +53,8 @@ function fillGeometryParametersTab( entity ) {
 					let value = JSON.parse( input.value );
 	
 					ta_entities.updateSelectedObject( input.id, value, entity );
+					ta_State.changeAppState('GeometryParameters-' + input.id, input.value);
+
 	
 				}, false );
 
@@ -69,6 +73,8 @@ function fillGeometryParametersTab( entity ) {
 				input.addEventListener( 'input', () => {
 
 					ta_entities.updateSelectedObject( input.id, +input.value, entity );
+					ta_State.changeAppState('GeometryParameters-' + input.id, input.value);
+
 	
 				}, false );
 

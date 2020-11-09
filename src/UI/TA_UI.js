@@ -12,9 +12,6 @@ import { fillMaterialParametersTab } from "./MaterialParametersTab.js";
 import { fillGeneralParametersTab } from "./GeneralParametersTab.js";
 import { createMeshEditToobar } from "./MeshEditToolbar.js";
 
-
-
-
 class TA_UI {
 
 	constructor() {
@@ -32,7 +29,6 @@ class TA_UI {
 
 		createMainMenu( taScene );
 		createMainToolbar();
-
 		return true;
 
 	}

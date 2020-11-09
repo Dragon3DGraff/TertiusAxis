@@ -44,9 +44,11 @@ import {TA_SceneCamera} from "./TA_SceneCamera.js";
 import * as Actions from "./Actions.js";
 import { MeshEdit } from "./MeshEdit.js";
 import { findBaryCenter } from "./Calculations.js"
-import { State } from './State.js';
+import { TA_State } from './TA_State.js';
 
 import * as CustomGeometry from "./Entities/CustomGeometry.js";
+import EventEmitter from "./EventEmitter.js";
+
 
 class TA_Scene {
 	constructor( ta_UI ) {
@@ -67,7 +69,8 @@ class TA_Scene {
 			entity: null
 		};
 
-		this.state = new State();
+		this.ta_State = new TA_State();
+		this.events = new EventEmitter();
 
 
 		this.meshEditObject = {};
@@ -182,7 +185,7 @@ class TA_Scene {
 			scope.transformControlsChanged = true;
 
 
-			if ( scope.state.appMode.meshEdit ){
+			if ( scope.ta_State.appMode.meshEdit ){
 
 				scope.meshEditObject.mesh.remove( scope.meshEditObject.mesh.getObjectByName( 'FaceHighlight') );
 
@@ -201,7 +204,7 @@ class TA_Scene {
 			scope.transformControlsChanged = true;
 
 
-			if ( scope.state.appMode.meshEdit ){
+			if ( scope.ta_State.appMode.meshEdit ){
 
 				scope.meshEditObject.faceHighlighting = true;
 
@@ -217,7 +220,7 @@ class TA_Scene {
 
 			if( event.target.mode === 'translate' ){
 
-				if ( scope.state.appMode.meshEdit ){
+				if ( scope.ta_State.appMode.meshEdit ){
 
 					let editHelper = event.target;
 
@@ -363,18 +366,18 @@ class TA_Scene {
 		// let sphere = new Mesh( sphereGeometry, material);
 		// scene.add( sphere );
 
-		let sphereGeometry = new SphereBufferGeometry(20, 30, 30 );
-		let testSphere = new Mesh( sphereGeometry, material );
-		scene.add( testSphere );
-		this.selectableObjects.push( testSphere );
-		testSphere.position.set( 25, 0, 0 );
+		// let sphereGeometry = new SphereBufferGeometry(20, 30, 30 );
+		// let testSphere = new Mesh( sphereGeometry, material );
+		// scene.add( testSphere );
+		// this.selectableObjects.push( testSphere );
+		// testSphere.position.set( 25, 0, 0 );
 
 
 
 		let cubeGeometry = new BoxBufferGeometry( 10, 10, 10);
 		let mesh = new Mesh( cubeGeometry, material );
 		scene.add( mesh );
-		mesh.position.set( 0, 0, 20 );
+		mesh.position.set( 0, 0, 7 );
 		mesh.name = 'TestCube'
 		this.selectableObjects.push( mesh );
 
@@ -498,7 +501,7 @@ class TA_Scene {
 
 
 
-				if ( scope.state.appMode.meshEdit ) {
+				if ( scope.ta_State.appMode.meshEdit ) {
 
 					let screenPoint = getScreenPoint( event );
 
@@ -687,7 +690,7 @@ class TA_Scene {
 					scope.resetMultyselection();
 
 // ИЩИ ТУТ!!!
-					if ( !scope.state.meshEditMode || scope.currentSelection.object ) {
+					if ( !scope.ta_State.meshEditMode || scope.currentSelection.object ) {
 
 					// console.log(  scope.currentSelection.object )
 
@@ -768,11 +771,11 @@ class TA_Scene {
 			// 
 			// let screenPoint = getScreenPoint( event.touches[0] ); 
 			// raycaster.setFromCamera( screenPoint, camera );
-			// let intersects = raycaster.intersectObjects( sceneGrid.mainPlanesArray );
+			let intersects = raycaster.intersectObjects( sceneGrid.mainPlanesArray );
 			// if ( event.target.id == "labelRenderer") {
 			// coordsHelpers.removeCoordsHelpers( scene );
 			// coordsHelpers.createCoordsHelpers( intersects, scene );
-			// intersectionsInfo( intersects );
+			intersectionsInfo( intersects );
 			// if (creatingEntity.currentEntity) {
 			// 	creatingEntity.createEntity( scope.mode, scene, event, sceneCamera );
 			// 	this.ta_UI.updateParametersMenu( creatingEntity.currentEntity );
@@ -780,6 +783,8 @@ class TA_Scene {
 			// }
 		}
 		function onDocumentMouseMove( event ) {
+			event.stopPropagation();
+			// event.preventDefault();
 
 			let screenPoint = getScreenPoint(event);
 
@@ -787,11 +792,11 @@ class TA_Scene {
 			scope.mousePosition.y = screenPoint.y;
 
 			raycaster.setFromCamera(screenPoint, camera);
-			// let intersects = raycaster.intersectObjects(sceneGrid.mainPlanesArray);
+			let intersects = raycaster.intersectObjects(sceneGrid.mainPlanesArray);
 			// if ( event.target.id == "labelRenderer") {
 			// coordsHelpers.removeCoordsHelpers(scene);
 			// coordsHelpers.createCoordsHelpers(intersects, scene);
-			// intersectionsInfo(intersects);
+			intersectionsInfo(intersects);
 
 			if (creatingEntity.currentEntity) {
 
@@ -800,7 +805,7 @@ class TA_Scene {
 
 			}
 
-			if ( scope.state.appMode.meshEdit && scope.meshEditObject.mode === 'Faces') {
+			if ( scope.ta_State.appMode.meshEdit && scope.meshEditObject.mode === 'Faces') {
 
 				if ( scope.meshEditObject.faceHighlighting ) {
 
@@ -815,7 +820,8 @@ class TA_Scene {
 		}
 
 		function getScreenPoint(event) {
-			event.preventDefault();
+			
+			// 
 			const screenPoint = new Vector2();
 			return screenPoint.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 		}
@@ -844,7 +850,7 @@ class TA_Scene {
 			// console.log('onDocumentMouseUp');
 
 			if ( event.target.id !== "labelRenderer" ) return;
-			if ( scope.state.appMode.meshEdit ) return;
+			if ( scope.ta_State.appMode.meshEdit ) return;
 
 			// event.stopPropagation();
 
@@ -969,7 +975,7 @@ class TA_Scene {
 			}
 		}
 
-		this.state.eventEmitter.onEvent('matcapChanged', matcapChanging );
+		this.events.onEvent('matcapChanged', matcapChanging );
 
 		function matcapChanging(img) {
 

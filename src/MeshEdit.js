@@ -99,7 +99,7 @@ class MeshEdit {
 
 		if ( this.mode === 'Vertices' ){
 
-			this.addSpheresToVertexes( this.mesh, this.vertices );
+			this.addSpheresToVertices( this.mesh, this.vertices );
 
 		}
 		if ( this.mode === 'Faces' ){
@@ -207,7 +207,7 @@ class MeshEdit {
 
 	}
 
-	addSpheresToVertexes( mesh, vertices ){
+	addSpheresToVertices( mesh, vertices ){
 
 		let sphereGeometry = new SphereBufferGeometry( 0.3, 3, 2 );
 		let material = new MeshBasicMaterial( { color: new Color( 'red' ) } );

@@ -33,12 +33,20 @@ module.exports = {
 	},
 	output: {
 		filename: filename('js'),
-		path: path.resolve(__dirname, 'dist')
+		path: path.resolve(__dirname, 'dist'),
+		publicPath: '/'
 	},
 	devtool: 'inline-source-map',
 	devServer: {
 		contentBase: path.join(__dirname, 'dist'),
-		hot: isDev
+		hot: isDev,
+		historyApiFallback: true,
+		proxy: {
+			'/api': {
+				target: 'http://localhost:5000',
+				secure: false
+			},
+}
 	},
 	optimization: optimization(),
 	plugins: [
@@ -63,7 +71,7 @@ module.exports = {
 		 ),
 		  new MiniCssExtractPlugin({
 			filename: filename('css')
-		  })
+		  }),
 	],
 	module: {
 		rules: [

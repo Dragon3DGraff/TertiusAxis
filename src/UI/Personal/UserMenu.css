@@ -1,0 +1,16 @@
+.UserMenu-div{
+	position: absolute;
+	right: -20px;
+	top: 18px;
+	display: flex;
+	flex-direction: column;
+	width: 150px;
+	background-color: black;
+	color: aqua;
+}
+
+.UserMenu-logout{
+	color: orangered;
+	align-self: flex-end;
+	justify-self: end;
+}

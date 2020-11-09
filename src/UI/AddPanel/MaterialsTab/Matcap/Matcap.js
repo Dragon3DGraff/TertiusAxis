@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import './Matcap.css';
 import { MatcapContext } from '../../../ReactPanel';
+import {TA_State} from '../../../../TA_State'
+
 
 let headers = {
 	'MatCaps': "Select Matcap",
@@ -16,6 +18,7 @@ function Matcap( props ) {
 	const [ cardsDiv, setCardsDiv ] = useState(null);
 	const [clickPoint, setClickPoint] = useState({x: undefined, y: undefined});
 	const selectedCard = useContext( MatcapContext );
+	let ta_State = new TA_State();
 
 	useEffect(() => {
 		if( dragModeEnabled ) { document.addEventListener( "mousemove", onMouseMove, false) }
@@ -28,9 +31,8 @@ function Matcap( props ) {
 		setCardsDiv( props.cardsDiv );
 	}, [] )
 
-
 	function clickUseButton () {
-		console.log('clickUseButton');
+		ta_State.changeAppState( 'matcapChanged', selectedCard.src );
 	}
 	
 	function changeCheckbox( e ) {

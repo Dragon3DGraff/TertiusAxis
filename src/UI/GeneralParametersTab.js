@@ -3,10 +3,13 @@
  */
 
 import { TA_UI } from "./TA_UI.js";
+import { TA_State } from '../TA_State';
 
 function fillGeneralParametersTab( entity ) {
 
 	let ta_UI = new TA_UI();
+	let ta_State = new TA_State();
+
 
 	
 	let divGeneral = document.getElementById( 'GeneralParameters');
@@ -48,6 +51,8 @@ function fillGeneralParametersTab( entity ) {
 		input.addEventListener( 'input', () => {
 
 			entity.position[nameOfParameter] = input.value;
+			ta_State.changeAppState('GeneralParameters-' + input.id, input.value);
+
 
 		}, false );
 
@@ -70,6 +75,8 @@ function fillGeneralParametersTab( entity ) {
 		input.addEventListener( 'input', () => {
 
 			entity.rotation[nameOfParameter] = input.value;
+			ta_State.changeAppState('GeneralParameters-' + input.id, input.value);
+
 
 		}, false );
 
@@ -92,8 +99,9 @@ function fillGeneralParametersTab( entity ) {
 		input.addEventListener( 'input', () => {
 
 		entity.scale[nameOfParameter] = input.value;
+		ta_State.changeAppState('GeneralParameters-' + input.id, input.value);
 
-	   }, false );
+		}, false );
 
 	}
 

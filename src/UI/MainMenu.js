@@ -24,11 +24,14 @@ function createMainMenu ( ta_scene ){
 	// mainMenu.style.height = '18px';
 	document.body.appendChild( mainMenu );
 
-	let author = ta_UI.addElement( mainMenu, 'p', 'Dragon3DGraff', '');
-	author.className = 'author';
+	// let author = ta_UI.addElement( mainMenu, 'p', 'author Dragon3DGraff', '');
+	// author.className = 'author';
 
 	let title = ta_UI.addElement( mainMenu, 'p', 'TertiusAxis', '');
 	title.className = 'Title';
+
+	// let register = ta_UI.addElement( mainMenu, 'p', 'Register', '');
+	// register.className = 'author';
 
 // menu buttons
 

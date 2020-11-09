@@ -1,0 +1,30 @@
+.registration-mainMenu{
+	padding: 0px;
+	margin: 0px;
+	position: absolute ;
+	/* height: 100%; */
+	width: 100%;
+	color: rgb(255, 255, 255);
+	/* right: 10px; */
+	z-index: 999;
+	font-size: 12px;
+}
+.authentication-link {
+	color: rgba(127,255,255, 1);
+	padding-left: 10px;
+}
+
+.authentication-link:hover {
+	color: lightskyblue;
+	padding-left: 10px;
+}
+
+.authentication-welcome{
+	color: aliceblue;
+}
+
+.auth-in-mainMenu{
+	position: absolute;
+	z-index: 888;
+	right: 20px;
+}

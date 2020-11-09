@@ -29,9 +29,11 @@ export default class EventEmitter {
 
 	emitEvent(name, data) {
 		if (!this._events[name]) {
-			throw new Error(`Can't emit an event. Event ${name} doesn't exist`);
+			// console.error(`No any listeners on event ${name}`)
+			// throw new Error(`Can't emit an event. Event ${name} doesn't exist`);
+		} else {
+			this._events[name].forEach( callback => callback(data));
 		}
-
-		this._events[name].forEach( callback => callback(data));
+		
 	}
 }
