@@ -4,7 +4,7 @@
 
 This will be a 3d editor / game engine in a browser
 
-Try it [https://tertiusaxis.ru/](https://tertiusaxis.ru/ "https://tertiusaxis.ru/)
+Try it [https://tertiusaxis.ru/](https://tertiusaxis.ru/ "https://tertiusaxis.ru/")
 
 You can follow my [blog](https://dragon3dgraff.ru/en/ "dragon3dgraff.ru") to see the process of creation
 
