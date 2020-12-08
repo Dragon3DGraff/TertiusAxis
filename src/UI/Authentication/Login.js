@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import './Login.css';
 import logo from '../../_Resources/Logo/logo5.jpg';
 import {TA_State} from '../../TA_State.js';
@@ -10,6 +10,8 @@ const http = new Http(ta_State);
 
 export default function Login({history, hide}) {
 
+	const passwordRef = useRef();
+
 	const [form, setForm] = useState({
 		email:"",
 		password:"",
@@ -17,12 +19,23 @@ export default function Login({history, hide}) {
 
 	const [errorMessage, setErrorMessage] = useState('');
 
+
 	useEffect(() => {
 		hide(false);
+		document.addEventListener('keydown', closeOnEscape);
+
+		return () => document.removeEventListener('keydown', closeOnEscape);
 	},[])
 
 	const onInputChange = (e) => {
 		setForm( {...form, [e.target.name]: e.target.value });
+	}
+
+
+	const closeOnEscape = (e) => {
+		if(e.key === 'Escape'){
+			onCloseForm();
+		}
 	}
 
 	const hideForm = () => {
@@ -40,17 +53,19 @@ export default function Login({history, hide}) {
 
 	const onLogin = async (e) => {
 		e.preventDefault();
+		setErrorMessage('');
 		
 		const answer = await http.login({...form});
-		if(answer.userName){
+		passwordRef.current.value = '';
+		if(answer && answer.userName){
 			hideForm();
 		} else{
-			setErrorMessage(answer.message);
+			setErrorMessage('No connection');
 		}
 	}
 
 	return (
-		<div className="Login-div">
+		<div className="Login-div" onClick={onCloseForm}>
 			<div className="registration-form">
 				<div className="registration-form-header">
 					<img src={logo} alt="Logo" />
@@ -67,11 +82,11 @@ export default function Login({history, hide}) {
 				<form className="registration-form-inputs">
 				
 					<input placeholder="Email" name="email" onChange={onInputChange}></input>
-					<input placeholder="Password" name="password" type="password" onChange={onInputChange}></input>
+					<input ref={passwordRef} placeholder="Password" name="password" type="password" onChange={onInputChange}></input>
 
 						<div className="registration-form-buttons">
 							<button className='registration-form-IHaveLogin' onClick={onRegister}>I have no login</button>
-							<button className='registration-form-register' onClick={onLogin}>Login</button>
+							<button className='registration-form-register' type='submit' onClick={onLogin}>Login</button>
 						</div>
 				</form>
 			</div>

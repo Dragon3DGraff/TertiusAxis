@@ -431,6 +431,8 @@ class TA_Scene {
 		function onDocumentMouseClick( event ) {
 
 			// console.log(scope.orbitControlsChanged);
+			// event.stopPropagation();
+			// event.preventDefault();
 
 
 			if ( scope.orbitControlsChanged ) {
@@ -441,7 +443,7 @@ class TA_Scene {
 
 			}
 
-			if (event.target.parentElement.id === "secondCanvas") {
+			if (event.target.parentElement && event.target.parentElement.id === "secondCanvas") {
 
 				resizeSecondCanvas();
 
@@ -844,7 +846,7 @@ class TA_Scene {
 		function onDocumentMouseDown( event ) {
 
 		}
-		function onDocumentMouseUp() {
+		function onDocumentMouseUp(event) {
 
 			
 			// console.log('onDocumentMouseUp');

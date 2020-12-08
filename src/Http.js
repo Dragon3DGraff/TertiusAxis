@@ -31,9 +31,7 @@ class Http {
 			}
 		} catch (error) {
 			this.ta_State.changeAppState('isLoading', false);
-			console.log(error);
 		}
-	
 	}
 
 	async register (data) {
@@ -56,7 +54,6 @@ class Http {
 			}
 		} catch (error) {
 			this.ta_State.changeAppState('isLoading', false);
-
 		}
 
 	}
@@ -82,7 +79,6 @@ class Http {
 			return answer;
 		} catch (error) {
 			this.ta_State.changeAppState('isLoading', false);
-			console.log(error);
 		}
 	}
 
@@ -99,7 +95,6 @@ class Http {
 			return res.status;
 		} catch (error) {
 			this.ta_State.changeAppState('isLoading', false);
-			console.log(error);
 		}
 	}
 }

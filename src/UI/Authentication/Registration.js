@@ -10,7 +10,7 @@ const http = new Http(ta_State);
 export default function Registration({history, hide}) {
 
 	const passwordRef = useRef();
-	const ConfirmPasswordRef = useRef();
+	const confirmPasswordRef = useRef();
 
 	const [form, setForm] = useState({
 		name:"",
@@ -24,7 +24,16 @@ export default function Registration({history, hide}) {
 
 	useEffect(() => {
 		hide(false);
+		document.addEventListener('keydown', closeOnEscape);
+
+		return () => document.removeEventListener('keydown', closeOnEscape);
 	},[])
+
+	const closeOnEscape = (e) => {
+		if(e.key === 'Escape'){
+			onCloseForm();
+		}
+	}
 
 	const onCloseForm = () => {
 		hide(true);
@@ -32,17 +41,20 @@ export default function Registration({history, hide}) {
 	}
 
 	const onInputChange = (e) => {
+		setErrorMessage('');
 		setForm( {...form, [e.target.name]: e.target.value });
 	}
 
 	const onSubmit = async (e) => {
 		e.preventDefault();
 		if(form.password !== form.confirmPassword){
-			ConfirmPasswordRef.current.value='';
+			confirmPasswordRef.current.value='';
 			setErrorMessage("Please confirm your password");
-			return
+			return;
 		}
 		const answer = await http.register({...form});
+		passwordRef.current.value = '';
+		confirmPasswordRef.current.value='';
 		if(answer === 201){
 			setSuccessRegister(true);
 		} else {
@@ -55,7 +67,7 @@ export default function Registration({history, hide}) {
 	}
 
 	return (
-		<div className="registration-div">
+		<div className="registration-div" onClick={onCloseForm}>
 			{successRegister
 			?
 			<div className="registration-form-congrat">
@@ -84,11 +96,11 @@ export default function Registration({history, hide}) {
 					<input placeholder="Name" name="name" onChange={onInputChange}></input>
 					<input placeholder="Email" name="email" onChange={onInputChange}></input>
 					<input ref={passwordRef} placeholder="Password not less 6 symbols" name="password" type="password" onChange={onInputChange}></input>
-					<input ref={ConfirmPasswordRef} placeholder="Confirm password" name="confirmPassword" type="password" onChange={onInputChange}></input>
+					<input ref={confirmPasswordRef} placeholder="Confirm password" name="confirmPassword" type="password" onChange={onInputChange}></input>
 
 						<div className="registration-form-buttons">
 							<button className='registration-form-IHaveLogin' onClick={onLogin}>I have login</button>
-							<button className='registration-form-register' onClick={onSubmit}>Register</button>
+							<button className='registration-form-register' type='submit' onClick={onSubmit}>Register</button>
 						</div>
 				</form>
 			</div>
