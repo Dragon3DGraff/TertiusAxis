@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React from "react";
 import "./addPanel_Buttons.css";
+import PropTypes from "prop-types";
 
-function Button ( props ){
-
-	function btnClick( e ) {
-		props.setPanel(props.name)
-	}
-	return (
-		
-			<button
-			className="addPanel_Buttons"
-			onClick= { btnClick }
-			>{props.name}</button>
-		
-	)
+function Button({ name, setPanel }) {
+  function btnClick() {
+    setPanel(name);
+  }
+  return (
+    <button className="addPanel_Buttons" onClick={btnClick}>
+      {name}
+    </button>
+  );
 }
+
+Button.propTypes = {
+  name: PropTypes.string,
+  setPanel: PropTypes.func,
+};
 
 export default Button;

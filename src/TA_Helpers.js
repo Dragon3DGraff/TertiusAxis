@@ -1,231 +1,243 @@
 /**
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
-*/
+ */
 
 import {
-	GridHelper,
-	Color,
-	PlaneBufferGeometry,
-	MeshBasicMaterial,
-	DoubleSide,
-	Mesh,
-	CameraHelper
-	}from "../node_modules/three/build/three.module.js";;
-import {TA_Entities} from "./Entities/TA_Entities.js";
+  GridHelper,
+  Color,
+  PlaneBufferGeometry,
+  MeshBasicMaterial,
+  DoubleSide,
+  Mesh,
+  CameraHelper,
+} from "../node_modules/three/build/three.module.js";
+import { TA_Entities } from "./Entities/TA_Entities.js";
 
 let TA_Helpers = function () {
+  this.coordsHelpers = function () {
+    this.createCoordsHelpers = function (intersects, scene) {
+      if (intersects.length > 0) {
+        let x = intersects[0].point.x;
+        let y = intersects[0].point.y;
+        let z = intersects[0].point.z;
 
-	this.coordsHelpers = function () {
+        let lineX, lineY, lineZ;
+        let labelX, labelY, labelZ;
 
-		this.createCoordsHelpers = function ( intersects, scene ) {
-		
-			if ( intersects.length > 0 ) {
+        let taEntities = new TA_Entities();
 
-				let x = intersects[0].point.x;
-				let y = intersects[0].point.y;
-				let z = intersects[0].point.z;
+        let labelAtPoint = taEntities.createLabel(x, y, z, "");
+        labelAtPoint.name = "CoordsHelper";
+        scene.add(labelAtPoint);
 
-				let lineX, lineY, lineZ;
-				let labelX, labelY, labelZ;
+        switch (intersects[0].object.name) {
+          case "mainPlaneZY":
+            labelAtPoint.element.innerHTML =
+              "z = " +
+              Math.round(z * 100) / 100 +
+              "<br>y = " +
+              Math.round(y * 100) / 100;
 
-				let taEntities = new TA_Entities();
+            labelZ = taEntities.createLabel(0, 0, z, "");
+            labelZ.name = "CoordsHelper";
+            labelZ.element.innerHTML = "z = " + Math.round(z * 100) / 100;
+            scene.add(labelZ);
 
-				let labelAtPoint = taEntities.createLabel( x, y, z, "" );
-				labelAtPoint.name = "CoordsHelper";
-				scene.add( labelAtPoint );
+            labelY = taEntities.createLabel(0, y, 0, "");
+            labelY.name = "CoordsHelper";
+            labelY.element.innerHTML = "y = " + Math.round(y * 100) / 100;
+            scene.add(labelY);
 
-				switch ( intersects[0].object.name ) {
+            lineZ = taEntities.createLine(x, y, z, x, 0, z, "red", "dashed");
+            lineZ.name = "CoordsHelper";
+            scene.add(lineZ);
 
-					case 'mainPlaneZY':
+            lineY = taEntities.createLine(x, y, z, x, y, 0, "red", "dashed");
+            lineY.name = "CoordsHelper";
+            scene.add(lineY);
 
-						labelAtPoint.element.innerHTML = "z = " + Math.round( z * 100 ) /100 +
-						"<br>y = " + Math.round( y * 100 ) /100;
+            break;
 
-						labelZ = taEntities.createLabel( 0, 0, z, ""); 
-						labelZ.name = "CoordsHelper";
-						labelZ.element.innerHTML = "z = " + Math.round( z * 100 ) /100;
-						scene.add( labelZ );
+          case "mainPlaneXY":
+            labelAtPoint.element.innerHTML =
+              " x = " +
+              Math.round(x * 100) / 100 +
+              "<br>y = " +
+              Math.round(y * 100) / 100;
 
-						labelY = taEntities.createLabel( 0, y, 0, ""); 
-						labelY.name = "CoordsHelper";
-						labelY.element.innerHTML = "y = " + Math.round( y * 100 ) /100;
-						scene.add( labelY );
+            labelX = taEntities.createLabel(x, 0, 0, "");
+            labelX.name = "CoordsHelper";
+            labelX.element.innerHTML = "x = " + Math.round(x * 100) / 100;
+            scene.add(labelX);
 
-						lineZ =  taEntities.createLine( x, y, z, x, 0, z, 'red', 'dashed' );
-						lineZ.name = "CoordsHelper";
-						scene.add(lineZ);
+            labelY = taEntities.createLabel(0, y, 0, "");
+            labelY.name = "CoordsHelper";
+            labelY.element.innerHTML = "y = " + Math.round(y * 100) / 100;
+            scene.add(labelY);
 
-						lineY =  taEntities.createLine( x, y, z, x, y, 0, 'red', 'dashed' );
-						lineY.name = "CoordsHelper"; 
-						scene.add(lineY);
+            lineX = taEntities.createLine(x, y, z, x, 0, z, "red", "dashed");
+            lineX.name = "CoordsHelper";
+            scene.add(lineX);
 
-					break;
+            lineY = taEntities.createLine(x, y, z, 0, y, z, "red", "dashed");
+            lineY.name = "CoordsHelper";
+            scene.add(lineY);
 
-					case 'mainPlaneXY':
+            break;
 
-						labelAtPoint.element.innerHTML = " x = " + Math.round( x * 100 ) /100 + "<br>y = " + Math.round( y * 100 ) /100;
+          case "mainPlaneXZ":
+            labelAtPoint.element.innerHTML =
+              "x = " +
+              Math.round(x * 100) / 100 +
+              "<br>z = " +
+              Math.round(z * 100) / 100;
 
-						labelX = taEntities.createLabel( x, 0, 0, "");  
-						labelX.name = "CoordsHelper";
-						labelX.element.innerHTML = "x = " + Math.round( x * 100 ) /100;
-						scene.add( labelX );
+            labelX = taEntities.createLabel(x, 0, 0, "");
+            labelX.name = "CoordsHelper";
+            labelX.element.innerHTML = "x = " + Math.round(x * 100) / 100;
+            scene.add(labelX);
 
+            labelZ = taEntities.createLabel(0, 0, z, "");
+            labelZ.name = "CoordsHelper";
+            labelZ.element.innerHTML = "z = " + Math.round(z * 100) / 100;
+            scene.add(labelZ);
 
-						labelY = taEntities.createLabel( 0, y, 0, ""); 
-						labelY.name = "CoordsHelper";
-						labelY.element.innerHTML = "y = " + Math.round( y * 100 ) /100;
-						scene.add( labelY );
+            lineX = taEntities.createLine(x, y, z, x, y, 0, "red", "dashed");
+            lineX.name = "CoordsHelper";
+            scene.add(lineX);
 
-						lineX =  taEntities.createLine ( x, y, z, x, 0, z, 'red', 'dashed' );
-						lineX.name = "CoordsHelper";
-						scene.add( lineX ); 
+            lineZ = taEntities.createLine(x, y, z, 0, y, z, "red", "dashed");
+            lineZ.name = "CoordsHelper";
+            scene.add(lineZ);
 
-						lineY =  taEntities.createLine ( x, y, z, 0, y, z, 'red', 'dashed' );
-						lineY.name = "CoordsHelper";
-						scene.add( lineY );
+            break;
 
-					break;
+          default:
+            break;
+        }
+      }
+    };
 
-					case 'mainPlaneXZ':
+    this.removeCoordsHelpers = function (scene) {
+      let linesinScene = scene.children.filter(
+        (item) => item.name === "CoordsHelper"
+      );
+      linesinScene.forEach((element) => {
+        scene.remove(element);
+      });
+    };
+  };
 
-						labelAtPoint.element.innerHTML = "x = " + Math.round( x * 100 ) /100 + "<br>z = " + Math.round( z * 100 ) /100;
+  this.SceneGrids = function (scene) {
+    //Small grid
+    this.gridHelperSmall = new GridHelper(
+      100,
+      100,
+      new Color("grey"),
+      new Color("lightgrey")
+    );
+    this.gridHelperSmall.position.y = 0;
+    this.gridHelperSmall.position.x = 0;
 
-						labelX = taEntities.createLabel( x, 0, 0, "");  
-						labelX.name = "CoordsHelper";
-						labelX.element.innerHTML = "x = " + Math.round( x * 100 ) /100;
-						scene.add( labelX );
+    //Big grid
+    this.gridHelperBig = new GridHelper(100, 20, 0x0000ff, new Color("grey"));
+    this.gridHelperBig.position.y = 0;
+    this.gridHelperBig.position.x = 0;
 
-						labelZ = taEntities.createLabel( 0, 0, z, ""); 
-						labelZ.name = "CoordsHelper";			
-						labelZ.element.innerHTML = "z = " + Math.round( z * 100 ) /100;
-						scene.add( labelZ );
-						
-						lineX = taEntities.createLine( x, y, z, x, y, 0, 'red', 'dashed' );
-						lineX.name = "CoordsHelper";
-						scene.add( lineX ); 
+    //planes on axises
+    this.mainPlanesArray = [];
 
-						lineZ = taEntities.createLine( x, y, z, 0, y, z, 'red', 'dashed' );
-						lineZ.name = "CoordsHelper"; 
-						scene.add( lineZ );
+    let mainPlaneGeom = new PlaneBufferGeometry(200, 200);
+    let mainPlaneMaterial = new MeshBasicMaterial({
+      color: new Color("lightgrey"),
+      transparent: true,
+      opacity: 0.0,
+      alphaTest: 0.1,
+      side: DoubleSide,
+    });
 
-					break;
+    let mainPlaneZY = new Mesh(mainPlaneGeom, mainPlaneMaterial);
 
-					default:
-						break;
+    mainPlaneZY.name = "mainPlaneXY";
+    scene.add(mainPlaneZY);
+    this.mainPlanesArray.push(mainPlaneZY);
 
-				}
-			}
-		}
+    let mainPlaneXY = new Mesh(mainPlaneGeom, mainPlaneMaterial);
+    mainPlaneXY.rotation.y = (90 * Math.PI) / 180;
+    mainPlaneXY.name = "mainPlaneZY";
+    scene.add(mainPlaneXY);
+    this.mainPlanesArray.push(mainPlaneXY);
 
-		this.removeCoordsHelpers =  function ( scene ) {
+    let mainPlaneXZ = new Mesh(mainPlaneGeom, mainPlaneMaterial);
+    mainPlaneXZ.rotation.x = (90 * Math.PI) / 180;
+    mainPlaneXZ.name = "mainPlaneXZ";
+    scene.add(mainPlaneXZ);
+    this.mainPlanesArray.push(mainPlaneXZ);
 
-			let linesinScene = scene.children.filter( item => item.name === "CoordsHelper" );
-			linesinScene.forEach( element => {
-			scene.remove( element );
-			
-		});
+    let taEntities = new TA_Entities();
+    let lineAxixY = taEntities.createLine(
+      0,
+      -100,
+      0,
+      0,
+      100,
+      0,
+      "blue",
+      "solid"
+    );
+    lineAxixY.name = "AxisY";
+    scene.add(lineAxixY);
 
-		}
+    this.initSmallGrid = function (scene) {
+      if (!scene || !scene.isScene) {
+        console.warn(
+          "Parameter of this function must be object of THREE.Scene()"
+        );
+        return;
+      }
 
-	}
-	
-	this.SceneGrids = function ( scene ) {
+      scene.add(this.gridHelperSmall);
+    };
 
-		//Small grid
-		this.gridHelperSmall = new GridHelper( 100, 100, new Color('grey'), new Color( 'lightgrey' ) );
-		this.gridHelperSmall.position.y = 0;
-		this.gridHelperSmall.position.x = 0;
-	
-		//Big grid
-		this.gridHelperBig = new GridHelper( 100, 20, 0x0000ff, new Color( 'grey' ) );
-		this.gridHelperBig.position.y = 0;
-		this.gridHelperBig.position.x = 0;
-	
-		//planes on axises    
-		this.mainPlanesArray = [];
-	
-		let mainPlaneGeom = new PlaneBufferGeometry( 200, 200 );
-		let mainPlaneMaterial = new MeshBasicMaterial( { color: new Color('lightgrey'), transparent: true, opacity: 0.0, alphaTest: 0.1, side: DoubleSide } );
-	
-		let mainPlaneZY = new Mesh( mainPlaneGeom, mainPlaneMaterial );
-		
-		mainPlaneZY.name = 'mainPlaneXY'
-		scene.add( mainPlaneZY );
-		this.mainPlanesArray.push ( mainPlaneZY );
-	
-		let mainPlaneXY = new Mesh( mainPlaneGeom, mainPlaneMaterial );
-		mainPlaneXY.rotation.y = 90*Math.PI/180;
-		mainPlaneXY.name = 'mainPlaneZY'
-		scene.add( mainPlaneXY );
-		this.mainPlanesArray.push ( mainPlaneXY );
-	   
-		let mainPlaneXZ = new Mesh( mainPlaneGeom, mainPlaneMaterial );
-		mainPlaneXZ.rotation.x = 90*Math.PI/180;
-		mainPlaneXZ.name = 'mainPlaneXZ'
-		scene.add( mainPlaneXZ );
-		this.mainPlanesArray.push ( mainPlaneXZ );
-	
-		let taEntities = new TA_Entities ();
-		let lineAxixY =  taEntities.createLine ( 0, -100, 0, 0, 100, 0, 'blue', 'solid' );
-		lineAxixY.name = "AxisY";
-		scene.add ( lineAxixY );
-		
-		
-		this.initSmallGrid = function ( scene ) {
-	
-			if ( !scene || !scene.isScene) {
-				console.warn( "Parameter of this function must be object of THREE.Scene()" );
-				return;
-			}
-	
-			scene.add( this.gridHelperSmall );
-	
-		};
-	
-		this.initBigGrid = function ( scene ) {
-	
-			if ( !scene || !scene.isScene) {
-				console.warn( "Parameter of this function must be object of THREE.Scene()" );
-				return;
-			}
-	
-			scene.add( this.gridHelperBig );
-	
-		};
-	
-		this.initAll = function ( scene ){
-	
-			if ( !scene || !scene.isScene ) {
-				console.warn( "Parameter of this function must be object of THREE.Scene()" );
-				return;
-			}
-			
-			scene.add( this.gridHelperSmall );
-			scene.add( this.gridHelperBig );
-			
-		};
-	
-		this.removeAll = function ( scene ) {
-	
-			if ( !scene || !scene.isScene) {
-				console.warn( "Parameter of this function must be object of THREE.Scene()" );
-				return;
-			}
-	
-			scene.remove( this.gridHelperSmall );
-			scene.remove( this.gridHelperBig );
-	
-		}
-	
-	}
-	
-	this.addCameraHelper = function ( scene, camera ) {
+    this.initBigGrid = function (scene) {
+      if (!scene || !scene.isScene) {
+        console.warn(
+          "Parameter of this function must be object of THREE.Scene()"
+        );
+        return;
+      }
 
-		var helper = new CameraHelper( camera );
-		scene.add( helper );
+      scene.add(this.gridHelperBig);
+    };
 
-	}
+    this.initAll = function (scene) {
+      if (!scene || !scene.isScene) {
+        console.warn(
+          "Parameter of this function must be object of THREE.Scene()"
+        );
+        return;
+      }
 
-}
-	export {TA_Helpers};
-	
+      scene.add(this.gridHelperSmall);
+      scene.add(this.gridHelperBig);
+    };
+
+    this.removeAll = function (scene) {
+      if (!scene || !scene.isScene) {
+        console.warn(
+          "Parameter of this function must be object of THREE.Scene()"
+        );
+        return;
+      }
+
+      scene.remove(this.gridHelperSmall);
+      scene.remove(this.gridHelperBig);
+    };
+  };
+
+  this.addCameraHelper = function (scene, camera) {
+    var helper = new CameraHelper(camera);
+    scene.add(helper);
+  };
+};
+export { TA_Helpers };

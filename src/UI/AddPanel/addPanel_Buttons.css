@@ -1,13 +1,9 @@
 .addPanel_Buttons {
-
-	width: 53px;
-	z-index: 203;
-	background-color:rgb(51, 51, 51) ;
-	color: rgba(127,255,255, 1);
-	font-size: 12px;
-
-	text-align: center;
-	/* margin-left: 4px; */
-	padding: 0px;
-
+  width: 53px;
+  z-index: 203;
+  background-color: rgb(51, 51, 51);
+  color: rgba(127, 255, 255, 1);
+  font-size: 12px;
+  text-align: center;
+  padding: 0px;
 }

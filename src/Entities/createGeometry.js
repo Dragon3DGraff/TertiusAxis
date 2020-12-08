@@ -179,18 +179,15 @@
 
 // 		break;
 
-
-
-// // 
+// //
 
 // // TextBufferGeometry
 
-// // 
+// //
 
 // // TorusKnotBufferGeometry
 
 // // TubeBufferGeometry
-
 
 // 		default:
 
@@ -203,6 +200,5 @@
 // 	return geometry;
 
 // };
-
 
 // export { createGeometry };

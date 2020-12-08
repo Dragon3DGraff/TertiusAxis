@@ -1,0 +1,15 @@
+draft.js
+
+
+/THREEJS/*
+
+.vscode/*
+
+.vs/*
+node_modules/*
+dist/*
+Transportation/*
+
+src/_Resources/*
+gitCommands
+*.html

@@ -3,107 +3,118 @@
  */
 
 import { TA_UI } from "./TA_UI.js";
-import { TA_State } from '../TA_State';
+import { TA_State } from "../TA_State";
 
-function fillGeneralParametersTab( entity ) {
+function fillGeneralParametersTab(entity) {
+  let ta_UI = new TA_UI();
+  let ta_State = new TA_State();
 
-	let ta_UI = new TA_UI();
-	let ta_State = new TA_State();
+  let divGeneral = document.getElementById("GeneralParameters");
+  let elemGeneral = document.createElement("div");
+  elemGeneral.id = "ParametersGeneralRows";
+  divGeneral.appendChild(elemGeneral);
 
+  let rowUUID = ta_UI.addParametersRow("ID", "string", entity.id);
+  elemGeneral.appendChild(rowUUID);
 
-	
-	let divGeneral = document.getElementById( 'GeneralParameters');
-	let elemGeneral = document.createElement( 'div' );
-	elemGeneral.id = 'ParametersGeneralRows';
-	divGeneral.appendChild( elemGeneral );
+  // this.addElement( elemGeneral, 'p', 'Name', '');
+  let rowDiv = ta_UI.addParametersRow("Name", "string", entity.name);
+  elemGeneral.appendChild(rowDiv);
+  let input = ta_UI.getInput(rowDiv);
+  input.addEventListener(
+    "input",
+    () => {
+      entity.name = input.value;
+    },
+    false
+  );
 
-	let rowUUID = ta_UI.addParametersRow( 'ID', 'string', entity.id );
-	elemGeneral.appendChild( rowUUID );
-	
+  let inputId = ta_UI.addParametersRow("id", "string", entity.id);
+  inputId.disabled = true;
 
-	// this.addElement( elemGeneral, 'p', 'Name', '');
-	let rowDiv = ta_UI.addParametersRow( 'Name', 'string', entity.name );
-	elemGeneral.appendChild( rowDiv );
-	let input = ta_UI.getInput(rowDiv);
-	input.addEventListener( 'input', () => {
+  ta_UI.addElement(elemGeneral, "p", "Position", "");
 
-		entity.name = input.value;
+  let parametersGeneral = Object.entries(entity.position);
 
-	}, false );
+  for (let i = 0; i < parametersGeneral.length; i++) {
+    let nameOfParameter = parametersGeneral[i][0];
+    let valueOfParameter = Math.round(parametersGeneral[i][1] * 1000) / 1000;
 
-	let inputId = ta_UI.addParametersRow( 'id', 'string', entity.id );
-	inputId.disabled = true;
+    let rowDiv = ta_UI.addParametersRow(
+      "position_" + nameOfParameter,
+      "number",
+      valueOfParameter
+    );
+    elemGeneral.appendChild(rowDiv);
+    let input = ta_UI.getInput(rowDiv);
+    input.step = 0.1;
 
-	ta_UI.addElement( elemGeneral, 'p', 'Position', '');
+    input.addEventListener(
+      "input",
+      () => {
+        entity.position[nameOfParameter] = input.value;
+        ta_State.changeAppState("GeneralParameters-" + input.id, input.value);
+      },
+      false
+    );
+  }
 
-	let parametersGeneral = Object.entries( entity.position );
+  ta_UI.addElement(elemGeneral, "p", "Rotation", "");
 
-	for (let i = 0; i < parametersGeneral.length; i++) {
+  parametersGeneral = Object.entries({
+    x: entity.rotation.x,
+    y: entity.rotation.y,
+    z: entity.rotation.z,
+  });
 
-		let nameOfParameter = parametersGeneral[i][0];
-		let valueOfParameter = Math.round( parametersGeneral[i][1] * 1000 )/1000;;
+  for (let i = 0; i < parametersGeneral.length; i++) {
+    let nameOfParameter = parametersGeneral[i][0];
+    let valueOfParameter = Math.round(parametersGeneral[i][1] * 1000) / 1000;
 
-		let rowDiv = ta_UI.addParametersRow( 'position_' + nameOfParameter, 'number', valueOfParameter );
-		elemGeneral.appendChild( rowDiv );
-		let input = ta_UI.getInput(rowDiv);
-		input.step = 0.1;
+    let rowDiv = ta_UI.addParametersRow(
+      "rotation_" + nameOfParameter,
+      "number",
+      valueOfParameter
+    );
+    elemGeneral.appendChild(rowDiv);
+    let input = ta_UI.getInput(rowDiv);
 
-		input.addEventListener( 'input', () => {
+    input.step = 0.1;
+    input.addEventListener(
+      "input",
+      () => {
+        entity.rotation[nameOfParameter] = input.value;
+        ta_State.changeAppState("GeneralParameters-" + input.id, input.value);
+      },
+      false
+    );
+  }
 
-			entity.position[nameOfParameter] = input.value;
-			ta_State.changeAppState('GeneralParameters-' + input.id, input.value);
+  ta_UI.addElement(elemGeneral, "p", "Scale", "");
 
+  parametersGeneral = Object.entries(entity.scale);
 
-		}, false );
+  for (let i = 0; i < parametersGeneral.length; i++) {
+    let nameOfParameter = parametersGeneral[i][0].replace("_", "");
+    let valueOfParameter = Math.round(parametersGeneral[i][1] * 1000) / 1000;
 
-	}
+    let rowDiv = ta_UI.addParametersRow(
+      "scale_" + nameOfParameter,
+      "number",
+      valueOfParameter
+    );
+    elemGeneral.appendChild(rowDiv);
+    let input = ta_UI.getInput(rowDiv);
 
-	ta_UI.addElement( elemGeneral, 'p', 'Rotation', '');
-
-	 parametersGeneral = Object.entries( {x: entity.rotation.x, y: entity.rotation.y, z: entity.rotation.z } );
-
-	for (let i = 0; i < parametersGeneral.length; i++) {
-
-		let nameOfParameter = parametersGeneral[i][0];
-		let valueOfParameter = Math.round( parametersGeneral[i][1] * 1000 )/1000;;
-
-		let rowDiv = ta_UI.addParametersRow( 'rotation_' + nameOfParameter, 'number', valueOfParameter );
-		elemGeneral.appendChild( rowDiv );
-		let input = ta_UI.getInput(rowDiv);
-
-		input.step = 0.1;
-		input.addEventListener( 'input', () => {
-
-			entity.rotation[nameOfParameter] = input.value;
-			ta_State.changeAppState('GeneralParameters-' + input.id, input.value);
-
-
-		}, false );
-
-	}
-
-	ta_UI.addElement( elemGeneral, 'p', 'Scale', '');
-
-	parametersGeneral = Object.entries( entity.scale );
-
-	for (let i = 0; i < parametersGeneral.length; i++) {
-
-		let nameOfParameter = parametersGeneral[i][0].replace('_','');
-		let valueOfParameter = Math.round( parametersGeneral[i][1] * 1000 )/1000;;
-
-		let rowDiv = ta_UI.addParametersRow( 'scale_' + nameOfParameter, 'number', valueOfParameter );
-		elemGeneral.appendChild( rowDiv );
-		let input = ta_UI.getInput(rowDiv);
-
-		input.step = 0.1;
-		input.addEventListener( 'input', () => {
-
-		entity.scale[nameOfParameter] = input.value;
-		ta_State.changeAppState('GeneralParameters-' + input.id, input.value);
-
-		}, false );
-
-	}
-
+    input.step = 0.1;
+    input.addEventListener(
+      "input",
+      () => {
+        entity.scale[nameOfParameter] = input.value;
+        ta_State.changeAppState("GeneralParameters-" + input.id, input.value);
+      },
+      false
+    );
+  }
 }
 export { fillGeneralParametersTab };

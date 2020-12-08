@@ -1,40 +1,33 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from "react";
 import "./AddPanel.css";
 import Button from "./Button";
 import Matcap from "./MaterialsTab/Matcap/Matcap";
+import PropTypes from "prop-types";
+function AddPanel(props) {
+  const buttons = ["MatCaps", "Textures", "Models"];
 
-function AddPanel ( props ) {
+  const [panel, setPanel] = useState("");
+  const [cardsDiv, setCardsDiv] = useState(null);
 
-	const buttons = [
-		'MatCaps',
-		'Textures',
-		'Models'
-	];
+  useEffect(() => {
+    setCardsDiv(props.cardsDiv);
+  }, []);
 
-	const [ panel, setPanel ] = useState('');
-	const [ cardsDiv, setCardsDiv ] = useState(null);
-
-	useEffect( () => {
-		setCardsDiv( props.cardsDiv );
-	}, [] )
-
-	function getButtonName( e ) {
-		setPanel(e.target.name );
-	}
-
-	return(
-		<div className="Main">
-			{ buttons.map( (btn) =>
-				<Button
-					name= {btn}
-					key= {btn}
-					setPanel = { setPanel }
-				/>)
-			}
-			{panel && <Matcap setPanel = { setPanel } panel = {panel} cardsDiv={cardsDiv} />}
-			{/* {panel === 'Textures' && <TexturesTab setPanel = { setPanel }/>} */}
-		</div>
-	)
+  return (
+    <div className="Main">
+      {buttons.map((btn) => (
+        <Button name={btn} key={btn} setPanel={setPanel} />
+      ))}
+      {panel && (
+        <Matcap setPanel={setPanel} panel={panel} cardsDiv={cardsDiv} />
+      )}
+      {/* {panel === 'Textures' && <TexturesTab setPanel = { setPanel }/>} */}
+    </div>
+  );
 }
+
+AddPanel.propTypes = {
+  cardsDiv: PropTypes.element,
+};
 
 export default AddPanel;

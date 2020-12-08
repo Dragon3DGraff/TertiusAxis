@@ -4,119 +4,104 @@
 
 import { TA_UI } from "./TA_UI.js";
 import { TA_Entities } from "../Entities/TA_Entities.js";
-import { TA_State } from '../TA_State';
+import { TA_State } from "../TA_State";
 
-function fillGeometryParametersTab( entity ) {
+function fillGeometryParametersTab(entity) {
+  let ta_UI = new TA_UI();
+  let ta_State = new TA_State();
 
-	let ta_UI = new TA_UI();
-	let ta_State = new TA_State();
+  let divGeometry = document.getElementById("GeometryParameters");
+  let elem = document.createElement("div");
+  elem.id = "ParametersGoemetryRows";
+  divGeometry.appendChild(elem);
 
-	let divGeometry = document.getElementById( 'GeometryParameters');
-		let elem = document.createElement( 'div' );
-		elem.id = 'ParametersGoemetryRows';
-		divGeometry.appendChild( elem );
+  let parametersArray = Object.entries(entity.geometry.parameters);
 
-		let parametersArray = Object.entries( entity.geometry.parameters );
+  for (let i = 0; i < parametersArray.length; i++) {
+    let rowDiv = document.createElement("div");
+    elem.appendChild(rowDiv);
+    rowDiv.className = "ParametersRow";
 
-		for (let i = 0; i < parametersArray.length; i++) {
+    let text = document.createElement("p");
+    rowDiv.appendChild(text);
+    text.innerHTML = parametersArray[i][0];
 
-			let rowDiv = document.createElement( 'div' );
-			elem.appendChild( rowDiv );
-			rowDiv.className = 'ParametersRow';
+    let input;
+    let ta_entities = new TA_Entities();
 
-			let text = document.createElement( 'p' );
-			rowDiv.appendChild( text );
-			text.innerHTML = parametersArray[i][0];
+    if (typeof parametersArray[i][1] === "boolean") {
+      input = document.createElement("select");
+      input.id = parametersArray[i][0];
 
-			let input;
-			let ta_entities = new TA_Entities;
-			
+      let option = document.createElement("option");
+      option.text = "true";
+      option.value = "true";
+      input.add(option);
+      option = document.createElement("option");
+      option.text = "false";
+      option.value = "false";
+      input.add(option);
 
-			if ( typeof( parametersArray[i][1] ) === "boolean" ) {
+      input.value = parametersArray[i][1];
 
-				input = document.createElement( 'select' );
-				input.id = parametersArray[i][0];
-				
-				let option = document.createElement("option");
-				option.text = 'true';
-				option.value = 'true';
-				input.add(option) ;
-				option = document.createElement("option");
-				option.text = 'false';
-				option.value = 'false';
-				input.add(option) ;
+      input.addEventListener(
+        "input",
+        () => {
+          let value = JSON.parse(input.value);
 
-				input.value = parametersArray[i][1];
+          ta_entities.updateSelectedObject(input.id, value, entity);
+          ta_State.changeAppState(
+            "GeometryParameters-" + input.id,
+            input.value
+          );
+        },
+        false
+      );
+    } else {
+      input = document.createElement("input");
 
-				input.addEventListener( 'input', () => {
+      input.id = parametersArray[i][0];
+      input.min = 0.001;
+      input.step = 0.1;
 
-					let value = JSON.parse( input.value );
-	
-					ta_entities.updateSelectedObject( input.id, value, entity );
-					ta_State.changeAppState('GeometryParameters-' + input.id, input.value);
+      input.type = "number";
+      input.value = Math.round(parametersArray[i][1] * 1000) / 1000;
 
-	
-				}, false );
+      input.addEventListener(
+        "input",
+        () => {
+          ta_entities.updateSelectedObject(input.id, +input.value, entity);
+          ta_State.changeAppState(
+            "GeometryParameters-" + input.id,
+            input.value
+          );
+        },
+        false
+      );
+    }
 
-			}
-			else {
+    if (parametersArray[i][0].toUpperCase().includes("SEGMENTS")) {
+      input.step = 1;
+      input.min = 1;
+    }
 
-				input = document.createElement( 'input' );
+    if (parametersArray[i][0].toUpperCase().includes("DETAIL")) {
+      input.step = 1;
+      input.min = 0;
+      input.max = 7;
+    }
 
-				input.id = parametersArray[i][0];
-				input.min = 0.001;
-				input.step = 0.1;
+    //check max values to close object!!!
 
-				input.type = 'number';
-				input.value = Math.round( parametersArray[i][1] * 1000 )/1000;
+    //thetaLength : 2*Math.PI
+    // if ( parametersArray[i][0].includes( 'thetaLength' )) {
 
-				input.addEventListener( 'input', () => {
+    // 	input.max = 2*Math.PI;
 
-					ta_entities.updateSelectedObject( input.id, +input.value, entity );
-					ta_State.changeAppState('GeometryParameters-' + input.id, input.value);
+    // }
 
-	
-				}, false );
-
-			}
-
-
-			if ( parametersArray[i][0].toUpperCase().includes( 'SEGMENTS' ) ) {
-
-				input.step = 1;
-				input.min = 1;
-
-			}
-
-			
-			if ( parametersArray[i][0].toUpperCase().includes( 'DETAIL' ) ) {
-
-				input.step = 1;
-				input.min = 0;
-				input.max = 7;
-
-			}
-
-
-			//check max values to close object!!!
-			
-			//thetaLength : 2*Math.PI
-			// if ( parametersArray[i][0].includes( 'thetaLength' )) {
-
-			// 	input.max = 2*Math.PI;
-
-			// }
-
-
-
-
-			rowDiv.appendChild ( input );
-
-
-		}
-
-
-
+    rowDiv.appendChild(input);
+  }
 }
 
 export { fillGeometryParametersTab };

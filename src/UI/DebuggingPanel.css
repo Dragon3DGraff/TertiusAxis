@@ -1,26 +1,26 @@
 .DebuggingPanel {
-	position: absolute;
-	z-index: 500;
-	right: 0px;
-	top: 50px;
-	
-	width: 300px;
-	background-color: black;
-	color: lime;
-	font-size: 10px;
-	/* opacity: 0.6; */
+  position: absolute;
+  z-index: 500;
+  right: 0px;
+  top: 50px;
+
+  width: 300px;
+  background-color: black;
+  color: lime;
+  font-size: 10px;
+  /* opacity: 0.6; */
 }
 
 .DebuggingPanel h3 {
-	text-align-last: center;
-	margin-top: 3px;
-	margin-left: 8px;
-	margin-bottom: 5px;
+  text-align-last: center;
+  margin-top: 3px;
+  margin-left: 8px;
+  margin-bottom: 5px;
 }
 
 .DebuggingPanel p {
-	font-size: 10px;
+  font-size: 10px;
 }
-.appStateChanged{
-	color: orangered;
+.appStateChanged {
+  color: orangered;
 }
