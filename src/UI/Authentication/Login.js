@@ -39,8 +39,8 @@ export default function Login({ history, hide }) {
     history.push("/");
   };
 
-  const onCloseForm = () => {
-    hideForm();
+  const onCloseForm = (e) => {
+    e.target.className === "Login-div" && hideForm();
   };
 
   const onRegister = (e) => {

@@ -34,9 +34,11 @@ export default function Registration({ history, hide }) {
     }
   };
 
-  const onCloseForm = () => {
-    hide(true);
-    history.push("/");
+  const onCloseForm = (e) => {
+    if (e.target.className === "registration-div") {
+      hide(true);
+      history.push("/");
+    }
   };
 
   const onInputChange = (e) => {
