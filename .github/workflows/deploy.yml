@@ -15,8 +15,7 @@ jobs:
           local: testworkflow
           remote: ${{ env.DEPLOY_PATH }}/testWF
           host: ${{ secrets.DEPLOY_SERVER_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.PASSWORD }}
+          username:  ${{ secrets.DEPLOY_SERVER_USERNAME }}
         
       - name: Print Info
         run: echo "Deployed at ../tertiusaxis/TertiusAxis/client"
