@@ -42,7 +42,7 @@ jobs:
           username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
           key: ${{ secrets.DEPLOY_SERVER_KEY }}
           source: dist
-          target: /tertiusaxis/TertiusAxis/client/test
+          target: testWF
           strip_components: 1
         
       - name: Print Info
