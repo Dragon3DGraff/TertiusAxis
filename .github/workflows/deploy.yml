@@ -1,8 +1,8 @@
 name: Deploy to server
 
 env:
- DEPLOY_PATH: /tertiusaxis/TertiusAxis/client
- BUILD_SCRIPT_OUTPUT: /dist
+ DEPLOY_PATH: tertiusaxis/TertiusAxis/client
+ BUILD_SCRIPT_OUTPUT: dist
 
 on:
   push:
