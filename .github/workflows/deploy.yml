@@ -7,13 +7,15 @@ on: [push]
 
 jobs:
   deploy:
-    - name: Deploy to Server
-      uses: appleboy/scp-action@v0.1.2      
-      with:
-        host: ${{ secrets.DEPLOY_SERVER_HOST }}
-        key: ${{ secrets.DEPLOY_SERVER_KEY }}
-        source: dist/
-        target: ${{ env.DEPLOY_PATH }}
-        strip_components: 1
-    - name: Print Info
-      run: echo "Deployed at ../tertiusaxis/TertiusAxis/client"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEPLOY_SERVER_HOST }}
+          key: ${{ secrets.DEPLOY_SERVER_KEY }}
+          source: ico
+          target: ${{ env.DEPLOY_PATH }}/testWF
+          strip_components: 1
+      - name: Print Info
+        run: echo "Deployed at ../tertiusaxis/TertiusAxis/client"
