@@ -3,3 +3,4 @@ function fe(params) {
 }
 
 fe("s");
+fe("s");
