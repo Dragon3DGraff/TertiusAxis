@@ -11,7 +11,7 @@ import {
   Color,
   Vector2,
   // Vector3,
-  // SphereBufferGeometry,
+  SphereBufferGeometry,
   // LineCurve3,
   // Line,
   // BufferGeometry,
@@ -348,18 +348,18 @@ class TA_Scene {
     // let sphere = new Mesh( sphereGeometry, material);
     // scene.add( sphere );
 
-    // let sphereGeometry = new SphereBufferGeometry(20, 30, 30 );
-    // let testSphere = new Mesh( sphereGeometry, material );
-    // scene.add( testSphere );
-    // this.selectableObjects.push( testSphere );
-    // testSphere.position.set( 25, 0, 0 );
+    let sphereGeometry = new SphereBufferGeometry(20, 30, 30 );
+    let testSphere = new Mesh( sphereGeometry, material );
+    scene.add( testSphere );
+    this.selectableObjects.push( testSphere );
+    testSphere.position.set( 25, 0, 0 );
 
-    let cubeGeometry = new BoxBufferGeometry(10, 10, 10);
-    let mesh = new Mesh(cubeGeometry, material);
-    scene.add(mesh);
-    mesh.position.set(0, 0, 7);
-    mesh.name = "TestCube";
-    this.selectableObjects.push(mesh);
+    // let cubeGeometry = new BoxBufferGeometry(10, 10, 10);
+    // let mesh = new Mesh(cubeGeometry, material);
+    // scene.add(mesh);
+    // mesh.position.set(0, 0, 7);
+    // mesh.name = "TestCube";
+    // this.selectableObjects.push(mesh);
 
     // let lineMaterial = new LineBasicMaterial( { color: 'red' } );
 
