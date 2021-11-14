@@ -29,22 +29,21 @@ jobs:
         run: npm run build
     
       - name: Deploy to Server
-        uses: garygrossgarten/github-action-scp@release
-        with:
-          local: dist
-          remote: /tertiusaxis/TertiusAxis/client/test
-          host: ${{ secrets.DEPLOY_SERVER_HOST }}
-          username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
-#           password: ${{ secrets.PASSWORD }}
-#         uses: appleboy/scp-action@master
+#         uses: garygrossgarten/github-action-scp@release
 #         with:
+#           local: dist
+#           remote: /tertiusaxis/TertiusAxis/client/test
 #           host: ${{ secrets.DEPLOY_SERVER_HOST }}
 #           username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
-#           port: 22
-#           key: ${{ secrets.DEPLOY_SERVER_KEY }}
-#           source: dist
-#           target: /tertiusaxis/TertiusAxis/client/test
-#           strip_components: 1
+#           password: ${{ secrets.PASSWORD }}
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEPLOY_SERVER_HOST }}
+          username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
+          key: ${{ secrets.DEPLOY_SERVER_KEY }}
+          source: dist
+          target: /tertiusaxis/TertiusAxis/client/test
+          strip_components: 1
         
       - name: Print Info
         run: echo "Deployed at ../tertiusaxis/TertiusAxis/client"
