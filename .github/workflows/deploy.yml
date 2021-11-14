@@ -2,6 +2,7 @@ name: Deploy to server
 
 env:
  DEPLOY_PATH: /tertiusaxis/TertiusAxis/client
+ BUILD_SCRIPT_OUTPUT: dist
 
 on: [push]
 
@@ -25,11 +26,15 @@ jobs:
         run: npm run build
     
       - name: Deploy to Server
-        uses: garygrossgarten/github-action-scp@release
+        uses: appleboy/scp-action@master
         with:
-          local: testworkflow
-          remote: ${{ env.DEPLOY_PATH }}/testWF
           host: ${{ secrets.DEPLOY_SERVER_HOST }}
+          port: ${{ secrets.DEPLOY_SERVER_PORT }}
+          username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
+          key: ${{ secrets.DEPLOY_SERVER_KEY }}
+          source: ${{ env.BUILD_SCRIPT_OUTPUT }}
+          target: ${{ env.DEPLOY_PATH }}/${{ env.BRANCH_NAME }}
+          strip_components: 1
         
       - name: Print Info
         run: echo "Deployed at ../tertiusaxis/TertiusAxis/client"
