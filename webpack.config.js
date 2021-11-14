@@ -71,6 +71,14 @@ module.exports = {
         },
       ],
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "src/ico/"),
+          to: path.resolve(__dirname, "dist/ico/"),
+        },
+      ],
+    }),
     new MiniCssExtractPlugin({
       filename: filename("css"),
     }),
