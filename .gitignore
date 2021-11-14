@@ -10,5 +10,5 @@ node_modules/*
 dist/*
 Transportation/*
 
-src/_Resources/*
+# src/_Resources/*
 gitCommands
