@@ -1,21 +1,42 @@
 name: Deploy to server
 
-env:
- DEPLOY_PATH: /tertiusaxis/TertiusAxis/client
+# env:
+#  DEPLOY_PATH: /var/www/app
+#  BUILD_SCRIPT_OUTPUT: dist
 
-on: [push]
+on:
+  push:
+    branches: [ master ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Server
-        uses: appleboy/scp-action@master
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
         with:
-          host: ${{ secrets.DEPLOY_SERVER_HOST }}
-          key: ${{ secrets.DEPLOY_SERVER_KEY }}
-          source: testworkflow
-          target: ${{ env.DEPLOY_PATH }}/testWF
-          strip_components: 1
+          node-version: '14'
+      # Записываем в переменные окружения имя текущей ветки
+      # Чтобы избежать конфиликтов с URL, меняем точки на _, а слеши на минусы
+      - name: Get branch name
+        shell: bash
+        run: echo "name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/g' | sed 's/\./_/g')" >> $GITHUB_ENV
+      # Устанавливаем зависимости для сборки
+      - name: Install Dependencies
+        run: npm i
+      # Собираем приложение
+      - name: Build Appliction
+        run: npm run build
+    
+#       - name: Deploy to Server
+#         uses: appleboy/scp-action@master
+#         with:
+#           host: ${{ secrets.DEPLOY_SERVER_HOST }}
+#           username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
+#           key: ${{ secrets.DEPLOY_SERVER_KEY }}
+#           source: ${{ env.BUILD_SCRIPT_OUTPUT }}
+#           target: ${{ env.DEPLOY_PATH }}/${{ env.BRANCH_NAME }}
+#           strip_components: 1
+        
       - name: Print Info
         run: echo "Deployed at ../tertiusaxis/TertiusAxis/client"
