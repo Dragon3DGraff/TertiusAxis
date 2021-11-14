@@ -2,7 +2,7 @@ name: Deploy to server
 
 # env:
 #  DEPLOY_PATH: /tertiusaxis/TertiusAxis/client
-#  BUILD_SCRIPT_OUTPUT: dist
+#  BUILD_SCRIPT_OUTPUT: /dist
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
           username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
           key: ${{ secrets.DEPLOY_SERVER_KEY }}
           source: ${{ env.BUILD_SCRIPT_OUTPUT }}
-          target: ${{ env.DEPLOY_PATH }}/${{ env.BRANCH_NAME }}
+          target: ${{ env.DEPLOY_PATH }}/test
           strip_components: 1
         
       - name: Print Info
