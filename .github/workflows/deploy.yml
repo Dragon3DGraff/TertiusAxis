@@ -1,23 +1,19 @@
 name: CI
 
 env:
-DEPLOY_PATH: /tertiusaxis/TertiusAxis/client
+ DEPLOY_PATH: /tertiusaxis/TertiusAxis/client
 
 on: [push]
 
-
 jobs:
   deploy:
-  - name: SCP Command to Transfer Files
-    uses: appleboy/scp-action@v0.1.2
-
-  - name: Deploy to Server       
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.DEPLOY_SERVER_HOST }}
-          key: ${{ secrets.DEPLOY_SERVER_KEY }}
-          source: dist/
-          target: ${{ env.DEPLOY_PATH }}}
-          strip_components: 1
-      - name: Print Info
-        run: echo "Deployed at ../tertiusaxis/TertiusAxis/client"
+    - name: Deploy to Server
+      uses: appleboy/scp-action@v0.1.2      
+      with:
+        host: ${{ secrets.DEPLOY_SERVER_HOST }}
+        key: ${{ secrets.DEPLOY_SERVER_KEY }}
+        source: dist/
+        target: ${{ env.DEPLOY_PATH }}
+        strip_components: 1
+    - name: Print Info
+      run: echo "Deployed at ../tertiusaxis/TertiusAxis/client"
