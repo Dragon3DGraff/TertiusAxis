@@ -33,6 +33,7 @@ jobs:
         with:
           host: ${{ secrets.DEPLOY_SERVER_HOST }}
           username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
+          port: 22
           key: ${{ secrets.DEPLOY_SERVER_KEY }}
           source: dist
           target: /tertiusaxis/TertiusAxis/client/test
