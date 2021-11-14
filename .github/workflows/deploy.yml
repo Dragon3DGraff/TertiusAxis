@@ -43,6 +43,7 @@ jobs:
           key: ${{ secrets.DEPLOY_SERVER_KEY }}
           source: ${{ env.BUILD_SCRIPT_OUTPUT }}
           target: ${{ env.DEPLOY_PATH }}
+          rm: true
           strip_components: 1
         
       - name: Print Info
