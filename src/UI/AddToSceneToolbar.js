@@ -3,8 +3,8 @@
  */
 
 import { TA_UI } from "./TA_UI.js";
-import cubeIco from "../ico/cubeico.png";
-import sphereIco from "../ico/sphereico.png";
+// import cubeIco from "../ico/cubeico.png";
+// import sphereIco from "../ico/sphereico.png";
 import { TA_State } from "../TA_State.js";
 
 function createAddToSceneToolbar(taScene) {
@@ -53,11 +53,11 @@ function createAddToSceneToolbar(taScene) {
   buttonsDiv.style.display = "grid";
 
   let primitivesNamesForButtons = [
-    { text: "", type: "BoxBufferGeometry", imgLink: cubeIco, active: true },
+    { text: "", type: "BoxBufferGeometry", imgLink: "", active: true },
     {
       text: "",
       type: "SphereBufferGeometry",
-      imgLink: sphereIco,
+      imgLink: "",
       active: true,
     },
     { text: "Circle", type: "CircleBufferGeometry", imgLink: "", active: true },
