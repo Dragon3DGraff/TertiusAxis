@@ -10,12 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to Server
-        uses: appleboy/scp-action@master
+        uses: garygrossgarten/github-action-scp@release
         with:
+          local: testworkflow
+          remote: ${{ env.DEPLOY_PATH }}/testWF
           host: ${{ secrets.DEPLOY_SERVER_HOST }}
-          key: ${{ secrets.DEPLOY_SERVER_KEY }}
-          source: testworkflow
-          target: ${{ env.DEPLOY_PATH }}/testWF
-          strip_components: 1
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.PASSWORD }}
+        
       - name: Print Info
         run: echo "Deployed at ../tertiusaxis/TertiusAxis/client"
