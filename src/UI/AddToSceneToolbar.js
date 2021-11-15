@@ -53,9 +53,9 @@ function createAddToSceneToolbar(taScene) {
   buttonsDiv.style.display = "grid";
 
   let primitivesNamesForButtons = [
-    { text: "", type: "BoxBufferGeometry", imgLink: "", active: true },
+    { text: "Cube", type: "BoxBufferGeometry", imgLink: "", active: true },
     {
-      text: "",
+      text: "Sphere",
       type: "SphereBufferGeometry",
       imgLink: "",
       active: true,

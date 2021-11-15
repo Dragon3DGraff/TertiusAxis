@@ -43,15 +43,19 @@
   background-color: white;
 }
 
+.registration-close:hover {
+  background-color: rgba(127, 255, 255, 1);
+}
+
 .registration-form-header {
   display: grid;
   grid-template-columns: 1fr 12fr 0.8fr;
   margin-bottom: 10px;
 }
 
-.registration-form-title {
+/* .registration-form-title { */
   /* align-items: center; */
-}
+/* } */
 
 .registration-form h1 {
   font-family: Abel;

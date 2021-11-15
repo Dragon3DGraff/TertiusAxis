@@ -112,7 +112,7 @@ class TA_Scene {
     camera2 = new PerspectiveCamera(
       50,
       document.getElementById("secondCanvas").clientWidth /
-        document.getElementById("secondCanvas").clientHeight,
+      document.getElementById("secondCanvas").clientHeight,
       0.01,
       10000
     );
@@ -153,7 +153,9 @@ class TA_Scene {
     );
     scene.add(this.transformControls);
     this.transformControls.addEventListener("change", render);
-    this.transformControls.addEventListener("change", function () {});
+    this.transformControls.addEventListener("change", function () {
+      scope.transformControlsChanged = true;
+    });
 
     this.orbitControls.addEventListener("start", function () {
       // document.removeEventListener('mousedown', onDocumentMouseDown, false);
@@ -162,8 +164,6 @@ class TA_Scene {
     });
 
     this.orbitControls.addEventListener("change", function () {
-      // console.log('orbitControls change');
-
       scope.orbitControlsChanged = true;
       // document.removeEventListener('mousedown', onDocumentMouseDown, false);
     });
@@ -173,7 +173,7 @@ class TA_Scene {
     // });
 
     this.transformControls.addEventListener("mouseDown", function () {
-      document.removeEventListener("click", onDocumentMouseClick, false);
+      document.removeEventListener("click", onDocMouseUp, false);
       scope.transformControlsChanged = true;
 
       if (scope.ta_State.appMode.meshEdit) {
@@ -188,7 +188,7 @@ class TA_Scene {
     this.transformControls.addEventListener("mouseUp", function () {
       // console.log('transformControls mouseUp');
 
-      document.addEventListener("click", onDocumentMouseClick, false);
+      document.addEventListener("click", onDocMouseUp, false);
       scope.transformControlsChanged = true;
 
       if (scope.ta_State.appMode.meshEdit) {
@@ -197,8 +197,8 @@ class TA_Scene {
     });
 
     this.transformControls.addEventListener("objectChange", function (event) {
-      document.removeEventListener("click", onDocumentMouseClick, false);
-      // scope.transformControlsChanged = true;
+      document.removeEventListener("click", onDocMouseUp, false);
+      scope.transformControlsChanged = true;
 
       if (event.target.mode === "translate") {
         if (scope.ta_State.appMode.meshEdit) {
@@ -209,7 +209,7 @@ class TA_Scene {
           // scope.ta_UI.deleteGeometryParametersTab();
         }
 
-        // СДЕЛАТЬ ОБНОВЛЕНИЕ ПОЛЕЙ ПАРАМЕТРОВ
+        //TODO СДЕЛАТЬ ОБНОВЛЕНИЕ ПОЛЕЙ ПАРАМЕТРОВ
 
         if (event.target.object.type === "Group") {
           return;
@@ -265,10 +265,10 @@ class TA_Scene {
     const infoDiv = document.getElementById("infoParagraph");
 
     window.addEventListener("resize", onWindowResize, false);
-    document.addEventListener("click", onDocumentMouseClick, false);
+    document.addEventListener("click", onDocMouseClick, false);
     document.addEventListener("mousemove", onDocumentMouseMove, false);
     // document.addEventListener("mousedown", onDocumentMouseDown, false);
-    document.addEventListener("mouseup", onDocumentMouseUp, false);
+    document.addEventListener("mouseup", onDocMouseUp, false);
     document.addEventListener("keydown", onKeyDown, false);
     document.addEventListener("touchstart", onTouchStart, false);
     document.addEventListener("touchend", onTouchEnd, false);
@@ -348,11 +348,11 @@ class TA_Scene {
     // let sphere = new Mesh( sphereGeometry, material);
     // scene.add( sphere );
 
-    let sphereGeometry = new SphereBufferGeometry(20, 30, 30 );
-    let testSphere = new Mesh( sphereGeometry, material );
-    scene.add( testSphere );
-    this.selectableObjects.push( testSphere );
-    testSphere.position.set( 25, 0, 0 );
+    let sphereGeometry = new SphereBufferGeometry(20, 30, 30);
+    let testSphere = new Mesh(sphereGeometry, material);
+    scene.add(testSphere);
+    this.selectableObjects.push(testSphere);
+    testSphere.position.set(25, 0, 0);
 
     // let cubeGeometry = new BoxBufferGeometry(10, 10, 10);
     // let mesh = new Mesh(cubeGeometry, material);
@@ -400,7 +400,7 @@ class TA_Scene {
 
     //////////////////-------------------------------
 
-    function onDocumentMouseClick(event) {
+    function onDocMouseUp(event) {
       // console.log(scope.orbitControlsChanged);
       // event.stopPropagation();
       // event.preventDefault();
@@ -410,6 +410,11 @@ class TA_Scene {
 
         return;
       }
+
+      // if (scope.transformControlsChanged) {
+      //   scope.transformControlsChanged = false;
+      //   return;
+      // }
 
       if (
         event.target.parentElement &&
@@ -426,6 +431,8 @@ class TA_Scene {
         raycaster.setFromCamera(screenPoint, camera);
 
         let intersects = raycaster.intersectObjects(sceneGrid.mainPlanesArray);
+
+        console.log(scope.mode.action);
 
         if (scope.mode.action === "creationEntity") {
           scope.returnObjectsToScene();
@@ -514,6 +521,7 @@ class TA_Scene {
       // if ( scope.transformControlsChanged ) {
 
       scope.transformControlsChanged = false;
+      // return
 
       // } else {
 
@@ -773,15 +781,13 @@ class TA_Scene {
       }
     }
     // function onDocumentMouseDown() {}
-    function onDocumentMouseUp(event) {
+    function onDocMouseClick(event) {
       // console.log('onDocumentMouseUp');
 
       if (event.target.id !== "labelRenderer") return;
       if (scope.ta_State.appMode.meshEdit) return;
 
       // event.stopPropagation();
-
-      // console.log(scope.orbitControlsChanged);
 
       if (scope.orbitControlsChanged) {
         scope.orbitControlsChanged = false;
@@ -794,6 +800,7 @@ class TA_Scene {
           selectByMouse(event);
         }
       }
+      scope.transformControlsChanged = false;
 
       // let screenPoint = getScreenPoint(event);
     }
@@ -880,7 +887,8 @@ class TA_Scene {
           break;
         }
 
-        case 68: { //'d' drag object or group
+        case 68: {
+          //'d' drag object or group
           let dragButton = document.getElementById("dragCheck");
           dragButton.checked = dragButton.checked ? false : true;
 

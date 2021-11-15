@@ -39,8 +39,14 @@ export default function Login({ history, hide }) {
     history.push("/");
   };
 
-  const onCloseForm = (e) => {
-    e.target.className === "Login-div" && hideForm();
+  const onCloseForm = () => {
+    hideForm();
+  };
+
+  const onOverlayClick = (e) => {
+    if (e.target.className === "Login-div") {
+      hideForm();
+    }
   };
 
   const onRegister = (e) => {
@@ -61,7 +67,7 @@ export default function Login({ history, hide }) {
   };
 
   return (
-    <div className="Login-div" onClick={onCloseForm}>
+    <div className="Login-div" onClick={onOverlayClick}>
       <div className="registration-form">
         <div className="registration-form-header">
           <img src={logo} alt="Logo" />

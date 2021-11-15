@@ -34,11 +34,15 @@ export default function Registration({ history, hide }) {
     }
   };
 
-  const onCloseForm = (e) => {
+  const onOverlayClick = (e) => {
     if (e.target.className === "registration-div") {
-      hide(true);
-      history.push("/");
+      onCloseForm()
     }
+  };
+
+  const onCloseForm = () => {
+    hide(true);
+    history.push("/");
   };
 
   const onInputChange = (e) => {
@@ -68,7 +72,7 @@ export default function Registration({ history, hide }) {
   };
 
   return (
-    <div className="registration-div" onClick={onCloseForm}>
+    <div className="registration-div" onClick={onOverlayClick}>
       {successRegister ? (
         <div className="registration-form-congrat">
           <div className="congrat-text">

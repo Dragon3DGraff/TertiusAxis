@@ -169,22 +169,22 @@ function createMeshEditToobar() {
   );
   ta_UI.elements.meshEditVertex.checked = true;
 
-  ta_UI.elements.meshEditEdges = ta_UI.createSwitchButton(
-    {
-      parent: meshEditElementsForm,
-      text: "Edges",
-      id: "Edges",
-      name: "meshEditElements",
-      value: "Edges",
-      tooltip: "Edges",
-      imgLink: "",
-    },
-    function () {
-      ta_State.changeAppState("meshEditEvent", "Edges");
+  // ta_UI.elements.meshEditEdges = ta_UI.createSwitchButton(
+  //   {
+  //     parent: meshEditElementsForm,
+  //     text: "Edges",
+  //     id: "Edges",
+  //     name: "meshEditElements",
+  //     value: "Edges",
+  //     tooltip: "Edges",
+  //     imgLink: "",
+  //   },
+  //   function () {
+  //     ta_State.changeAppState("meshEditEvent", "Edges");
 
-      taScene.meshEditObject.mode = "Edges";
-    }
-  );
+  //     taScene.meshEditObject.mode = "Edges";
+  //   }
+  // );
 
   ta_UI.elements.meshEditFaces = ta_UI.createSwitchButton(
     {
