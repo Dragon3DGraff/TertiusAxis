@@ -35,15 +35,15 @@
 
 // 			break;
 
-// 		case 'SphereBufferGeometry':
+// 		case 'SphereGeometry':
 
-// 			geometry = new THREE.SphereBufferGeometry();
+// 			geometry = new THREE.SphereGeometry();
 
 // 			ta_Entities.checkParams( params, geometry.parameters );
 
 // 			paramsArray = Object.values( params );
 
-// 			geometry = new THREE.SphereBufferGeometry( ...paramsArray );
+// 			geometry = new THREE.SphereGeometry( ...paramsArray );
 
 // 			break;
 
@@ -119,15 +119,15 @@
 
 // 		break;
 
-// 		case 'PlaneBufferGeometry':
+// 		case 'PlaneGeometry':
 
-// 			geometry = new THREE.PlaneBufferGeometry();
+// 			geometry = new THREE.PlaneGeometry();
 
 // 			ta_Entities.checkParams( params, geometry.parameters );
 
 // 			paramsArray = Object.values( params );
 
-// 			geometry = new THREE.PlaneBufferGeometry( ...paramsArray );
+// 			geometry = new THREE.PlaneGeometry( ...paramsArray );
 
 // 		break;
 

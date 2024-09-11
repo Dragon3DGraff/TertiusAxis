@@ -2,7 +2,7 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 
-import * as THREE from "../../node_modules/three/build/three.module.js";
+import * as THREE from "three";
 
 // import { BoxBufferGeometry } from "../../node_modules/three/build/three.module.js";
 
@@ -88,7 +88,7 @@ class TA_Entities {
         thetaStart: 0,
         thetaLength: Math.PI,
       };
-      let geometry = this.createGeometry("SphereBufferGeometry", params);
+      let geometry = this.createGeometry("SphereGeometry", params);
 
       if (!geometry) {
         console.error("Invalid geometry. Object not created");
@@ -322,9 +322,13 @@ class TA_Entities {
           });
           break;
       }
-      const geometry = new THREE.Geometry();
-      geometry.vertices.push(new THREE.Vector3(x, y, z));
-      geometry.vertices.push(new THREE.Vector3(x1, y1, z1));
+      // const geometry = new THREE.Geometry();
+      // geometry.vertices.push(new THREE.Vector3(x, y, z));
+      // geometry.vertices.push(new THREE.Vector3(x1, y1, z1));
+      const points = [];
+      points.push(new THREE.Vector3(x, y, z));
+      points.push(new THREE.Vector3(x1, y1, z1));
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
       const line = new THREE.Line(geometry, material);
       if (dashed === "dashed") {
         line.computeLineDistances();
@@ -341,7 +345,7 @@ class TA_Entities {
       return labelobject;
     };
     this.createPlane = function (height, width) {
-      let planeGeom = new THREE.PlaneBufferGeometry(width, height);
+      let planeGeom = new THREE.PlaneGeometry(width, height);
       let planeMaterial = new THREE.MeshBasicMaterial({
         color: new THREE.Color("lightgrey"),
         transparent: false,
@@ -400,6 +404,8 @@ class TA_Entities {
     };
 
     this.removeWireframeAndBoundingBox = function (object) {
+      if (!object) return;
+
       let wireframeScene = object.children.filter(
         (item) => item.name === "wireframe" || item.name === "BoundingBox"
       );
@@ -528,7 +534,7 @@ class TA_Entities {
 
             break;
 
-          case "SphereBufferGeometry":
+          case "SphereGeometry":
             if (this.currentEntity !== null) {
               GLOBALSCOPE.updateObject("radius", width, this.currentEntity);
             } else {

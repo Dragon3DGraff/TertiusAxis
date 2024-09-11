@@ -3,10 +3,16 @@
  */
 
 import { TA_UI } from "./TA_UI.js";
-import { TA_Entities } from "../Entities/TA_Entities.js";
+// import { TA_Entities } from "../Entities/TA_Entities.js";
 import * as Actions from "../Actions.js";
+import { ta_State } from "../State/State";
 
 function createManipulateToolbar(taScene) {
+  ta_State.eventEmitter.onEvent(
+    "mode",
+    (event) => event === "creationEntity" && switchMode("none")
+  );
+
   let check = document.getElementById("ManipulateToolbar");
 
   if (check !== null) {
@@ -89,7 +95,10 @@ function createManipulateToolbar(taScene) {
   );
 
   function switchMode(selectedRadio) {
+   if (selectedRadio === 'none') return
     let selectedButton = selectedRadio.target.id;
+
+    ta_State.changeAppState("mode", "select");
 
     switch (selectedButton) {
       case "Select":

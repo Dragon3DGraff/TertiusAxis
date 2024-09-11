@@ -5,9 +5,13 @@
 import { TA_UI } from "./TA_UI.js";
 // import cubeIco from "../ico/cubeico.png";
 // import sphereIco from "../ico/sphereico.png";
-import { TA_State } from "../TA_State.js";
+import { ta_State } from "../State/State";
 
 function createAddToSceneToolbar(taScene) {
+  ta_State.eventEmitter.onEvent(
+    "mode",
+    (event) => event === "select" && switchMode("none")
+  );
   let check = document.getElementById("AddToSceneToolbar");
 
   if (check !== null) {
@@ -16,7 +20,6 @@ function createAddToSceneToolbar(taScene) {
   }
 
   let ta_UI = new TA_UI();
-  let ta_State = new TA_State();
 
   let addToSceneContainer = ta_UI.createContainer("sectionDiv", mainContainer);
   addToSceneContainer.id = "AddToSceneToolbar";
@@ -56,7 +59,7 @@ function createAddToSceneToolbar(taScene) {
     { text: "Cube", type: "BoxBufferGeometry", imgLink: "", active: true },
     {
       text: "Sphere",
-      type: "SphereBufferGeometry",
+      type: "SphereGeometry",
       imgLink: "",
       active: true,
     },
@@ -93,7 +96,7 @@ function createAddToSceneToolbar(taScene) {
       imgLink: "",
       active: true,
     },
-    { text: "Plane", type: "PlaneBufferGeometry", imgLink: "", active: false },
+    { text: "Plane", type: "PlaneGeometry", imgLink: "", active: false },
     { text: "Ring", type: "RingBufferGeometry", imgLink: "", active: false },
     { text: "Shape", type: "ShapeBufferGeometry", imgLink: "" },
     { text: "Text", type: "TextBufferGeometry", imgLink: "", active: false },
@@ -118,28 +121,32 @@ function createAddToSceneToolbar(taScene) {
           tooltip: element.type,
           imgLink: element.imgLink,
         },
-        function (selectedRadio) {
-          let selectedButton = selectedRadio.target;
-
-          if (ta_State.appMode.meshEdit) {
-            selectedButton.form.reset();
-            return;
-          }
-
-          if (selectedButton.id === taScene.mode.entity) {
-            selectedButton.form.reset();
-            ta_UI.elements.finishButton.style.display = "none";
-            taScene.mode.action = "select";
-            taScene.mode.entity = null;
-          } else {
-            taScene.mode.action = "creationEntity";
-            taScene.mode.entity = selectedButton.id;
-            ta_UI.elements.finishButton.style.display = "block";
-          }
-        }
+        (selectedRadio) => switchMode(selectedRadio)
       );
     }
   });
+
+  function switchMode(selectedRadio) {
+    let selectedButton = selectedRadio.target;
+
+    if (ta_State.appMode.meshEdit) {
+      selectedButton.form.reset();
+      return;
+    }
+
+    if (selectedButton.id === taScene.mode.entity) {
+      selectedButton.form.reset();
+      ta_UI.elements.finishButton.style.display = "none";
+      taScene.mode.action = "select";
+      taScene.mode.entity = null;
+      ta_State.changeAppState("mode", "select");
+    } else {
+      taScene.mode.action = "creationEntity";
+      taScene.mode.entity = selectedButton.id;
+      ta_UI.elements.finishButton.style.display = "block";
+      ta_State.changeAppState("mode", "creationEntity");
+    }
+  }
 
   ta_UI.elements.finishButton = ta_UI.addElement(
     buttonsDiv,

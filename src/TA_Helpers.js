@@ -5,7 +5,7 @@
 import {
   GridHelper,
   Color,
-  PlaneBufferGeometry,
+  PlaneGeometry,
   MeshBasicMaterial,
   DoubleSide,
   Mesh,
@@ -147,7 +147,7 @@ let TA_Helpers = function () {
     //planes on axises
     this.mainPlanesArray = [];
 
-    let mainPlaneGeom = new PlaneBufferGeometry(200, 200);
+    let mainPlaneGeom = new PlaneGeometry(200, 200);
     let mainPlaneMaterial = new MeshBasicMaterial({
       color: new Color("lightgrey"),
       transparent: true,

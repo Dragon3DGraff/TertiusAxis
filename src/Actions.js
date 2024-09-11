@@ -69,12 +69,12 @@ export function switchDragMode(checked, taScene) {
       if (taScene.currentSelection.object) {
         // taScene.transformControls.detach( taScene.currentSelection.object );
       }
-      if (taScene.currentSelection.multiselection.children.length === 0) {
+      if (taScene.currentSelection.multiselection?.children?.length === 0) {
         // taScene.transformControls.detach( taScene.currentSelection.multiselection );
       }
       // taScene.transformControls.detach( taScene.currentSelection.object );
 
-      taEntities.removeWireframeAndBoundingBox(taScene.currentSelection.object);
+     taScene.currentSelection&& taEntities.removeWireframeAndBoundingBox(taScene.currentSelection.object);
     }
 
     // taScene.transformControlsMode = '';

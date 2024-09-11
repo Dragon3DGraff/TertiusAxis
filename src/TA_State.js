@@ -29,7 +29,7 @@ class TA_State {
       transformControlsMode: "",
     };
 
-    this.meshEditMode = {};
+    // this.meshEditMode = {};
   }
 
   changeAppState(mode, state) {

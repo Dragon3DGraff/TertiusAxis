@@ -11,7 +11,7 @@ import {
   Color,
   Vector2,
   // Vector3,
-  SphereBufferGeometry,
+  SphereGeometry,
   // LineCurve3,
   // Line,
   // BufferGeometry,
@@ -20,7 +20,7 @@ import {
   Mesh,
   // MeshBasicMaterial,
   MeshPhongMaterial,
-  BoxBufferGeometry,
+  // BoxBufferGeometry,
   // DoubleSide,
   // BufferAttribute,
   // Material,
@@ -112,7 +112,7 @@ class TA_Scene {
     camera2 = new PerspectiveCamera(
       50,
       document.getElementById("secondCanvas").clientWidth /
-      document.getElementById("secondCanvas").clientHeight,
+        document.getElementById("secondCanvas").clientHeight,
       0.01,
       10000
     );
@@ -335,7 +335,7 @@ class TA_Scene {
     // scene.add( testBuffer );
     // this.selectableObjects.push( testBuffer );
 
-    // let sphereGeometry = new SphereBufferGeometry(0.5, 4, 4);
+    // let sphereGeometry = new SphereGeometry(0.5, 4, 4);
     let material = new MeshPhongMaterial({
       color: new Color("green"),
       transparent: true,
@@ -348,7 +348,7 @@ class TA_Scene {
     // let sphere = new Mesh( sphereGeometry, material);
     // scene.add( sphere );
 
-    let sphereGeometry = new SphereBufferGeometry(20, 30, 30);
+    let sphereGeometry = new SphereGeometry(20, 30, 30);
     let testSphere = new Mesh(sphereGeometry, material);
     scene.add(testSphere);
     this.selectableObjects.push(testSphere);
@@ -740,7 +740,7 @@ class TA_Scene {
       }
 
       if (
-        scope.ta_State.appMode.meshEdit &&
+        scope.ta_State.appMode?.meshEdit &&
         scope.meshEditObject.mode === "Faces"
       ) {
         if (scope.meshEditObject.faceHighlighting) {

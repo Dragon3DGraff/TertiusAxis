@@ -38,15 +38,16 @@ module.exports = {
   },
   devtool: "inline-source-map",
   devServer: {
-    contentBase: path.join(__dirname, "dist"),
+    static: path.join(__dirname, "dist"),
     hot: isDev,
     historyApiFallback: true,
-    proxy: {
-      "/api": {
-        target: "http://localhost:5000",
+    proxy: [
+      {
+        context: ["/api"],
+        target: "http://localhost:3000",
         secure: false,
       },
-    },
+    ],
   },
   optimization: optimization(),
   plugins: [
@@ -93,6 +94,7 @@ module.exports = {
             options: {
               hmr: isDev,
               reloadAll: true,
+              fallback: { url: require.resolve("url/") },
             },
           },
           "css-loader",

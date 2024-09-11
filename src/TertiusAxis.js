@@ -16,16 +16,17 @@ import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import MatcapImages from "./UI/MatcapImages";
 import { Http } from "./Http.js";
-import { TA_State } from "./TA_State";
+import { ta_State } from "./State/State";
 import EventEmitter from "./EventEmitter.js";
 import { loader } from "./loader.js";
 
-const ta_State = new TA_State();
+console.log('погнали');
+
 const http = new Http(ta_State);
 let matcapImages = new MatcapImages();
 const history = createBrowserHistory();
 
-let events = new EventEmitter();
+export const events = new EventEmitter();
 events.onEvent("isLoading", () => {
   if (ta_State.state["isLoading"]) {
     loader.show();

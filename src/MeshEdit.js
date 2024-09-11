@@ -9,7 +9,7 @@ import {
   Vector3,
   BufferGeometry,
   BufferAttribute,
-  SphereBufferGeometry,
+  SphereGeometry,
   Mesh,
   MeshBasicMaterial,
   DoubleSide,
@@ -182,7 +182,7 @@ class MeshEdit {
   }
 
   addSpheresToVertices(mesh, vertices) {
-    let sphereGeometry = new SphereBufferGeometry(0.3, 3, 2);
+    let sphereGeometry = new SphereGeometry(0.3, 3, 2);
     let material = new MeshBasicMaterial({ color: new Color("red") });
 
     let group = new Group();
@@ -204,7 +204,7 @@ class MeshEdit {
     let group = new Group();
     group.name = "FaceHelperGroup";
 
-    let sphereGeometry = new SphereBufferGeometry(0.2, 3, 2);
+    let sphereGeometry = new SphereGeometry(0.2, 3, 2);
     let material = new MeshBasicMaterial({
       color: new Color("lightgrey"),
       transparent: true,
@@ -258,7 +258,7 @@ class MeshEdit {
   }
 
   addTriangles(mesh, points) {
-    let sphereGeometry = new SphereBufferGeometry(0.2, 3, 2);
+    let sphereGeometry = new SphereGeometry(0.2, 3, 2);
     let material = new MeshBasicMaterial({ color: new Color("lightgrey") });
 
     let triangleNumber = 0;
