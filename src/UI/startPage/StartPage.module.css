@@ -1,7 +1,21 @@
 .startPage {
+    position: absolute;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100vw;
     height: 100vh;
+    gap: 16px;
+}
+
+.startButton {
+    padding: 8px 16px;
+    border-radius: 16px;
+    border: 1px solid;
+    cursor: pointer;
+}
+
+.startButton:hover {
+    background-color: rgb(211, 211, 211);
 }

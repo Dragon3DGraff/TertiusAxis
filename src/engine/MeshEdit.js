@@ -13,7 +13,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   DoubleSide,
-  FaceColors,
+  // FaceColors,
 } from "three";
 import { TA_Entities } from "./Entities/TA_Entities.js";
 import { TA_Scene } from "./TA_Scene.js";

@@ -2,16 +2,13 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 
-import React from "react";
 import {
   createBrowserRouter,
   RouterProvider,
-  Route,
-  Link,
 } from "react-router-dom";
-import { TertiusAxis } from "./engine/TertiusAxis";
+import { TertiusAxis } from "./engine/TertiusAxis.js";
 import { createRoot } from "react-dom/client";
-import { StartPage } from "./UI/startPage/StartPage.jsx";
+import { StartPage } from "./UI/startPage/StartPage";
 
 // import Authentication from "./UI/Authentication/Authentication";
 // import AuthInMainMenu from "./UI/Authentication/AuthInMainMenu";
@@ -19,12 +16,18 @@ import { StartPage } from "./UI/startPage/StartPage.jsx";
 // import MatcapImages from "./UI/MatcapImages.js";
 
 const container = document.getElementById("UI");
-const root = createRoot(container);
+const root = createRoot(container!);
+
+const onStart=() =>{
+  console.log("onStart");
+  const editor = new TertiusAxis()
+  editor.init();
+};
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <StartPage />,
+    element: <StartPage onStart={onStart} />,
   },
 ]);
 
