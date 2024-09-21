@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import logo from "../../_Resources/Logo/logo5.jpg";
 import styles from "./StartPage.module.css";
+import AuthInMainMenu from "../Authentication/AuthInMainMenu";
 
 type Props = {
   onStart: () => void;
@@ -18,7 +19,8 @@ export const StartPage = ({ onStart }: Props) => {
     onStart();
   };
 
-  if (!isOpened) return null;
+  if (!isOpened) return <AuthInMainMenu />;
+
   return (
     <div className={styles.startPage}>
       <img src={logo} alt="Logo" />

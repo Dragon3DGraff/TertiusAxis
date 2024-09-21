@@ -22,7 +22,8 @@ function createMainMenu(ta_scene) {
   mainMenu.className = "mainMenu";
   mainMenu.id = "mainMenu";
   // mainMenu.style.height = '18px';
-  document.body.appendChild(mainMenu);
+   const editorContainer = document.getElementById("TertiusAxisEditor");
+  editorContainer.appendChild(mainMenu);
 
   // let author = ta_UI.addElement( mainMenu, 'p', 'author Dragon3DGraff', '');
   // author.className = 'author';

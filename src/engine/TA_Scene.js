@@ -141,10 +141,12 @@ class TA_Scene {
     sceneGrid.initBigGrid(scene);
     // sceneGrid.initSmallGrid(scene);
 
-    document.body.appendChild(renderer.domElement);
+    const editorContainer = document.getElementById("TertiusAxisEditor");
+
+    editorContainer.appendChild(renderer.domElement);
 
     document.getElementById("secondCanvas").appendChild(renderer2.domElement);
-    document.body.appendChild(labelRenderer.domElement);
+    editorContainer.appendChild(labelRenderer.domElement);
 
     this.orbitControls = new OrbitControls(camera, labelRenderer.domElement);
     this.transformControls = new TransformControls(

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Switch, Route } from "react-router-dom";
-import "./Authentication.css";
+import styles from "./Authentication.module.css";
 import Registration from "./Registration";
 import Login from "./Login";
 
@@ -12,7 +12,7 @@ export default function Authentication({ history }) {
 
   return (
     <div
-      className="registration-mainMenu"
+      className={styles.registration_mainMenu}
       style={hidden ? { height: "0px" } : { height: "100%" }}
     >
       <Switch>

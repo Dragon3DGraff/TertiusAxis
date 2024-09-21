@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { TA_State } from "../../TA_State.js";
-import EventEmitter from "../../EventEmitter.js";
-import UserMenu from "../Personal/UserMenu.js";
+import { TA_State } from "../../engine/TA_State.js";
+import EventEmitter from "../../engine/EventEmitter.js";
+import UserMenu from "../Personal/UserMenu.jsx";
+
+import styles from "./Authentication.module.css";
 
 let ta_State = new TA_State();
 
@@ -24,16 +26,16 @@ export default function AuthInMainMenu() {
   const unlogged = (
     <div>
       <NavLink to="/Login">
-        <span className="authentication-link">Login</span>
+        <span className={styles.authentication_link}>Login</span>
       </NavLink>
       <NavLink to="/registration">
-        <span className="authentication-link">Registration</span>
+        <span className={styles.authentication_link}>Registration</span>
       </NavLink>
     </div>
   );
 
   let loggedIn = (
-    <div className="authentication-welcome">
+    <div className={styles.authentication_welcome}>
       Welcome,
       <span onClick={showUsermenu} className="authentication-link">
         {ta_State.state.userName}
@@ -42,7 +44,7 @@ export default function AuthInMainMenu() {
   );
 
   return (
-    <div className="auth-in-mainMenu">
+    <div className={styles.auth_in_mainMenu}>
       {isAuth ? loggedIn : unlogged}
       {isAuth && userMenuVisible && (
         <UserMenu

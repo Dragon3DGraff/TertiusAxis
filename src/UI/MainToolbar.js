@@ -18,7 +18,8 @@ function createMainToolbar() {
 
   mainToolbar.className = "mainToolbar";
   mainToolbar.id = "mainToolbar";
-  document.body.appendChild(mainToolbar);
+  const editorContainer = document.getElementById("TertiusAxisEditor");
+  editorContainer.appendChild(mainToolbar);
 
   let hideButton = document.createElement("div");
   hideButton.className = "hideButton";
