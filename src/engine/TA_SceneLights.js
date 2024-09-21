@@ -2,11 +2,7 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 
-import {
-  AmbientLight,
-  SpotLight,
-  Color,
-} from "../node_modules/three/build/three.module.js";
+import { AmbientLight, SpotLight, Color } from "three";
 class TA_SceneLights {
   constructor() {
     this.ambientLight = new AmbientLight(new Color("white"), 0.5);

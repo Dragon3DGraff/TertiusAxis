@@ -29,7 +29,7 @@ const filename = (ext) => (isDev ? `[name].${ext}` : `[name].[hash].${ext}`);
 module.exports = {
   mode: "development",
   entry: {
-    TertiusAxis: "./src/TertiusAxis.js",
+    TertiusAxis: "./src/index.js",
   },
   output: {
     filename: filename("js"),

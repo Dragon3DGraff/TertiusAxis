@@ -8,7 +8,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   Color,
-} from "../../node_modules/three/build/three.module.js";
+} from "three";
 
 export function createCustomGeometry(scene) {
   console.log("Creating Custom Geometry");

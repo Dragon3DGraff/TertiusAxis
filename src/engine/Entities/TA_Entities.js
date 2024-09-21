@@ -6,8 +6,9 @@ import * as THREE from "three";
 
 // import { BoxBufferGeometry } from "../../node_modules/three/build/three.module.js";
 
-import { CSS2DObject } from "../../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
-import { TA_UI } from "../UI/TA_UI.js";
+import { CSS2DObject } from "../../../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
+import { TA_UI } from "../../UI/TA_UI.js";
+
 
 class TA_Entities {
   constructor() {

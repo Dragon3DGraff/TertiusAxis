@@ -1,7 +1,8 @@
 /**
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
-import { TA_Entities } from "./Entities/TA_Entities.js";
+
+import { TA_Entities } from "./engine/Entities/TA_Entities.js";
 import { TA_UI } from "./UI/TA_UI.js";
 
 export function switchOnMoveMode(taScene) {

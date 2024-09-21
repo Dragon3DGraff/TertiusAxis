@@ -14,10 +14,10 @@ import {
   MeshBasicMaterial,
   DoubleSide,
   FaceColors,
-} from "../node_modules/three/build/three.module.js";
+} from "three";
 import { TA_Entities } from "./Entities/TA_Entities.js";
 import { TA_Scene } from "./TA_Scene.js";
-import { TA_UI } from "./UI/TA_UI.js";
+import { TA_UI } from "../UI/TA_UI.js";
 import { findBaryCenter } from "./Calculations.js";
 
 class MeshEdit {

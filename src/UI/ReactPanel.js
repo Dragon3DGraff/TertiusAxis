@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import AddPanel from "./AddPanel/AddPanel";
 import MatcabCard from "./AddPanel/MaterialsTab/Matcap/MatcabCard.js";
-import { TA_State } from "../TA_State";
+
 import DebuggingPanel from "./DebuggingPanel";
+import { TA_State } from "../engine/TA_State.js";
 
 export const MatcapContext = React.createContext();
 

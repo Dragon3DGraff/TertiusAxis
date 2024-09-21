@@ -2,8 +2,8 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 
+import { TA_State } from "../engine/TA_State.js";
 import { TA_UI } from "./TA_UI.js";
-import { TA_State } from "../TA_State";
 
 function fillGeneralParametersTab(entity) {
   let ta_UI = new TA_UI();

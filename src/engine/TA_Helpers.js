@@ -10,7 +10,7 @@ import {
   DoubleSide,
   Mesh,
   CameraHelper,
-} from "../node_modules/three/build/three.module.js";
+} from "three";
 import { TA_Entities } from "./Entities/TA_Entities.js";
 
 let TA_Helpers = function () {

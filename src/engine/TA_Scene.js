@@ -27,11 +27,11 @@ import {
   // Texture,
   TextureLoader,
   // sRGBEncoding,
-} from "../node_modules/three/build/three.module.js";
+} from "three";
 
-import { CSS2DRenderer } from "../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js";
-import { OrbitControls } from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
-import { TransformControls } from "../node_modules/three/examples/jsm/controls/TransformControls.js";
+import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { TransformControls } from "three/examples/jsm/controls/TransformControls.js";
 
 //if you want to use this see bug fix in Action.js (function switchDragMode)
 // import { DragControls } from '../node_modules/three/examples/jsm/controls/DragControls.js';
@@ -41,7 +41,7 @@ import { TA_Entities } from "./Entities/TA_Entities.js";
 import { TA_SceneLights } from "./TA_SceneLights.js";
 import { TA_Helpers } from "./TA_Helpers.js";
 import { TA_SceneCamera } from "./TA_SceneCamera.js";
-import * as Actions from "./Actions.js";
+import * as Actions from "../Actions.js";
 // import { MeshEdit } from "./MeshEdit.js";
 import { findBaryCenter } from "./Calculations.js";
 import { TA_State } from "./TA_State.js";
@@ -350,7 +350,7 @@ class TA_Scene {
 
     let sphereGeometry = new SphereGeometry(20, 30, 30);
     let testSphere = new Mesh(sphereGeometry, material);
-    scene.add(testSphere);
+    // scene.add(testSphere);
     this.selectableObjects.push(testSphere);
     testSphere.position.set(25, 0, 0);
 

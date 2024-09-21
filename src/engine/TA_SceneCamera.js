@@ -1,11 +1,7 @@
 /**
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
-import {
-  PerspectiveCamera,
-  Vector3,
-  Line3,
-} from "../node_modules/three/build/three.module.js";
+import { PerspectiveCamera, Vector3, Line3 } from "three";
 
 class TA_SceneCamera {
   constructor() {

@@ -11,7 +11,7 @@ import {
   Raycaster,
   Vector2,
   Vector3,
-} from "../node_modules/three/build/three.module.js";
+} from "three";
 
 var DragControls = function (_objects, _camera, _domElement) {
   var _plane = new Plane();
