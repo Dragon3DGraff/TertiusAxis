@@ -3,7 +3,7 @@
  */
 
 import { TA_UI } from "./TA_UI.js";
-import { Color } from "../../node_modules/three/build/three.module.js";
+import { Color } from "three";
 
 function fillMaterialParametersTab(entity) {
   let ta_UI = new TA_UI();

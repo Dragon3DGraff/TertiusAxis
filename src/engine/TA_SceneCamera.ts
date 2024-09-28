@@ -4,6 +4,7 @@
 import { PerspectiveCamera, Vector3, Line3 } from "three";
 
 class TA_SceneCamera {
+ public camera: PerspectiveCamera;
   constructor() {
     this.camera = new PerspectiveCamera(
       50,
@@ -12,16 +13,12 @@ class TA_SceneCamera {
       10000
     );
     this.camera.position.z = 50;
-    this.camera.position.y = 50;
+    this.camera.position.y = 40;
     this.camera.position.x = 50;
     this.camera.lookAt(0, 0, 0);
   }
 
-  initCamera() {
-    return this.camera;
-  }
-
-  getWorldSizeOfScreen(camera, point) {
+  getWorldSizeOfScreen(camera: PerspectiveCamera, point: Vector3) {
     let cameraDirection = new Vector3();
     camera.getWorldDirection(cameraDirection);
     let cameraPosition = new Vector3();

@@ -1,0 +1,10 @@
+.container {
+    width: 300px;
+    height: fit-content;
+    background-color: black;
+    /* padding: 8px; */
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+}
+

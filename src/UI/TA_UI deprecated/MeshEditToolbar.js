@@ -4,13 +4,12 @@
 
 import { TA_UI } from "./TA_UI.js";
 
-import { MeshEdit } from "../engine/MeshEdit.js";
+import { MeshEdit } from "../../engine/MeshEdit.js";
 
-import { switchEditVertices } from "../Actions.js";
-import { TA_State } from "../engine/TA_State.js";
-import { TA_Entities } from "../engine/Entities/TA_Entities.js";
-import { TA_Scene } from "../engine/TA_Scene.js";
-
+import { switchEditVertices } from "../../Actions.js";
+import { TA_State } from "../../engine/TA_State.js";
+import { TA_Entities } from "../../engine/Entities/TA_Entities.js";
+import { TA_Scene } from "../../engine/TA_Scene.js";
 
 function createMeshEditToobar() {
   let ta_UI = new TA_UI();

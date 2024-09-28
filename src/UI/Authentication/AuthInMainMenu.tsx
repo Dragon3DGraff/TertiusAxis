@@ -1,7 +1,7 @@
 import  { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { TA_State } from "../../engine/TA_State.js";
-import EventEmitter from "../../engine/EventEmitter.js";
+import {EventEmitter} from "../../engine/EventEmitter.js";
 import UserMenu from "../Personal/UserMenu.jsx";
 
 import styles from "./Authentication.module.css";

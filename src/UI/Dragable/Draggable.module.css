@@ -1,0 +1,29 @@
+.container {
+    /* z-index: 999; */
+    position: absolute;
+    /* width: 300px;
+    height: 350px; */
+    font-size: 16px;
+    color: aqua;
+    text-align: center;
+    background-color: lightslategray;
+    left: 0;
+    top: 0;
+    overflow: auto;
+}
+
+.dragLine {
+    height: 20px;
+    width: 100%;
+    background-color: black;
+    display: flex;
+}
+
+.container:hover {
+    /* background-color: brown; */
+    cursor: grab;
+}
+
+.closeButton{
+    margin-left: auto;
+}

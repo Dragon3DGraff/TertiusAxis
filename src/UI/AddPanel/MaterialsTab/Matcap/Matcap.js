@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./Matcap.css";
-import { MatcapContext } from "../../../ReactPanel";
+import { MatcapContext } from "../../../TA_UI deprecated/ReactPanel";
 import { TA_State } from "../../../../engine/TA_State";
-
 
 let headers = {
   MatCaps: "Select Matcap",

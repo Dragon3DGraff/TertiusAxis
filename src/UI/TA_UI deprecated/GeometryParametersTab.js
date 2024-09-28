@@ -4,9 +4,8 @@
 
 import { TA_UI } from "./TA_UI.js";
 
-import { TA_State } from "../engine/TA_State.js";
-import { TA_Entities } from "../engine/Entities/TA_Entities.js";
-
+import { TA_State } from "../../engine/TA_State.js";
+import { TA_Entities } from "../../engine/Entities/TA_Entities.js";
 
 function fillGeometryParametersTab(entity) {
   let ta_UI = new TA_UI();

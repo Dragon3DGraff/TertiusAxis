@@ -2,30 +2,40 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 
-import { useState } from "react";
+import { useContext } from "react";
 
 import logo from "../../_Resources/Logo/logo5.jpg";
 import styles from "./StartPage.module.css";
-import AuthInMainMenu from "../Authentication/AuthInMainMenu";
+// import AuthInMainMenu from "../Authentication/AuthInMainMenu";
+import { EditorMode } from "../../engine/types";
+import { TertiusAxisContext } from "../contexts/TertiusAxisContext";
+import { UI } from "../UI";
 
 type Props = {
-  onStart: () => void;
+  onStart: (mode: EditorMode) => void;
 };
 export const StartPage = ({ onStart }: Props) => {
-  const [isOpened, setIsOpened] = useState(true);
-
-  const onClickHandler = () => {
-    setIsOpened(false);
-    onStart();
+  const editor = useContext(TertiusAxisContext);
+  const onStartHandler = (mode: EditorMode) => {
+    onStart(mode);
   };
 
-  if (!isOpened) return <AuthInMainMenu />;
-
-  return (
+  return editor ? (
+    <UI />
+  ) : (
     <div className={styles.startPage}>
       <img src={logo} alt="Logo" />
-      <button className={styles.startButton} onClick={onClickHandler}>
+      <button
+        className={styles.startButton}
+        onClick={() => onStartHandler(EditorMode["3D"])}
+      >
         3D editor
+      </button>
+      <button
+        className={styles.startButton}
+        onClick={() => onStartHandler(EditorMode["2D"])}
+      >
+        2D editor
       </button>
       {/* <p>
         author

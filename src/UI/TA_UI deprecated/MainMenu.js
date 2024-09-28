@@ -2,9 +2,9 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 
-import { ObjectLoader } from "../../node_modules/three/build/three.module.js";
-import { GLTFExporter } from "../../node_modules/three/examples/jsm/exporters/GLTFExporter.js";
-import { TA_Entities } from "../engine/Entities/TA_Entities.js";
+import { ObjectLoader } from "three";
+import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter.js";
+import { TA_Entities } from "../../engine/Entities/TA_Entities.js";
 
 import { TA_UI } from "./TA_UI.js";
 
@@ -22,7 +22,7 @@ function createMainMenu(ta_scene) {
   mainMenu.className = "mainMenu";
   mainMenu.id = "mainMenu";
   // mainMenu.style.height = '18px';
-   const editorContainer = document.getElementById("TertiusAxisEditor");
+  const editorContainer = document.getElementById("TertiusAxisEditor");
   editorContainer.appendChild(mainMenu);
 
   // let author = ta_UI.addElement( mainMenu, 'p', 'author Dragon3DGraff', '');
@@ -103,27 +103,9 @@ function createMainMenu(ta_scene) {
     }
   });
 
-  ta_UI.addElement(
-    fileMenu,
-    "label",
-    "Clear Scene",
-    "",
-    clearScene
-  );
-  ta_UI.addElement(
-    fileMenu,
-    "label",
-    "Save to disk",
-    "",
-    saveSceneToDisk
-  );
-  ta_UI.addElement(
-    fileMenu,
-    "label",
-    "Export glTF",
-    "",
-    exportGLTF
-  );
+  ta_UI.addElement(fileMenu, "label", "Clear Scene", "", clearScene);
+  ta_UI.addElement(fileMenu, "label", "Save to disk", "", saveSceneToDisk);
+  ta_UI.addElement(fileMenu, "label", "Export glTF", "", exportGLTF);
 
   ta_UI.createFileSelectionButton(
     fileMenu,
@@ -252,16 +234,10 @@ function createMainMenu(ta_scene) {
   let editMenu = ta_UI.createContainer("editMenu", mainMenu);
   editMenu.className = "subMainMenu";
 
-  ta_UI.addElement(
-    editMenu,
-    "label",
-    "Clone object",
-    "",
-    function () {
-      let ta_entities = new TA_Entities();
-      ta_entities.cloneObject(ta_scene);
-    }
-  );
+  ta_UI.addElement(editMenu, "label", "Clone object", "", function () {
+    let ta_entities = new TA_Entities();
+    ta_entities.cloneObject(ta_scene);
+  });
   editMenu.addEventListener("mouseout", function (e) {
     if (!e.relatedTarget || e.relatedTarget.offsetParent.id !== "editMenu") {
       this.style.visibility = "hidden";

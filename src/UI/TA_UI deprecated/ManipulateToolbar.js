@@ -4,8 +4,8 @@
 
 import { TA_UI } from "./TA_UI.js";
 // import { TA_Entities } from "../Entities/TA_Entities.js";
-import * as Actions from "../Actions.js";
-import { ta_State } from "../State/State";
+import * as Actions from "../../Actions.js";
+import { ta_State } from "../../State/State.js";
 
 function createManipulateToolbar(taScene) {
   ta_State.eventEmitter.onEvent(
@@ -95,7 +95,7 @@ function createManipulateToolbar(taScene) {
   );
 
   function switchMode(selectedRadio) {
-   if (selectedRadio === 'none') return
+    if (selectedRadio === "none") return;
     let selectedButton = selectedRadio.target.id;
 
     ta_State.changeAppState("mode", "select");

@@ -5,7 +5,7 @@
 import { TA_UI } from "./TA_UI.js";
 // import cubeIco from "../ico/cubeico.png";
 // import sphereIco from "../ico/sphereico.png";
-import { ta_State } from "../State/State";
+import { ta_State } from "../../State/State.js";
 
 function createAddToSceneToolbar(taScene) {
   ta_State.eventEmitter.onEvent(

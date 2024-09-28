@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./DebuggingPanel.css";
 import { TA_State } from "../TA_State";
-import EventEmitter from "../EventEmitter";
+import {EventEmitter} from "../EventEmitter";
 
 let eventEmitter = new EventEmitter();
 let ta_State = new TA_State();

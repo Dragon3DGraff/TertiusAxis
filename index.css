@@ -1,0 +1,48 @@
+body {
+    padding: 0;
+    margin: 0;
+    color: rgba(127, 255, 255, 1);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+button {
+    color: rgba(127, 255, 255, 1);
+    background-color: rgb(51, 51, 51);
+    border-width: 0.1px;
+    border-color: snow;
+    font-size: 14px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    cursor: pointer;
+}
+
+p {
+    padding: 0;
+    margin: 0;
+}
+
+.Layout {
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+
+}
+
+.TertiusAxisEditor {
+    width: 100%;
+    height: 100%;
+}
+
+.TertiusAxisEditor canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.UI {
+    position: absolute;
+    z-index: 3;
+    background-color: white;
+}

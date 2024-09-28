@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 	<title>TertiusAxis</title>
@@ -7,8 +7,26 @@
 	<meta charset="utf-8">
 	<link rel="icon" type="image/png" href="./logo5_Small5.png" />
 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="theme-color" content="#fff" />
+
+	<meta name="description" content="3D-editor, 2D-editor" />
+	<meta name="keywords" content="3D-editor, 2D-editor" />
+	<meta name="Author" content="Dragon3DGraff" />
+	<meta name="Copyright" content="Dragon3DGraff" />
+	<meta property="og:title" content="TertiusAxis" />
+	<meta property="og:description" content="3D-editor, 2D-editor" />
+	<!-- <meta property="og:image" content="https://know-it-all.ru/nez.png" /> -->
+	<!-- <meta property="og:url" content="https://know-it-all.ru/" /> -->
+
+	<!-- <meta name="twitter:card" content="summary_large_image" /> -->
 
 
+	<meta property="og:site_name" content="TertiusAxis" />
+	<meta name="twitter:image:alt" content="3D-editor, 2D-editor" />
+
+
+	<link rel="stylesheet" href="index.css">
 </head>
 
 <body>
@@ -32,10 +50,15 @@
 	</noscript> -->
 	<!-- /Yandex.Metrika counter -->
 
-	<div id="TertiusAxisEditor" class="TertiusAxisEditor"></div>
-	<div class="secondCanvas" id="secondCanvas"></div>
-	<div id="MatCab"></div>
-	<div id="UI" class="UI"></div>
+	<div class="Layout">
+		<div id="TertiusAxisEditor" class="TertiusAxisEditor">
+			<!-- <div class="secondCanvas" id="secondCanvas"></div> -->
+		</div>
+
+		<!-- <div id="MatCab"></div> -->
+		<div id="UI" class="UI"></div>
+
+	</div>
 	<script type="module" src='./src/main.tsx'></script>
 
 </body>
