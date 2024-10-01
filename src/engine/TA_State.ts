@@ -3,11 +3,12 @@
  */
 
 import { EventEmitter } from "./EventEmitter";
+import { EventType, StateMode } from "./types";
 
 export class TA_State extends EventEmitter {
   state: Record<string, any>;
-  appMode: { mode: string; meshEdit: boolean; action: string; entity: null; };
-  transformMode: { mode: string; transformControlsMode: string; };
+  appMode: { mode: string; meshEdit: boolean; action: string; entity: null };
+  transformMode: { mode: string; transformControlsMode: string };
   constructor() {
     super();
     // // singleton
@@ -35,15 +36,14 @@ export class TA_State extends EventEmitter {
     // this.meshEditMode = {};
   }
 
-  changeAppState(mode: string, state: any) {
-    this._updateState(mode, state);
-    this.emitEvent(mode, state);
+  changeAppState(mode: StateMode, data: EventType["data"]) {
+    this.state[mode] = data;
+    this.emitEvent("appStateChanged", { mode, data });
   }
 
-  _updateState(mode: string, state: string) {
-    this.state[mode] = state;
-    this.emitEvent("appStateChanged", mode + " " + state);
-  }
+  // private updateState(mode: States, state: string) {
+
+  // }
 
   // setAppMode ( appMode ) {
 

@@ -5,7 +5,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { TertiusAxis } from "./engine/TertiusAxis";
+import { TertiusAxis } from "./engine";
 import { createRoot } from "react-dom/client";
 import { StartPage } from "./UI/startPage/StartPage";
 import "./main.css";

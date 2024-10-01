@@ -1,3 +1,4 @@
+import { CreatePrimitivesToolbar } from "../CreatePrimitivesToolbar/CreatePrimitivesToolbar";
 import { Draggable } from "../Dragable/Draggable";
 import styles from "./MainToolbar.module.css";
 
@@ -11,7 +12,9 @@ export const MainToolbar = () => {
           <button>Move</button>
           <button>Rotate</button>
           <button>Scale</button>
+          <button>Drag</button>
         </div>
+        <CreatePrimitivesToolbar />
         <div>Parameters</div>
         <div style={{ height: "300px" }}></div>
       </div>

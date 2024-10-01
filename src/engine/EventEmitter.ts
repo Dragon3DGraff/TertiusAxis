@@ -1,3 +1,5 @@
+import { EventType } from "./types";
+
 export class EventEmitter {
   private _events: Record<string, Array<(evt: any) => void>>;
   constructor() {
@@ -30,12 +32,12 @@ export class EventEmitter {
     );
   }
 
-  emitEvent(name: string, data: any) {
+  emitEvent(name: string, data: EventType) {
     if (!this._events[name]) {
-      console.warn(`No any listeners on event ${name}`);
+      // console.warn(`No any listeners on event ${name}`);
       // throw new Error(`Can't emit an event. Event ${name} doesn't exist`);
     } else {
-      this._events[name].forEach((callback: (evt: any) => void) =>
+      this._events[name].forEach((callback: (evt: EventType) => void) =>
         callback(data)
       );
     }

@@ -63,11 +63,14 @@ export class TertiusAxis extends EventEmitter {
   ) {
     super();
     this.setTarget(target);
+    if (!this.target) {
+      throw new Error("Impossible to create editor: No target canvas");
+    }
+
     this.state = new TA_State();
 
     this.mode = mode;
     this.taScene = new TA_Scene(this.target);
-    // this.taScene = taScene;
   }
 
   private setTarget(target: string | HTMLDivElement | HTMLCanvasElement) {
@@ -97,16 +100,5 @@ export class TertiusAxis extends EventEmitter {
 
       return;
     }
-  }
-
-  init() {
-    // let ta_UI = new TA_UI();
-    // let taScene = new TA_Scene(ta_UI);
-    // this.taScene = taScene;
-    // ta_UI.init(taScene);
-    // taScene.createScene();
-    // if (ta_UI.fillMainToolbar(taScene)) {
-    //   console.log("TertiusAxis loaded");
-    // }
   }
 }

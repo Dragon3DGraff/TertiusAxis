@@ -46,8 +46,6 @@ export const Draggable = ({
       return;
     }
     let blockStyle = getComputedStyle(refContainer.current);
-    console.log(blockStyle.left);
-    console.log(blockStyle.top);
     let blockOffset = {
       x: Number.parseFloat(blockStyle.left.replace("px", "")),
       y: Number.parseFloat(blockStyle.top.replace("px", "")),
