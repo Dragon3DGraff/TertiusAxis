@@ -1,20 +1,12 @@
-import { EventType } from "./types";
+import { EventType, StateMode } from "./types";
 
 export class EventEmitter {
-  private _events: Record<string, Array<(evt: any) => void>>;
+  private _events: Record<string, Array<(evt: EventType["data"]) => void>>;
   constructor() {
-    // singleton
-    // if (EventEmitter.exist) {
-    //   return EventEmitter.instance;
-    // }
-    // EventEmitter.instance = this;
-    // EventEmitter.exist = true;
-    // //---
-
     this._events = {};
   }
 
-  onEvent(name: string | number, listener: (evt: any) => void) {
+  onEvent(name: StateMode, listener: (evt: EventType["data"]) => void) {
     if (!this._events[name]) {
       this._events[name] = [];
     }
@@ -22,7 +14,10 @@ export class EventEmitter {
     this._events[name].push(listener);
   }
 
-  removelistener(name: string | number, listenerToRemove: (evt: any) => void) {
+  removelistener(
+    name: StateMode,
+    listenerToRemove: (evt: EventType["data"]) => void
+  ) {
     if (!this._events[name]) {
       console.warn(`Can't remove a listener. Event "${name} doesn't exist`);
     }
@@ -32,12 +27,12 @@ export class EventEmitter {
     );
   }
 
-  emitEvent(name: string, data: EventType) {
+  emitEvent(name: StateMode, data: EventType["data"]) {
     if (!this._events[name]) {
       // console.warn(`No any listeners on event ${name}`);
       // throw new Error(`Can't emit an event. Event ${name} doesn't exist`);
     } else {
-      this._events[name].forEach((callback: (evt: EventType) => void) =>
+      this._events[name].forEach((callback: (evt: EventType["data"]) => void) =>
         callback(data)
       );
     }

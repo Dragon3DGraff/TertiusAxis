@@ -92,6 +92,7 @@ export class TA_Scene {
     const ta_sHelpers = new TA_Helpers(this.scene);
     ta_sHelpers.createSceneGrids();
     ta_sHelpers.initAll();
+    this.addListeners();
 
     // this.render();
     const animate = () => {
@@ -106,6 +107,29 @@ export class TA_Scene {
     this.renderer.render(this.scene, this.camera);
     // renderer2.render(scene, camera2);
     this.labelRenderer.render(this.scene, this.camera);
+  }
+
+  private onWindowResize() {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    // camera2.aspect =
+    //   document.getElementById("secondCanvas").clientWidth /
+    //   document.getElementById("secondCanvas").clientHeight;
+    // camera2.updateProjectionMatrix();
+    // renderer2.setSize(
+    //   document.getElementById("secondCanvas").clientWidth,
+    //   document.getElementById("secondCanvas").clientHeight
+    // );
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.labelRenderer.setSize(window.innerWidth, window.innerHeight);
+  }
+
+  private addListeners() {
+    window.addEventListener("resize", this.onWindowResize, false);
+  }
+
+  dispose() {
+    window.removeEventListener("resize", this.onWindowResize, false);
   }
 }
 

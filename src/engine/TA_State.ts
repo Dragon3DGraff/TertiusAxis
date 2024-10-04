@@ -38,7 +38,7 @@ export class TA_State extends EventEmitter {
 
   changeAppState(mode: StateMode, data: EventType["data"]) {
     this.state[mode] = data;
-    this.emitEvent("appStateChanged", { mode, data });
+    this.emitEvent(mode, data);
   }
 
   // private updateState(mode: States, state: string) {

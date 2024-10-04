@@ -26,8 +26,10 @@ p {
     padding: 0;
     margin: 0;
     position: relative;
-    display: flex;
+
     justify-content: center;
+    display: block;
+    overflow: hidden;
 
 }
 
@@ -39,10 +41,30 @@ p {
 .TertiusAxisEditor canvas {
     width: 100%;
     height: 100%;
+    padding: 0;
+    margin: 0;
+    display: block;
 }
 
 .UI {
     position: absolute;
     z-index: 3;
     background-color: white;
+    top: 0;
+    left: 0;
+}
+
+.coordsLabel {
+    position: absolute;
+    background-color: #213547;
+    color: rgba(127, 255, 255, 1);
+    font-size: x-small;
+    left: -1000px;
+    top: 0;
+    text-align: center;
+    padding: auto;
+    border-radius: 8px;
+    user-select: none;
+
+    /* border: 1px solid #08fa41; */
 }

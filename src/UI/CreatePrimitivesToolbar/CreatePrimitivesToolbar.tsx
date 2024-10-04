@@ -67,7 +67,7 @@ export const CreatePrimitivesToolbar = () => {
   );
 
   const onClickHadler = (type: string) => {
-    changeAppState(StateMode.ADD_PRIMITIVE, type);
+    changeAppState(StateMode.ADD_PRIMITIVE, { primitiveName: type });
   };
 
   return (
@@ -81,7 +81,7 @@ export const CreatePrimitivesToolbar = () => {
               id={item.type}
               onChange={() => onClickHadler(item.type)}
               value={item.type}
-              checked={item.type === stateValue}
+              checked={item.type === stateValue?.primitiveName}
             />
             <label htmlFor={item.type}>{item.text}</label>
           </div>

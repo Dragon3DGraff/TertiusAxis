@@ -4,6 +4,7 @@
 
 import { EventEmitter } from "./EventEmitter.js";
 import { TA_Scene } from "./TA_Scene.js";
+import { TA_Scene2D } from "./2D/TA_Scene2D.js";
 // import "./style.css";
 
 // import { TA_UI } from "../UI/TA_UI.js";
@@ -55,7 +56,7 @@ import { EditorMode } from "./types";
 export class TertiusAxis extends EventEmitter {
   state: TA_State;
   target: HTMLCanvasElement | null = null;
-  taScene: TA_Scene;
+  taScene: TA_Scene | TA_Scene2D;
   mode: EditorMode;
   constructor(
     target: string | HTMLDivElement | HTMLCanvasElement,
@@ -70,7 +71,12 @@ export class TertiusAxis extends EventEmitter {
     this.state = new TA_State();
 
     this.mode = mode;
-    this.taScene = new TA_Scene(this.target);
+
+    if (mode === EditorMode["3D"]) {
+      this.taScene = new TA_Scene(this.target);
+    } else {
+      this.taScene = new TA_Scene2D(this.target);
+    }
   }
 
   private setTarget(target: string | HTMLDivElement | HTMLCanvasElement) {

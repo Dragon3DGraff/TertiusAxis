@@ -5,6 +5,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "lodash.debounce": "^4.0.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-error-boundary": "^4.0.13",
@@ -13,6 +14,7 @@
     "url": "^0.11.4"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
     "@types/three": "^0.169.0",

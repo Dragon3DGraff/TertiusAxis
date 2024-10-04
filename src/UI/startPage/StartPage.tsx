@@ -2,7 +2,7 @@
  * @author Dragon3DGraff / http://dragon3dgraff.ru/
  */
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 import logo from "../../_Resources/Logo/logo5.jpg";
 import styles from "./StartPage.module.css";
@@ -16,12 +16,13 @@ type Props = {
 };
 export const StartPage = ({ onStart }: Props) => {
   const editor = useContext(TertiusAxisContext);
+
   const onStartHandler = (mode: EditorMode) => {
     onStart(mode);
   };
 
   return editor ? (
-    <UI />
+    <UI mode={editor.mode} />
   ) : (
     <div className={styles.startPage}>
       <img src={logo} alt="Logo" />

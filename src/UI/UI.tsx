@@ -1,12 +1,16 @@
+import { EditorMode } from "../engine/types";
 import { MainMenu } from "./MainMenu/MainMenu";
 import { MainToolbar } from "./MainToolbar/MainToolbar";
 
-export const UI = () => {
+type Props = {
+  mode: EditorMode;
+};
+export const UI = ({ mode }: Props) => {
   return (
     <>
       <MainMenu />
 
-      <MainToolbar />
+      {mode === EditorMode["3D"] ? <MainToolbar /> : null}
 
       <div>
         {/* {isAuth ? loggedIn : unlogged}

@@ -11,16 +11,13 @@ export const useTertiusAxis = (mode: StateMode) => {
   };
 
   useEffect(() => {
-    const onStateChange = (evt: EventType) => {
-      if (evt.mode === mode) {
-        setStateValue(evt.data);
-        console.log(evt);
-      }
+    const onStateChange = (evt: EventType["data"]) => {
+      setStateValue(evt);
     };
-    editor?.state.onEvent("appStateChanged", onStateChange);
+    editor?.state.onEvent(mode, onStateChange);
 
     return () => {
-      editor?.state.removelistener("appStateChanged", onStateChange);
+      editor?.state.removelistener(mode, onStateChange);
     };
   }, [editor]);
 
