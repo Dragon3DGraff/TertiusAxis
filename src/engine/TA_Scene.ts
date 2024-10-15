@@ -32,6 +32,7 @@ import { TA_SceneCamera } from "./TA_SceneCamera";
 import { TA_Helpers } from "./TA_Helpers";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
+import { disposeRenderer } from "./utils/disposeRenderer";
 
 // import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 // import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -130,6 +131,7 @@ export class TA_Scene {
 
   dispose() {
     window.removeEventListener("resize", this.onWindowResize, false);
+    disposeRenderer(this.renderer)
   }
 }
 

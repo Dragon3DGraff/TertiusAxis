@@ -152,24 +152,17 @@ export class Controls2D extends EventEmitter {
       if (!this.ctrl) return;
       evt.stopPropagation();
       evt.preventDefault();
-      let delta = -evt.deltaY / 1000;
 
-      console.log(
-        "\x1B[92;40;22mthis.drawParams.scale\x1B[m",
-        this.drawParams.scale
-      ); // FIXME Удалить!
-      console.log("\x1B[92;40;22mdelta\x1B[m", delta); // FIXME Удалить!
-      if (this.drawParams.scale + delta <= 0) {
-        delta /= 1000;
-        // return;
-      }
-      this.drawParams.scale = Math.abs(this.drawParams.scale + delta);
+      let delta = Math.sign(evt.deltaY) * 0.1 * this.drawParams.scale;
+      const { clientX, clientY } = evt;
+      const ratio = 1 - (this.drawParams.scale + delta) / this.drawParams.scale;
+      this.drawParams.scale -= delta;
 
-      const canvasPosition = this.getCanvasPosition(evt);
       this.drawParams.startDrawPoint.x -=
-        canvasPosition.x * (1 + delta) - canvasPosition.x;
-      this.drawParams.startDrawPoint.x -=
-        canvasPosition.y * (1 + delta) - canvasPosition.y;
+        (clientX - this.drawParams.startDrawPoint.x) * ratio;
+
+      this.drawParams.startDrawPoint.y -=
+        (clientY - this.drawParams.startDrawPoint.y) * ratio;
 
       this.onScaleUpdate();
       if (this.saveState) {

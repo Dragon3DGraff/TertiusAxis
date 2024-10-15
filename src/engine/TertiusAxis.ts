@@ -107,4 +107,8 @@ export class TertiusAxis extends EventEmitter {
       return;
     }
   }
+
+  switchMode(mode: EditorMode) {
+    this.mode = mode;
+  }
 }
